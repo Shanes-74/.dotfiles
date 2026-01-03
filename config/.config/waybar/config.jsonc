@@ -1,0 +1,163 @@
+// -*- mode: jsonc -*-
+{
+    //"layer": "top", // Waybar at top layer
+    "position": "right", // Waybar position (top|bottom|left|right)
+    "height": 1040, // Waybar height (to be removed for auto height)
+    "width": 20, // Waybar width
+    //"spacing": 0, // Gaps between modules (4px)
+    "margin-left": -10,
+    "margin-right": 20,
+    
+    // Choose the order of the modules
+    "modules-left": [
+        "custom/menu",
+        "network",
+        /*"pulseaudio",
+        "backlight",
+        "custom/wallpaper",*/
+        "custom/clipboard"
+        
+    ],
+    "modules-center": [
+        "hyprland/workspaces"
+    ],
+    "modules-right": [
+        "tray",
+        "battery",
+        "clock",
+        "custom/notification",
+        "custom/power"
+    ],
+
+    "hyprland/workspaces": {
+        "format": "",
+        "on-scroll-up": "hyprctl dispatch workspace e+1",
+        "on-scroll-down": "hyprctl dispatch workspace e-1",
+        "persistent-workspaces": { 
+		    "*": 3
+        }
+    },
+    
+    "tray": {
+        "icon-size": 26,
+        "spacing": 10
+    },
+
+    "clock": {
+        "timezone": "America/Sao_Paulo",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format": "{:%I
+%M}",
+        "format-alt": "{:%d
+%m
+%y}"
+    },
+
+    "memory": {
+        "format": "{}% "
+    },
+
+    "backlight": {
+        // "device": "acpi_video1",
+        "format": "{icon}",
+        "format-icons": ["󰃚", "󰃛", "󰃜", "󰃝", "󰃞", "󰃟", "󰃠"],
+        "tooltip-format": "Brilho: {percent}%"
+    },
+
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon}", // Padrão (descarregando)
+        "format-full": "{icon}",
+        "format-charging": "{icon}", // Use "{icon}" para o ícone animado/graduado
+        "format-plugged": "", // Opcional: Se quiser um ícone estático quando estiver ligado/cheio
+    
+        // ATENÇÃO: format-icons deve ser um OBJETO, não uma LISTA
+        "format-icons": {
+            "default": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+            "charging": ["󰢟", "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"] 
+        },
+    
+        "tooltip-format": "{capacity}% - Descarregado em: {time}", 
+        "tooltip-format-charging": "{capacity}% - Carregado em: {time}",
+    },
+        
+    "network": {
+        // "interface": "wlp2*", // (Optional) To force the use of this interface
+        "format-wifi": "{icon}",
+        "format-icons": ["󰤫", "󰤟", "󰤢", "󰤥", "󰤨"],
+        "format-ethernet": "",
+        "format-linked": "",
+        "format-disconnected": "⚠",
+        "on-click": "nmgui",
+        "tooltip-format": "{essid} ({signalStrength}%)\n{ipaddr}",
+    },
+
+    "pulseaudio": {
+        // "scroll-step": 1, // %, can be a float
+        "format": "{icon}",
+        "format-bluetooth": "󰂱",
+        "format-bluetooth-muted": "󰂲",
+        "format-muted": "",
+        "format-source": "",
+        "format-source-muted": "",
+        "on-click": "pavucontrol",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "tooltip-format": "{desc}: {volume}%",
+    },
+    
+    "custom/menu": {
+        "on-click": "rofi -show drun & sleep 0.2 && hyprctl reload",
+        "format": "󰣇",
+        "tooltip": false
+    },
+
+    "custom/power": {
+        "format" : "",
+        "on-click": "wlogout",
+		"tooltip": false
+    },
+
+    "custom/wallpaper": {
+        "on-click": "bash ~/.config/swww/swww.sh",
+        "format": "󰸉",
+        "tooltip": false
+    },
+
+    "custom/notification": {
+        "tooltip": true,
+        "format": "{icon}",
+        "format-icons": {
+            "notification": "󰆈",
+            "none": "󰆉",
+            "dnd-notification": "󱗟",
+            "dnd-none": "󱗠",
+            "inhibited-notification": "󱗡",
+            "inhibited-none": "󱗢",
+            "dnd-inhibited-notification": "󰗞",
+            "dnd-inhibited-none": "󰆇"
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  },
+
+  "custom/clipboard": {
+        "format": "󰨸",
+        "on-click": "cliphist list | rofi -dmenu -display-columns 2 | cliphist decode | wl-copy",
+        "tooltip": false
+    }
+}
