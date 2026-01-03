@@ -1,0 +1,61 @@
+/* =========================
+   WLOGOUT - Preto & Branco
+   ========================= */
+
+* {
+  all: unset;
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 16px;
+}
+
+/* Fundo da tela */
+window {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+/* Container dos botões */
+#container {
+  padding: 40px;
+}
+
+/* Botões */
+button {
+  background-color: #000000;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+
+  margin: 12px;
+  padding: 20px;
+
+  min-width: 160px;
+  min-height: 160px;
+
+  transition: background-color 0.15s ease,
+              color 0.15s ease,
+              transform 0.1s ease;
+}
+
+/* Hover */
+button:hover {
+  background-color: #ffffff;
+  color: #000000;
+  transform: scale(1.05);
+}
+
+/* Clique */
+button:active {
+  background-color: #dddddd;
+  color: #000000;
+}
+
+/* Ícone */
+button image {
+  margin-bottom: 10px;
+}
+
+/* Texto */
+button label {
+  font-size: 14px;
+  letter-spacing: 1px;
+}

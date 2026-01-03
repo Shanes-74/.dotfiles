@@ -1,0 +1,101 @@
+@import "colors.rasi"
+
+window {
+    width:            28%;       /* Define a largura da janela */
+    transparency:     "real";
+    background-color: @base;
+    border:           3px;
+    border-color:     @base09;
+    border-radius:    8px;
+    font:             "SF Pro Medium 14";
+}
+
+mainbox {
+    /* Removido o mode-switcher */
+    children:         [inputbar, message, listview];
+    spacing:          15px;      /* Espaço reduzido entre elementos */
+    padding:          20px 0;    /* Padding reduzido */
+    border:           0;
+    border-color:     @base02;
+    border-radius:    8px;
+}
+
+inputbar {
+    border:           1px;
+    border-color:     @base05;
+    border-radius:    8px;
+    margin:           4px 24px;
+    padding:          20px;
+    children:         [prompt, textbox-prompt-colon, entry, case-indicator];
+}
+
+prompt {
+    text-color:       @base03;
+}
+
+textbox-prompt-colon {
+    expand:           false;
+    str:              ":";
+    margin:           0 1ch 0 0;
+    text-color:       @base03;
+}
+
+entry {
+    text-color:       @base05;
+}
+
+case-indicator {
+    text-color:       @base0F;
+}
+
+message {
+    border:           1px 0;
+    border-color:     @base02;
+}
+
+listview {
+    lines:            10;        /* Limita a altura da janela a 10 itens */
+    scrollbar:        true;
+    margin:           0 10px 0 30px;
+}
+
+element {
+    padding:          10px;
+    spacing:          5px;
+    highlight:        bold underline;
+    children:         [element-icon, element-text];
+}
+
+element-text, element-icon {
+    background-color: inherit;
+    text-color:       @base05;
+}
+
+element normal {
+    background-color: transparent;
+}
+
+element selected {
+    background-color: @base09;
+    border-radius:    8px;
+}
+
+element-text selected {
+    text-color:       @base00;
+}
+
+element alternate {
+    background-color: transparent;
+}
+
+element normal normal, element selected normal, element alternate normal {
+    text-color:       @base05;
+}
+
+element normal urgent, element selected urgent, element alternate urgent {
+    text-color:       @base08;
+}
+
+element normal active, element selected active, element alternate active {
+    text-color:       @base0B;
+}
