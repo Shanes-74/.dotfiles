@@ -1,29 +1,32 @@
-@import "colors.css";
-
 * {
-    font-family: "SF Pro Display", "JetBrainsMono Nerd Font Propo";
+    font-family: "JetBrainsMono Nerd Font Propo";
     font-size: 16px;
     font-weight: bold;
 
 }
 
 #waybar {
-    background-color: @base;
-    border: 3px solid @border;
-    border-radius: 8px;
+    background-color: transparent;
 }
 
 
 
+#workspaces {
+    background: black;
+    margin: 16px 0;
+    padding: 0px;
+    border-radius: 8px;
+}
+
 #workspaces button {
     font-size: 24px;
     font-weight: bold;
-    color: @color1;
-    border: 3px solid @white;
-    background: @white;
-    border-radius: 100%;
-    margin: 12px 20px;
-    padding: 0px 4px;
+    color: rgba(255, 255, 255, 0.6);
+    border: 3px solid white;
+    background: black;
+    border-radius: 999px;
+    margin: 4px 6px;
+    padding: 0 4px;
 }
 
 #workspaces button.empty {
@@ -33,16 +36,28 @@
 #workspaces button.active {
     font-size: 24px;
     font-weight: bold;
-    border-color: @border;
-    color: @border;
+    border-color: white;
+    color: white;
 }
 
 #workspaces button.urgent {
-    background-color: @red;
+    background-color: red;
 }
 
 #workspaces button:hover {
-    border: 3px solid @border;
+    background-color: white;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+#workspaces button.active:hover {
+    background-color: white;
+    color: black;
+}
+
+#workspaces button.empty:hover {
+    background-color: white;
+    color: transparent;
+
 }
 
 
@@ -71,13 +86,12 @@
 #custom-menu,
 #custom-notification,
 #custom-clipboard {
-    font-size: 28px;
-    color: @border;
-    padding: 0px;
-    border: 2px solid @border;
+    font-size: 24px;
+    color: white;
     border-radius: 8px;
-    background: @color1;
-    margin: 4px 14px;
+    background: black;
+    margin: 16px 4px;
+    padding: 2px 8px;
 }
 
 #clock:hover,
@@ -86,38 +100,34 @@
 #backlight:hover,
 #network:hover,
 #pulseaudio:hover,
-#tray:hover,
 #custom-power:hover,
 #custom-wallpaper:hover,
 #custom-menu:hover,
 #custom-notification:hover,
 #custom-clipboard:hover {
-    background: @white;
-    border: 2px solid @border;
+    background: white;
+    color: black;
 }
 
-#clock {
-    font-size: 26px;
-    font-family: "GeistMono Nerd Font Propo";
+#custom-notification {
+    padding: 0 8px;
+    border-radius: 8px;
+
+}
+#custom-clipboard {
+    padding: 0 8px;
+    border-radius: 8px;
 }
 
 #tray {
-    padding: 6px 0px;
-}
-
-#custom-menu {
-    margin-top: 12px;
-}
-
-#custom-power {
-    margin-bottom: 12px;
+    padding: 0 10px;
 }
 
 
 
 #battery.charging,
 #battery.plugged {
-    color: @color2;
+    color: green;
 }
 
 @keyframes blink {
@@ -129,7 +139,7 @@
 
 /* Using steps() instead of linear as a timing function to limit cpu usage */
 #battery.critical:not(.charging) {
-    background-color: @red;
+    background-color: red;
     color: black;
     animation-name: blink;
     animation-duration: 0.5s;
@@ -146,5 +156,5 @@
 
 #tray>.needs-attention {
     -gtk-icon-effect: highlight;
-    background-color: @red;
+    background-color: red;
 }

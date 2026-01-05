@@ -1,31 +1,30 @@
 // -*- mode: jsonc -*-
 {
-    //"layer": "top", // Waybar at top layer
-    "position": "right", // Waybar position (top|bottom|left|right)
-    "height": 1040, // Waybar height (to be removed for auto height)
-    "width": 20, // Waybar width
-    //"spacing": 0, // Gaps between modules (4px)
-    "margin-left": -10,
-    "margin-right": 20,
+    "layer": "top", // Waybar at top layer
+    "position": "top", // Waybar position (top|bottom|left|right)
+    "height": 20, // Waybar height (to be removed for auto height)
+    "width": 1905, // Waybar width
+    //"spacing": 6, // Gaps between modules (4px)
+    "margin-top": 0,
+    "margin-bottom": -10,
     
     // Choose the order of the modules
     "modules-left": [
         "custom/menu",
-        "network",
-        /*"pulseaudio",
-        "backlight",
-        "custom/wallpaper",*/
-        "custom/clipboard"
+        "clock"
+        /*"custom/wallpaper",*/
         
     ],
     "modules-center": [
-        "hyprland/workspaces"
+        "custom/clipboard",
+        "hyprland/workspaces",
+        "custom/notification"
     ],
     "modules-right": [
         "tray",
+        "pulseaudio",
+        "network",
         "battery",
-        "clock",
-        "custom/notification",
         "custom/power"
     ],
 
@@ -34,7 +33,7 @@
         "on-scroll-up": "hyprctl dispatch workspace e+1",
         "on-scroll-down": "hyprctl dispatch workspace e-1",
         "persistent-workspaces": { 
-		    "*": 3
+		    "*": 4
         }
     },
     
@@ -46,15 +45,9 @@
     "clock": {
         "timezone": "America/Sao_Paulo",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format": "{:%I
-%M}",
-        "format-alt": "{:%d
-%m
-%y}"
-    },
-
-    "memory": {
-        "format": "{}% "
+        "format": "{:%I:%M}",
+        "on-click-right": "gnome-calendar",
+        "format-alt": "{:%d/%m/%y}"
     },
 
     "backlight": {
@@ -75,10 +68,7 @@
         "format-plugged": "", // Opcional: Se quiser um ícone estático quando estiver ligado/cheio
     
         // ATENÇÃO: format-icons deve ser um OBJETO, não uma LISTA
-        "format-icons": {
-            "default": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
-            "charging": ["󰢟", "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"] 
-        },
+        "format-icons": ["", "", "", "", ""],
     
         "tooltip-format": "{capacity}% - Descarregado em: {time}", 
         "tooltip-format-charging": "{capacity}% - Carregado em: {time}",
@@ -101,7 +91,7 @@
         "format-bluetooth": "󰂱",
         "format-bluetooth-muted": "󰂲",
         "format-muted": "",
-        "format-source": "",
+        "format-source": "",
         "format-source-muted": "",
         "on-click": "pavucontrol",
         "format-icons": {
