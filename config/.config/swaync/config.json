@@ -8,7 +8,7 @@
   "control-center-layer": "overlay",
   "cssPriority": "user",
   "control-center-width": 400,
-  "control-center-height": 1012,
+  "control-center-height": 984,
   "control-center-margin-top": 34,
   "control-center-margin-bottom": 34,
   "control-center-margin-right": 34,
@@ -43,11 +43,11 @@
   "widgets": [
     "title",
     "dnd",
-    "notifications",
-    "mpris",
     "buttons-grid",
     "volume",
-    "backlight"
+    "backlight",
+    "mpris",
+    "notifications"
   ],
   "widget-config": {
     "dnd": {
