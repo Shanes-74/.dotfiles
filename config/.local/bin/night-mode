@@ -1,12 +1,31 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Check if hyprsunset is already running
-if pgrep -x "hyprsunset" > /dev/null; then
-    # Kill hyprsunset if it's running (switch to day mode)
-    killall -9 hyprsunset
-    notify-send "Night Light" "Off" -u "low"
+NOTIFY_ID_FILE="/tmp/nightlight-notify-id"
+
+notify_start() {
+  notify-send -p -t 2000 "Luz Noturnat" "$1" > "$NOTIFY_ID_FILE"
+}
+
+notify_update() {
+  notify-send -r "$(cat "$NOTIFY_ID_FILE")" -t 2000 "Luz Noturna" "$1"
+}
+
+# ───────── Toggle ─────────
+
+if pgrep -x hyprsunset > /dev/null; then
+  killall hyprsunset
+
+  if [ -f "$NOTIFY_ID_FILE" ]; then
+    notify_update "Off"
+  else
+    notify_start "Off"
+  fi
 else
-    # Start hyprsunset for night mode
-    hyprsunset -t 5200 &
-    notify-send "Night Light" "On" -u "low"
+  hyprsunset -t 5200 & disown
+
+  if [ -f "$NOTIFY_ID_FILE" ]; then
+    notify_update "On"
+  else
+    notify_start "On"
+  fi
 fi
