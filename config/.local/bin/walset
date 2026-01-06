@@ -1,42 +1,64 @@
 #!/usr/bin/env bash
 
-WALLPAPER_DIR="$HOME/Imagens/Wallpapers"
+set -o pipefail
 
-# Se um caminho for passado como argumento, usa ele
+WALLPAPER_DIR="$HOME/Imagens/Wallpapers"
+NOTIFY_ID_FILE="/tmp/walset-notify-id"
+
+notify_start() {
+  notify-send -p -t 0 "Walset" "Aplicando tema…" > "$NOTIFY_ID_FILE"
+}
+
+notify_update() {
+  notify-send -r "$(cat "$NOTIFY_ID_FILE")" -t 0 "Walset" "$1"
+}
+
+notify_success() {
+  notify-send -r "$(cat "$NOTIFY_ID_FILE")" -t 2000 "Walset" "✅ Tema aplicado com sucesso"
+}
+
+notify_error() {
+  notify-send -r "$(cat "$NOTIFY_ID_FILE" 2>/dev/null)" \
+    -u critical -t 0 "Walset" "❌ Tema NÃO foi aplicado"
+  exit 1
+}
+
+# ───────── Escolha do wallpaper ─────────
+
 if [ -n "$1" ]; then
   WALLPAPER="$1"
-
-  if [ ! -f "$WALLPAPER" ]; then
-    echo "Arquivo não encontrado: $WALLPAPER"
-    exit 1
-  fi
+  [ -f "$WALLPAPER" ] || notify_error
 else
-  # Fallback: escolhe um wallpaper aleatório
-  if [ ! -d "$WALLPAPER_DIR" ]; then
-    echo "Diretório de wallpapers não encontrado: $WALLPAPER_DIR"
-    exit 1
-  fi
+  [ -d "$WALLPAPER_DIR" ] || notify_error
 
   WALLPAPER=$(find "$WALLPAPER_DIR" -type f \( \
     -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" \
   \) | shuf -n 1)
 
-  if [ -z "$WALLPAPER" ]; then
-    echo "Nenhum wallpaper encontrado em $WALLPAPER_DIR"
-    exit 1
-  fi
+  [ -n "$WALLPAPER" ] || notify_error
 fi
 
-# Garante que o daemon do swww está rodando
+# ───────── Início ─────────
+
+notify_start
+
+# ───────── swww ─────────
+
 if ! pgrep -x swww-daemon > /dev/null; then
-  swww init
+  swww init || notify_error
 fi
 
-# Aplica o wallpaper com transição
 swww img "$WALLPAPER" \
   --transition-type center \
-  --transition-fps 144
+  --transition-duration 2.0 \
+  --transition-fps 144 \
+|| notify_error
 
-# Gera esquema de cores com matugen
-echo "Gerando cores a partir de: $WALLPAPER"
-matugen image "$WALLPAPER"
+# ───────── matugen ─────────
+
+matugen image "$WALLPAPER" || notify_error
+
+# ───────── Final ─────────
+
+notify_success
+rm -f "$NOTIFY_ID_FILE"
