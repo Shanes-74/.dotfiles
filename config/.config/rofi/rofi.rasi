@@ -1,101 +1,114 @@
 @import "colors.rasi"
 
 window {
-    width:            28%;       /* Define a largura da janela */
+    width:            28%; 
     transparency:     "real";
-    background-color: @base;
-    border:           3px;
-    border-color:     @base09;
-    border-radius:    8px;
-    font:             "SF Pro Medium 14";
+    background-color: @surface-container;
+    border:           2px; 
+    border-color:     @primary; 
+    border-radius:    8px; 
+    font:             "SF Pro Medium 14"; 
 }
 
 mainbox {
-    /* Removido o mode-switcher */
-    children:         [inputbar, message, listview];
-    spacing:          15px;      /* Espaço reduzido entre elementos */
-    padding:          20px 0;    /* Padding reduzido */
-    border:           0;
-    border-color:     @base02;
-    border-radius:    8px;
+    children:         [inputbar, message, listview]; 
+    spacing:          15px; 
+    padding:          20px 0; 
+    background-color: transparent;
 }
 
 inputbar {
-    border:           1px;
-    border-color:     @base05;
-    border-radius:    8px;
-    margin:           4px 24px;
-    padding:          20px;
-    children:         [prompt, textbox-prompt-colon, entry, case-indicator];
+    border:           1px; 
+    border-color:     @primary;
+    border-radius:    8px; 
+    margin:           4px 24px; 
+    padding:          20px; 
+    background-color: @surface-container-high;
+    children:         [prompt, textbox-prompt-colon, entry, case-indicator]; 
 }
 
 prompt {
-    text-color:       @base03;
+    text-color:       @primary;
+    background-color: transparent;
 }
 
 textbox-prompt-colon {
-    expand:           false;
-    str:              ":";
-    margin:           0 1ch 0 0;
-    text-color:       @base03;
+    expand:           false; 
+    str:              ":"; 
+    margin:           0 1ch 0 0; 
+    text-color:       @on-surface-variant;
+    background-color: transparent;
 }
 
 entry {
-    text-color:       @base05;
+    text-color:       @on-surface;
+    background-color: transparent;
 }
 
 case-indicator {
-    text-color:       @base0F;
+    text-color:       @error;
+    background-color: transparent;
 }
 
 message {
-    border:           1px 0;
-    border-color:     @base02;
+    border:           1px 0; 
+    border-color:     @primary;
+    background-color: @surface-container-low;
 }
 
 listview {
-    lines:            10;        /* Limita a altura da janela a 10 itens */
-    scrollbar:        true;
-    margin:           0 10px 0 30px;
+    lines:            10; 
+    scrollbar:        false; 
+    margin:           0 20px; 
+    background-color: transparent;
+    
+    /* Scrollbar com cor Primary */
+    handle-color:     @primary;
+    handle-width:     6px;
 }
 
 element {
-    padding:          10px;
-    spacing:          5px;
-    highlight:        bold underline;
-    children:         [element-icon, element-text];
+    padding:          10px; 
+    spacing:          5px; 
+    highlight:        bold underline; 
+    children:         [element-icon, element-text]; 
+    background-color: transparent;
 }
 
 element-text, element-icon {
-    background-color: inherit;
-    text-color:       @base05;
+    background-color: inherit; 
+    text-color:       inherit;
 }
 
-element normal {
+element normal normal {
+    text-color:       @on-surface; 
+}
+
+element selected normal {
+    background-color: @primary; 
+    text-color:       @on-primary; 
+    border-radius:    8px; 
+}
+
+element alternate normal {
     background-color: transparent;
+    text-color:       @on-surface; 
 }
 
-element selected {
-    background-color: @base09;
-    border-radius:    8px;
+element normal urgent, element alternate urgent {
+    text-color:       @error; 
 }
 
-element-text selected {
-    text-color:       @base00;
+element selected urgent {
+    background-color: @error-container;
+    text-color:       @on-error-container;
 }
 
-element alternate {
-    background-color: transparent;
+element normal active, element alternate active {
+    text-color:       @tertiary; 
 }
 
-element normal normal, element selected normal, element alternate normal {
-    text-color:       @base05;
-}
-
-element normal urgent, element selected urgent, element alternate urgent {
-    text-color:       @base08;
-}
-
-element normal active, element selected active, element alternate active {
-    text-color:       @base0B;
+element selected active {
+    background-color: @tertiary-container;
+    text-color:       @on-tertiary-container;
 }
