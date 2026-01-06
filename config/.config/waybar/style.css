@@ -1,10 +1,13 @@
 @import "colors.css";
 
 * {
-    font-family: "JetBrainsMono Nerd Font Propo";
+    font-family: "SF Pro Display", "JetBrainsMono Nerd Font Propo";
     font-size: 16px;
     font-weight: bold;
-
+    transition:
+        background-color 75ms ease,
+        color 75ms ease,
+        border-color 75ms ease
 }
 
 #waybar {
@@ -94,6 +97,10 @@
     background: @surface_container;
     margin: 16px 4px;
     padding: 2px 12px;
+    transition:
+        background-color 200ms ease,
+        color 200ms ease,
+        border-color 200ms ease
 }
 
 #clock:hover,
@@ -109,14 +116,11 @@
 #custom-clipboard:hover {
     background: @primary;
     color: @surface_container;
+    transition:
+        background-color 200ms ease,
+        color 200ms ease,
+        border-color 200ms ease
 }
-
-#custom-notification,
-#custom-clipboard {
-    padding: 0 12px;
-    border-radius: 8px;
-}
-
 
 #tray {
     padding: 0 10px;

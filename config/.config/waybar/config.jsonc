@@ -12,16 +12,15 @@
     "modules-left": [
         "custom/menu",
         "clock"
-        /*"custom/wallpaper",*/
-        
     ],
     "modules-center": [
-        "custom/clipboard",
+        "custom/wallpaper",
         "hyprland/workspaces",
         "custom/notification"
     ],
     "modules-right": [
         "tray",
+        "custom/clipboard",
         "pulseaudio",
         "network",
         "battery",
@@ -119,7 +118,7 @@
     },
 
     "custom/wallpaper": {
-        "on-click": "bash ~/.config/swww/swww.sh",
+        "on-click": "walselect",
         "format": "󰸉",
         "tooltip": false
     },
