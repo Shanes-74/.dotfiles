@@ -1,0 +1,100 @@
+@import "colors.rasi"
+
+* {
+	background-color: transparent;
+}
+
+/* ───────── Window ───────── */
+
+window {
+    width:            50%;
+    transparency:     "real";
+    background-color: @surface-container;
+    border:           2px;
+    border-color:     @primary;
+    border-radius:    8px;
+    font:             "SF Pro Medium 14";
+}
+
+/* ───────── Layout ───────── */
+
+mainbox {
+    children:         [inputbar, listview];
+    spacing:          15px;
+    padding:          15px;
+    background-color: transparent;
+}
+
+/* ───────── Input ───────── */
+
+inputbar {
+    border:           1px;
+    border-color:     @primary;
+    border-radius:    8px;
+    margin:           4px;
+    padding:          15px;
+    background-color: @surface-container-high;
+}
+
+prompt,
+textbox-prompt-colon,
+entry {
+    background-color: transparent;
+    text-color:       @on-surface;
+}
+
+entry {
+    cursor-color:     @primary;
+    placeholder-color:@on-surface-variant;
+}
+
+/* ───────── Grid ───────── */
+
+listview {
+    columns:          3;
+    lines:            2;
+    spacing:          20px;
+    scrollbar:        false;
+    background-color: transparent;
+}
+
+/* ───────── Element ───────── */
+
+element {
+    orientation:      vertical;
+    padding:          8px;
+    spacing:          6px;
+    border-radius:    8px;
+    background-color: transparent;
+
+    /* REMOVE highlight padrão */
+    highlight:        none;
+}
+
+/* ───────── Image ───────── */
+
+element-icon {
+    size:             280px;
+    horizontal-align: 0.5;
+    border-radius:    8px;
+    background-color: transparent;
+}
+
+/* ───────── Text (remove “barra”) ───────── */
+
+element-text {
+    enabled:          false;
+}
+
+/* ───────── States (igual ao teu tema base) ───────── */
+
+element normal normal {
+    background-color: transparent;
+    text-color:       @on-surface;
+}
+
+element selected normal {
+    background-color: @primary;
+    text-color:       @on-primary;
+    border-radius:    8px;
+}
