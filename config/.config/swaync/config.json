@@ -8,9 +8,9 @@
   "control-center-layer": "overlay",
   "cssPriority": "user",
   "control-center-width": 400,
-  "control-center-height": 1000,
+  "control-center-height": 956,
   "control-center-margin-top": 28,
-  "control-center-margin-bottom": 28,
+  "control-center-margin-bottom": 0,
   "control-center-margin-right": 28,
   "control-center-margin-left": 0,
   "notification-window-width": 400,
@@ -54,7 +54,8 @@
       "text": "Não Perturbe"
     },
     "title": {
-      "text": "Notificações"
+      "text": "Notificações",
+      "button-text": "Limpar Tudo"
     },
     "mpris": {
       "image-size": 96,
@@ -84,7 +85,7 @@
         },
         {
           "label": "󰖔",
-          "command": "~/.config/scripts/night-mode.sh"
+          "command": "night-mode"
         }
       ]
     }
