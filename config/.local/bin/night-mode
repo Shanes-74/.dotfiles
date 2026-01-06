@@ -3,29 +3,22 @@
 NOTIFY_ID_FILE="/tmp/nightlight-notify-id"
 
 notify_start() {
-  notify-send -p -t 2000 "Luz Noturnat" "$1" > "$NOTIFY_ID_FILE"
+    notify-send -p -t 2000 "Luz Noturna" "$1" > "$NOTIFY_ID_FILE"
 }
 
 notify_update() {
-  notify-send -r "$(cat "$NOTIFY_ID_FILE")" -t 2000 "Luz Noturna" "$1"
+    if [ -f "$NOTIFY_ID_FILE" ]; then
+        notify-send -r "$(cat "$NOTIFY_ID_FILE")" -t 2000 "Luz Noturna" "$1"
+    else
+        notify_start "$1"
+    fi
 }
 
 # ───────── Toggle ─────────
-
 if pgrep -x hyprsunset > /dev/null; then
-  killall hyprsunset
-
-  if [ -f "$NOTIFY_ID_FILE" ]; then
+    killall hyprsunset
     notify_update "Off"
-  else
-    notify_start "Off"
-  fi
 else
-  hyprsunset -t 5200 & disown
-
-  if [ -f "$NOTIFY_ID_FILE" ]; then
+    hyprsunset -t 5200 & disown
     notify_update "On"
-  else
-    notify_start "On"
-  fi
 fi
