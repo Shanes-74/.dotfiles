@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+WALLPAPER_DIR="$HOME/Imagens/Wallpapers"
+CACHE_DIR="$HOME/.cache/walselect"
+
+mkdir -p "$CACHE_DIR"
+
+# Gera thumbnails
+for img in "$WALLPAPER_DIR"/*.{jpg,jpeg,png,webp}; do
+  [ -e "$img" ] || continue
+  name="$(basename "$img")"
+  thumb="$CACHE_DIR/$name.png"
+
+  if [ ! -f "$thumb" ]; then
+    magick "$img" \
+      -resize 400x400^ \
+      -gravity center \
+      -extent 400x400 \
+      -background none \
+      "$thumb"
+  fi
+done
+
+# Menu (texto = nome, valor real = caminho)
+selection=$(for img in "$WALLPAPER_DIR"/*.{jpg,jpeg,png,webp}; do
+  [ -e "$img" ] || continue
+  name="$(basename "$img")"
+  thumb="$CACHE_DIR/$name.png"
+  echo -e "$name\0icon\x1f$thumb\0info\x1f$img"
+done | rofi -dmenu -show-icons -theme ~/.config/rofi/wallpapers.rasi -p "Wallpapers")
+
+[ -z "$selection" ] && exit 0
+
+# Aplica
+walset "$WALLPAPER_DIR/$selection"

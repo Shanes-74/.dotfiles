@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+WALLPAPER_DIR="$HOME/Imagens/Wallpapers"
+
+# Se um caminho for passado como argumento, usa ele
+if [ -n "$1" ]; then
+  WALLPAPER="$1"
+
+  if [ ! -f "$WALLPAPER" ]; then
+    echo "Arquivo não encontrado: $WALLPAPER"
+    exit 1
+  fi
+else
+  # Fallback: escolhe um wallpaper aleatório
+  if [ ! -d "$WALLPAPER_DIR" ]; then
+    echo "Diretório de wallpapers não encontrado: $WALLPAPER_DIR"
+    exit 1
+  fi
+
+  WALLPAPER=$(find "$WALLPAPER_DIR" -type f \( \
+    -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" \
+  \) | shuf -n 1)
+
+  if [ -z "$WALLPAPER" ]; then
+    echo "Nenhum wallpaper encontrado em $WALLPAPER_DIR"
+    exit 1
+  fi
+fi
+
+# Garante que o daemon do swww está rodando
+if ! pgrep -x swww-daemon > /dev/null; then
+  swww init
+fi
+
+# Aplica o wallpaper com transição
+swww img "$WALLPAPER" \
+  --transition-type center \
+  --transition-fps 144
+
+# Gera esquema de cores com matugen
+echo "Gerando cores a partir de: $WALLPAPER"
+matugen image "$WALLPAPER"
