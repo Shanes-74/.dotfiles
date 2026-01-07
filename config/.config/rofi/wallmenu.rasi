@@ -1,7 +1,7 @@
 @import "colors.rasi"
 
 * {
-	background-color: transparent;
+    background-color: transparent;
 }
 
 /* ───────── Window ───────── */
@@ -36,16 +36,17 @@ inputbar {
     background-color: @surface-container-high;
 }
 
-prompt,
-textbox-prompt-colon,
-entry {
+/* Prompt fixo com : e cor @primary */
+prompt {
+    text-color: @primary;
     background-color: transparent;
-    text-color:       @on-surface;
 }
 
 entry {
     cursor-color:     @primary;
     placeholder-color:@on-surface-variant;
+    background-color: transparent;
+    text-color:       @on-surface;
 }
 
 /* ───────── Grid ───────── */
