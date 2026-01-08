@@ -1,0 +1,49 @@
+@import 'colors.css';
+
+/* Janela OSD */
+window#osd {
+  border-radius: 8px;
+  border: none;
+  background: @surface_container;
+}
+
+/* Conteúdo interno */
+window#osd #container {
+  margin: 16px;
+}
+
+/* Ícones e texto */
+window#osd image,
+window#osd label {
+  color: @on_surface;
+}
+
+/* Estados desativados */
+window#osd progressbar:disabled,
+window#osd image:disabled {
+  opacity: 0.5;
+}
+
+/* Barra de progresso */
+window#osd progressbar {
+  min-height: 6px;
+  border-radius: 999px;
+  background: transparent;
+  border: none;
+}
+
+/* Fundo da barra */
+window#osd trough {
+  min-height: inherit;
+  border-radius: inherit;
+  border: none;
+  background: alpha(@on_surface, 0.3);
+}
+
+/* Progresso ativo */
+window#osd progress {
+  min-height: inherit;
+  border-radius: inherit;
+  border: none;
+  background: @primary;
+}
