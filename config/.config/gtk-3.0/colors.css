@@ -1,0 +1,52 @@
+* {
+    font-weight: 500;
+    font-family: "SF Pro Text", sans-serif
+}
+
+@define-color accent_color #ffb68f;
+@define-color accent_bg_color #773200;
+@define-color accent_fg_color #ffdbca;
+@define-color destructive_color #ffb4ab;
+@define-color destructive_bg_color #93000a;
+@define-color destructive_fg_color #ffdad6;
+@define-color success_color #ffb68f;
+@define-color success_bg_color #703714;
+@define-color success_fg_color #ffdbca;
+@define-color warning_color #dcc66e;
+@define-color warning_bg_color #544600;
+@define-color warning_fg_color #fae287;
+@define-color error_color #ffb4ab;
+@define-color error_bg_color #93000a;
+@define-color error_fg_color #ffdad6;
+@define-color window_bg_color #171306;
+@define-color window_fg_color #ebe2cb;
+@define-color view_bg_color #171306;
+@define-color view_fg_color #ebe2cb;
+@define-color headerbar_bg_color @window_bg_color;
+@define-color headerbar_fg_color @window_fg_color;
+@define-color headerbar_border_color @window_bg_color;
+@define-color headerbar_backdrop_color @window_bg_color;
+@define-color headerbar_shade_color @window_bg_color;
+@define-color card_bg_color #2e2a1a;
+@define-color card_fg_color #ebe2cb;
+@define-color card_shade_color rgba(0, 0, 0, 0.07);
+@define-color dialog_bg_color @card_bg_color;
+@define-color dialog_fg_color @card_fg_color;
+@define-color popover_bg_color @card_bg_color;
+@define-color popover_fg_color @card_fg_color;
+@define-color shade_color rgba(0, 0, 0, 0.36);
+@define-color scrollbar_outline_color rgba(139, 145, 152, 0.5);
+@define-color sidebar_bg_color #1f1b0d;
+@define-color secondary_sidebar_bg_color @sidebar_bg_color;
+@define-color sidebar_backdrop_color @sidebar_bg_color;
+@define-color secondary_sidebar_backdrop_color @sidebar_bg_color;
+
+headerbar.default-decoration {
+    margin-bottom: 50px;
+    margin-top: -100px;
+}
+
+window.csd,
+window.csd decoration {
+    box-shadow: none;
+}
