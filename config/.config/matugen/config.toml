@@ -25,3 +25,16 @@ output_path = '~/.config/rofi/colors.rasi'
 input_path = '~/.config/matugen/templates/colors.css'
 output_path = '~/.config/swaync/colors.css'
 post_hook = 'swaync-client -R -rs'
+
+[templates.swayosd]
+input_path = '~/.config/matugen/templates/colors.css'
+output_path = '~/.config/swayosd/colors.css'
+post_hook = 'killall swayosd-server && swayosd-server &'
+
+[templates.gtk3]
+input_path = '~/.config/matugen/templates/gtk-colors.css'
+output_path = '~/.config/gtk-3.0/colors.css'
+
+[templates.gtk4]
+input_path = '~/.config/matugen/templates/gtk-colors.css'
+output_path = '~/.config/gtk-4.0/colors.css'
