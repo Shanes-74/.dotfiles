@@ -7,7 +7,7 @@ window {
     border:           2px; 
     border-color:     @primary; 
     border-radius:    8px; 
-    font:             "SF Pro Medium 14"; 
+    font:             "Google Sans Display Medium 14";
 }
 
 mainbox {
@@ -76,7 +76,7 @@ element {
 }
 
 element-icon {
-    size:             32px;
+    size:             28px;
     preserve-aspect:  true;
     background-color: transparent;
 }
