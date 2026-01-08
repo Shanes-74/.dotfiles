@@ -1,7 +1,7 @@
 @import "colors.css";
 
 * {
-    font-family: "SF Pro Display", "JetBrainsMono Nerd Font Propo";
+    font-family: "Google Sans Display", "JetBrainsMono Nerd Font Propo";
     font-size: 16px;
     font-weight: bold;
     transition:
@@ -17,7 +17,7 @@
 
 
 #workspaces {
-    background: @surface_container;
+    background: @surface_container_high;
     margin: 16px 0;
     padding: 0px;
     border-radius: 8px;
@@ -28,7 +28,7 @@
     font-weight: bold;
     color: @on_surface_variant;
     border: 3px solid @primary;
-    background: @surface_container;
+    background: @surface_container_high;
     border-radius: 999px;
     margin: 8px;
     padding: 0 4px;
@@ -47,6 +47,7 @@
 
 #workspaces button.urgent {
     background-color: red;
+    color: white;
 }
 
 #workspaces button:hover {
@@ -56,7 +57,7 @@
 
 #workspaces button.active:hover {
     background-color: @primary;
-    color: @surface_container;
+    color: rgba(0, 0, 0, 0.6);
 }
 
 #workspaces button.empty:hover {
@@ -94,7 +95,7 @@
     font-size: 24px;
     color: @primary;
     border-radius: 8px;
-    background: @surface_container;
+    background: @surface_container_high;
     margin: 16px 4px;
     padding: 2px 12px;
     transition:
@@ -115,7 +116,7 @@
 #custom-notification:hover,
 #custom-clipboard:hover {
     background: @primary;
-    color: @surface_container;
+    color: @surface_container_high;
     transition:
         background-color 200ms ease,
         color 200ms ease,
@@ -136,14 +137,14 @@
 @keyframes blink {
     to {
         background-color: @primary;
-        color: @surface_container;
+        color: @surface_container_high;
     }
 }
 
 /* Using steps() instead of linear as a timing function to limit cpu usage */
 #battery.critical:not(.charging) {
     background-color: red;
-    color: @surface_container;
+    color: @surface_container_high;
     animation-name: blink;
     animation-duration: 0.5s;
     animation-timing-function: steps(12);
