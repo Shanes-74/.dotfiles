@@ -38,6 +38,19 @@ else
   [ -n "$WALLPAPER" ] || notify_error
 fi
 
+# ───────── Seleção do Tipo Matugen (Rofi) ─────────
+
+# Lista de tipos disponíveis no Matugen
+MATUGEN_TYPES="scheme-content\nscheme-expressive\nscheme-fidelity\nscheme-fruit-salad\nscheme-monochrome\nscheme-neutral\nscheme-rainbow\nscheme-tonal-spot\nscheme-vibrant"
+
+# Abre o rofi para escolha
+SELECTED_TYPE=$(echo -e "$MATUGEN_TYPES" | rofi -dmenu -i -p "Matugen Scheme" -lines 9)
+
+# Se o usuário cancelar (ESC) ou a string estiver vazia, encerra o script sem erro crítico
+if [ -z "$SELECTED_TYPE" ]; then
+  exit 0
+fi
+
 # ───────── Início ─────────
 
 notify_start
@@ -56,7 +69,8 @@ swww img "$WALLPAPER" \
 
 # ───────── matugen ─────────
 
-matugen image "$WALLPAPER" || notify_error
+# Aplica o wallpaper usando o tipo escolhido
+matugen image "$WALLPAPER" -t "$SELECTED_TYPE" || notify_error
 
 # ───────── Final ─────────
 
