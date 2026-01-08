@@ -32,8 +32,8 @@ selection=$(for img in "$WALLPAPER_DIR"/*.{jpg,jpeg,png,webp}; do
   thumb="$CACHE_DIR/$name.png"
   echo -e "$name\0icon\x1f$thumb"
 done | rofi -dmenu -show-icons \
-    -theme ~/.config/rofi/wallmenu.rasi \
-    -p "Wallpapers")
+    -theme ~/.config/scripts/wallpaper/wallmenu.rasi \
+    -p "Wallpapers:  ")
 
 [ -z "$selection" ] && exit 0
 
