@@ -2,8 +2,8 @@
 @import "colors.css";
 
 * {
-  font-family: "SF Pro Display", "JetBrainsMono Nerd Font Propo";
-  /* Garante que o texto base use a cor on_surface (pastel neutro) */
+  font-family: "Google Sans Display", "JetBrainsMono Nerd Font Propo";
+  font-weight: 500;
   color: @on_surface;
   transition:
         background-color 100ms ease,
@@ -12,7 +12,7 @@
 }
 
 .control-center {
-  background-color: @surface_container;
+  background-color: @surface_container_high;
   border: 3px solid @primary;
   border-radius: 8px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.8);
@@ -23,7 +23,7 @@
 
 /* --- NOTIFICAÇÕES --- */
 .notification {
-  background-color: @surface_container;
+  background-color: @surface_container_high;
   border: 3px solid @primary;
   border-radius: 8px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.8);
@@ -44,8 +44,8 @@
 
 .floating-notifications {
   padding: 10px;
-  margin-top: 2px;
-  margin-right: 2px;
+  margin-top: -4px;
+  margin-right: -4px;
 }
 
 .notification-action {
@@ -59,8 +59,7 @@
 .notification-default-action:hover,
 .notification-content:hover,
 .notification-action:hover {
-  background-color: @primary;
-  color: @on_primary;
+  background-color: transparent;
 }
 
 /* Botão de fechar da notificação */
