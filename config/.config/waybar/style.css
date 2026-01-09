@@ -18,9 +18,11 @@
 
 #workspaces {
     background: @surface_container_high;
-    margin: 16px 0;
+    margin: 16px 2px;
     padding: 0px;
-    border-radius: 8px;
+    border-radius: 999px;
+    border: 1px solid @outline_variant;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.8);
 }
 
 #workspaces button {
@@ -91,13 +93,17 @@
 #custom-wallpaper,
 #custom-menu,
 #custom-notification,
-#custom-clipboard {
+#custom-clipboard,
+#custom-pacman,
+#mpris {
     font-size: 24px;
     color: @primary;
-    border-radius: 8px;
+    border-radius: 999px;
+    border: 1px solid @outline_variant;
     background: @surface_container_high;
     margin: 16px 4px;
     padding: 2px 12px;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.8);
     transition:
         background-color 200ms ease,
         color 200ms ease,
@@ -114,7 +120,9 @@
 #custom-wallpaper:hover,
 #custom-menu:hover,
 #custom-notification:hover,
-#custom-clipboard:hover {
+#custom-clipboard:hover,
+#mpris:hover,
+#custom-pacman:hover {
     background: @primary;
     color: @surface_container_high;
     transition:
@@ -125,6 +133,18 @@
 
 #tray {
     padding: 0 10px;
+}
+
+#mpris {
+    font-size: 20px;
+}
+
+#mpris.paused:hover {
+    color: @surface_container_high;
+}
+
+#mpris.paused {
+    color: rgba(255, 255, 255, 0.3);
 }
 
 
