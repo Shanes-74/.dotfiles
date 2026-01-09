@@ -1,6 +1,6 @@
 * {
     font-weight: 500;
-    font-family: "SF Pro Text", sans-serif
+    font-family: "Google Sans Display", sans-serif;
 }
 
 @define-color accent_color {{colors.primary.default.hex}};
