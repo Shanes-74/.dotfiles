@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+
+import subprocess
+import os
+from pathlib import Path
+
+# --- CONFIGURAÇÕES DE CAMINHO ---
+# Path.home() garante o caminho completo /home/usuario/ sem depender do shell
+HOME = Path.home()
+MODULES_DIR = HOME / ".config/hypr/modules"
+
+# Definimos o caminho do tema. Se você usa Stow, o link costuma estar aqui:
+TEMA_ROFI = HOME / ".config/rofi/rofi.rasi"
+
+# Caso o link acima falhe, o script tentará buscar direto na fonte dos dotfiles
+TEMA_DOTFILES = HOME / ".dotfiles/.config/rofi/rofi.rasi"
+
+MODULOS = {
+    "animacoes": "video-display-symbolic",
+    "aparencia": "preferences-desktop-symbolic",
+    "atalhos": "input-keyboard-symbolic",
+    "entradas": "input-mouse-symbolic",
+    "iniciar": "system-run-symbolic",
+    "janelas": "window-new-symbolic",
+    "monitor": "video-display-symbolic",
+    "permissoes": "system-lock-screen-symbolic",
+    "programas": "application-x-executable-symbolic",
+    "variaveis": "preferences-system-symbolic"
+}
+
+def run():
+    # 1. Filtra apenas os módulos que possuem arquivos .conf reais
+    lista_rofi = []
+    for mod, icon in MODULOS.items():
+        if (MODULES_DIR / f"{mod}.conf").exists():
+            # Formato: Nome\0icon\x1ficone
+            lista_rofi.append(f"{mod.capitalize()}\0icon\x1f{icon}")
+
+    if not lista_rofi:
+        return
+
+    input_str = "\n".join(lista_rofi)
+
+    # 2. Determina qual arquivo de tema usar (priorizando o que existir)
+    tema_selecionado = str(TEMA_ROFI) if TEMA_ROFI.exists() else str(TEMA_DOTFILES)
+
+    # 3. Monta o comando do Rofi
+    # -no-config: Ignora o carregamento automático de arquivos que podem estar com link quebrado
+    # -theme: Força o caminho absoluto do tema encontrado
+    command = [
+        "rofi",
+        "-no-config",
+        "-dmenu",
+        "-i",
+        "-p", "Módulos Hypr",
+        "-show-icons",
+        "-theme", tema_selecionado
+    ]
+
+    # 4. Configura o ambiente para o SwayNC (garante reconhecimento do Hyprland)
+    env = os.environ.copy()
+    env["XDG_CURRENT_DESKTOP"] = "Hyprland"
+    env["XDG_CONFIG_HOME"] = str(HOME / ".config")
+
+    try:
+        process = subprocess.run(
+            command,
+            input=input_str,
+            capture_output=True,
+            text=True,
+            env=env
+        )
+        selection = process.stdout.strip()
+    except Exception as e:
+        print(f"Erro ao disparar o Rofi: {e}")
+        return
+
+    # 5. Se houver seleção, abre o Kitty + Micro
+    if selection:
+        filename = f"{selection.lower()}.conf"
+        file_path = MODULES_DIR / filename
+        
+        # Executa o terminal com o editor
+        subprocess.run(["kitty", "-e", "micro", str(file_path)])
+
+if __name__ == "__main__":
+    run()
