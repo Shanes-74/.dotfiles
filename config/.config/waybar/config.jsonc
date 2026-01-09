@@ -12,7 +12,8 @@
     // Choose the order of the modules
     "modules-left": [
         "custom/menu",
-        "clock"
+        "clock",
+        "mpris"
     ],
     "modules-center": [
         "custom/wallpaper",
@@ -21,6 +22,7 @@
     ],
     "modules-right": [
         "tray",
+        "custom/pacman",
         "custom/clipboard",
         "pulseaudio",
         "network",
@@ -37,8 +39,20 @@
         }
     },
     
+    "mpris": {
+    "player": "spotify",
+    "format": "  {artist} - {title}",
+    "format-paused": "  {artist} - {title}",
+    "tooltip-format": "{album} - {title}\n{artist}",
+    "max-length": 30,
+    "on-click": "playerctl -p spotify play-pause",
+    "on-scroll-up": "playerctl -p spotify next",
+    "on-scroll-down": "playerctl -p spotify previous",
+    "on-click-right": "spotwindow"
+    },
+
     "tray": {
-        "icon-size": 26,
+        "icon-size": 24,
         "spacing": 10
     },
 
@@ -70,8 +84,9 @@
         // ATENÇÃO: format-icons deve ser um OBJETO, não uma LISTA
         "format-icons": ["", "", "", "", ""],
     
-        "tooltip-format": "{capacity}% - Descarregado em: {time}", 
+        "tooltip-format": "{capacity}% - Descarregado em: {time}",
         "tooltip-format-charging": "{capacity}% - Carregado em: {time}",
+
     },
         
     "network": {
@@ -94,6 +109,9 @@
         "format-source": "",
         "format-source-muted": "",
         "on-click": "pavucontrol",
+        "on-click-right": "swayosd-client --output-volume mute-toggle",
+        "on-scroll-up": "swayosd-client --output-volume +5",
+        "on-scroll-down": "swayosd-client --output-volume -5",
         "format-icons": {
             "headphone": "",
             "hands-free": "",
@@ -103,11 +121,11 @@
             "car": "",
             "default": ["", "", ""]
         },
-        "tooltip-format": "{desc}: {volume}%",
+        "tooltip-format": "{desc}",
     },
     
     "custom/menu": {
-        "on-click": "rofi -show drun & sleep 0.2 && hyprctl reload",
+        "on-click": "rofi -show drun",
         "format": "󰣇",
         "tooltip": false
     },
@@ -119,7 +137,7 @@
     },
 
     "custom/wallpaper": {
-        "on-click": "walselect",
+        "on-click": "~/.config/scripts/wallpaper/wallmenu.py",
         "format": "󰸉",
         "tooltip": false
     },
@@ -143,11 +161,23 @@
     "on-click": "swaync-client -t -sw",
     "on-click-right": "swaync-client -d -sw",
     "escape": true
-  },
+    },
 
   "custom/clipboard": {
         "format": "󰨸",
         "on-click": "cliphist list | rofi -dmenu -display-columns 2 | cliphist decode | wl-copy",
         "tooltip": false
+    },
+
+    "custom/pacman": {
+    "format": "{icon}{0}",
+    "return-type": "json",
+    "format-icons": {
+        "pending-updates": " ",
+        "updated": ""          
+    },
+    "exec-if": "which waybar-updates",
+    "exec": "waybar-updates",
+    "on-click": "kitty sudo pacman -Syu",
     }
 }
