@@ -1,10 +1,13 @@
 @import 'colors.css';
 
-/* Janela OSD */
+/* Janela OSD Principal */
 window#osd {
-  border-radius: 8px;
-  border: none;
-  background: @surface_container;
+  border-radius: 999px; /* Cantos arredondados M3 */
+  background: @surface_container_high;
+  border: 1px solid @outline_variant;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.8);
+  margin: 10px;
+  padding: 4px;
 }
 
 /* Conteúdo interno */
@@ -12,38 +15,37 @@ window#osd #container {
   margin: 16px;
 }
 
-/* Ícones e texto */
-window#osd image,
+/* Ícones e Texto */
+window#osd image {
+  color: @primary;
+  font-size: 24px;
+  margin-right: 12px;
+}
+
 window#osd label {
   color: @on_surface;
+  font-weight: bold;
+  margin-left: 12px;
 }
 
-/* Estados desativados */
-window#osd progressbar:disabled,
-window#osd image:disabled {
-  opacity: 0.5;
-}
-
-/* Barra de progresso */
+/* Barra de progresso - O AJUSTE ESTÁ AQUI */
 window#osd progressbar {
-  min-height: 6px;
+  min-height: 12px;
+  min-width: 200px; /* Isso garante que a barra seja longa e não uma pílula curta */
   border-radius: 999px;
   background: transparent;
-  border: none;
 }
 
 /* Fundo da barra */
 window#osd trough {
   min-height: inherit;
   border-radius: inherit;
-  border: none;
-  background: alpha(@on_surface, 0.3);
+  background: @surface_variant;
 }
 
 /* Progresso ativo */
 window#osd progress {
   min-height: inherit;
   border-radius: inherit;
-  border: none;
   background: @primary;
 }
