@@ -1,30 +1,40 @@
 @import "colors.rasi"
 
+configuration {
+    disable-history: true;
+    show-icons: true;
+}
+
 window {
-    width:            28%; 
-    transparency:     "real";
-    background-color: @surface-container;
-    border:           2px; 
-    border-color:     @primary; 
-    border-radius:    8px; 
+    width:            28%;
+    transparency:     "real"; 
+    background-color: #00000050; 
+    border:           6px;                  /* pseudo-sombra */
+    border-color:     #00000040;          /* preto semi-transparente */
+    border-radius:    22px;                 
     font:             "Google Sans Display Medium 14";
 }
 
 mainbox {
+    /* Mantendo exatamente como estava */
+    background-color: @surface-container-high;
+    border:           1px;
+    border-color:     @outline-variant;
+    border-radius:    20px;
+    margin:           -1px; 
+    padding:          20px;
     children:         [inputbar, message, listview]; 
     spacing:          15px; 
-    padding:          20px 0; 
-    background-color: transparent;
 }
 
 inputbar {
     border:           1px; 
-    border-color:     @primary;
-    border-radius:    8px; 
-    margin:           4px 24px; 
-    padding:          20px; 
-    background-color: @surface-container-high;
-    children:         [prompt, textbox-prompt-colon, entry, case-indicator]; 
+    border-color:     @outline-variant;
+    border-radius:    999px; 
+    margin:           0 10px; 
+    padding:          12px 20px; 
+    background-color: @surface-container-highest;
+    children:         [prompt, textbox-prompt-colon, entry]; 
 }
 
 prompt {
@@ -34,8 +44,7 @@ prompt {
 
 textbox-prompt-colon {
     expand:           false; 
-    str:              ":"; 
-    margin:           0 1ch 0 0; 
+    str:              ": "; 
     text-color:       @on-surface-variant;
     background-color: transparent;
 }
@@ -43,50 +52,37 @@ textbox-prompt-colon {
 entry {
     text-color:       @on-surface;
     background-color: transparent;
-}
-
-case-indicator {
-    text-color:       @error;
-    background-color: transparent;
-}
-
-message {
-    border:           1px 0; 
-    border-color:     @primary;
-    background-color: @surface-container-low;
+    placeholder:      "Procurar...";
+    placeholder-color: @on-surface-variant;
 }
 
 listview {
     lines:            10; 
     scrollbar:        false; 
-    margin:           0 20px; 
+    margin:           0 10px; 
     background-color: transparent;
-    
-    /* Scrollbar com cor Primary */
-    handle-color:     @primary;
-    handle-width:     6px;
+    fixed-height:     false;
 }
 
 element {
-    padding:          10px; 
-    spacing:          5px; 
-    highlight:        bold underline; 
-    children:         [element-icon, element-text]; 
+    padding:          12px; 
+    spacing:          12px; 
+    border-radius:    999px; 
     background-color: transparent;
 }
 
 element-icon {
-    size:             28px;
-    preserve-aspect:  true;
+    size:             32px;
     background-color: transparent;
 }
 
-
-element-text, element-icon {
-    background-color: inherit; 
+element-text {
+    background-color: transparent; 
     text-color:       inherit;
     vertical-align:   0.5;
 }
+
+/* --- ESTADOS DE SELEÇÃO --- */
 
 element normal normal {
     text-color:       @on-surface; 
@@ -94,8 +90,7 @@ element normal normal {
 
 element selected normal {
     background-color: @primary; 
-    text-color:       @on-primary; 
-    border-radius:    8px; 
+    text-color:       @on-primary;
 }
 
 element alternate normal {
@@ -103,20 +98,8 @@ element alternate normal {
     text-color:       @on-surface; 
 }
 
-element normal urgent, element alternate urgent {
-    text-color:       @error; 
-}
-
-element selected urgent {
-    background-color: @error-container;
-    text-color:       @on-error-container;
-}
-
-element normal active, element alternate active {
-    text-color:       @tertiary; 
-}
-
-element selected active {
-    background-color: @tertiary-container;
-    text-color:       @on-tertiary-container;
+message {
+    padding:          10px;
+    background-color: @surface-container-low;
+    border-radius:    12px;
 }
