@@ -15,20 +15,18 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
-
-export PATH=$PATH:/home/shane/.spicetify
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
 # ALIAS
 alias s='paru -Ss'
-alias u='paru -Syu'
 alias i='paru -S'
 alias r='paru -Rns'
+alias up='paru -Syu'
 alias sq='paru -Qs'
+alias rpo='sudo pacman -Rns $(pacman -Qtdq)'
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
