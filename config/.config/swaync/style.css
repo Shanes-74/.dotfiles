@@ -5,27 +5,29 @@
   font-family: "Google Sans Display", "JetBrainsMono Nerd Font Propo";
   font-weight: 500;
   color: @on_surface;
+  border-color: none;
   transition:
-        background-color 100ms ease,
-        color 100ms ease,
-        border-color 100ms ease
+        background-color 200ms ease,
+        color 200ms ease,
+        border-color 200ms ease,
+        transform 200ms ease,
+        box-shadow 200ms ease
 }
 
 .control-center {
   background-color: @surface_container_high;
-  border: 3px solid @primary;
-  border-radius: 8px;
+  border: 1px solid @outline_variant;
+  border-radius: 20px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.8);
-  transition: background-color 0.1s ease;
-  padding: 5px;
+  padding: 6px;
   margin: -10px;
 }
 
 /* --- NOTIFICAÇÕES --- */
 .notification {
   background-color: @surface_container_high;
-  border: 3px solid @primary;
-  border-radius: 8px;
+  border: 1px solid @outline_variant;
+  border-radius: 20px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.8);
   transition: background-color 0.1s ease;
   padding: 10px;
@@ -33,9 +35,9 @@
 }
 
 .notification:hover {
-  /* Tom levemente mais claro ao passar o mouse */
-  background-color: @surface_container_high;
-}
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.8),
+  inset 0 0 12px 0 alpha(@primary, 0.4);
+  }
 
 .notification-group {
   background: transparent;
@@ -64,10 +66,10 @@
 
 /* Botão de fechar da notificação */
 .close-button {
-  background: @primary_container;
-  color: @on_primary_container;
+  background: @surface_container;
+  color: white;
   padding: 0;
-  border-radius: 8px;
+  border-radius: 999px;
   margin-top: 14px;
   margin-right: 8px;
   min-width: 24px;
@@ -78,7 +80,12 @@
 
 .close-button:hover {
   background: @error;
-  color: @on_error;
+  color: @surface_container;
+}
+
+.close-button:hover label,
+.close-button:hover image {
+  color: black;
 }
 
 /* --- WIDGETS (Títulos e Botões) --- */
@@ -89,85 +96,121 @@
   margin-bottom: 10px;
 }
 
+/* --- GRID DE BOTÕES (ESTILO ANDROID) --- */
+.widget-buttons-grid {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  margin: 12px;
+  border-radius: 24px;
+}
+
 .widget-buttons-grid button {
   background: @secondary_container;
   color: @on_secondary_container;
-  border: 2px solid @primary;
-  margin: 0;
-  padding: 5px 10px;
+  border: 1px solid @primary;
+  margin: 6px;
+  padding: 8px 16px; 
   font-size: 16px;
-  border-radius: 8px;
+  border-radius: 12px;
   transition: all 0.2s ease;
 }
 
+/* --- CORREÇÃO DEFINITIVA DO HOVER NO GRID --- */
 .widget-buttons-grid button:hover {
-  color: @on_primary;
   background: @primary;
-  border: 2px solid @surface_container;
+  border: 1px solid @on_primary;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px) scale(1.02);
 }
 
-/* --- SLIDERS (Volume e Brilho) --- */
-scale.horizontal {
-  border-radius: 8px;
-  margin: 8px 0;
+/* Alvos específicos para texto e ícone dentro do botão do grid */
+.widget-buttons-grid button:hover label,
+.widget-buttons-grid button:hover image,
+.wi{
+  color: @on_primary;
 }
 
-/* Fundo da barra (o caminho) */
+switch {
+  border-radius: 999px;
+  border: 1px solid @outline;
+  background-color: @surface_container_highest;
+  transition: all 200ms ease;
+}
+
+switch:checked {
+  background-color: @primary;
+  border: 1px solid @primary;
+}
+
+switch slider {
+  margin: 2px;
+  min-width: 18px;
+  min-height: 18px;
+  background-color: @outline;
+  border-radius: 999px;
+  transition: all 200ms ease;
+}
+
+switch:checked slider {
+  background-color: @on_primary;
+  transform: translateX(2px); /* Ajuste conforme o tamanho do seu switch */
+}
+
+/* --- SLIDERS --- */
+.widget-volume, .widget-backlight {
+  margin: 4px 10px;
+}
+
 scale.horizontal trough {
   background-color: @surface_container_highest;
   border: 1px solid @outline_variant;
-  border-radius: 8px;
-  min-height: 12px;
+  border-radius: 10px;
+  min-height: 10px;
 }
 
-/* Parte preenchida da barra */
 .widget-volume scale trough highlight,
 .widget-backlight scale trough highlight {
   background: @primary;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
-/* O "Círculo/Botão" de arrastar */
 scale slider {
   background-color: @primary;
   border-radius: 999px;
-  padding: 0 8px;
-  margin: -13px;
-  box-shadow: none;
+  padding: 0px 10px;
+  margin: -10px;
+  min-height: 18px;
+  min-width: 8px;
   border: 2px solid @surface_container;
-  outline: none;
 }
 
-/* Hover no Círculo */
-.widget-volume scale slider:hover,
-.widget-backlight scale slider:hover {
-  background: @surface_container_bright;
+scale slider:hover {
+  background-color: transparent;
   border: 2px solid @primary;
-  padding: 0 12px;
-  margin: -16px;
+  transform: scale(1.2);
 }
 
-/* Botão de Sink (Saída de Áudio) */
+/* --- BOTÃO DE SAÍDA DE ÁUDIO --- */
 .widget-volume > box > button {
   background: @secondary_container;
   border: 2px solid @primary;
   border-radius: 8px;
   color: @on_secondary_container;
-  margin-left: 10px;
-  padding: 6px;
-  margin: 14px 10px;
+  padding: 4px;
 }
 
 .widget-volume > box > button:hover {
   background: @primary;
+}
+
+/* Garante que o ícone dentro do botão de volume mude no hover */
+.widget-volume > box > button:hover image,
+.widget-volume > box > button:hover label {
   color: @on_primary;
 }
 
 /* --- SCROLLBAR --- */
-scrollbar,
-scrollbar slider,
-scrollbar trough {
-  /* Mantendo oculto conforme seu original, mas mapeado para cores neutras caso decida usar */
+scrollbar, scrollbar slider, scrollbar trough {
   background: transparent;
   color: transparent;
   border: none;
