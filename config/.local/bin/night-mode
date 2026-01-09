@@ -1,24 +1,11 @@
 #!/usr/bin/env bash
 
-NOTIFY_ID_FILE="/tmp/nightlight-notify-id"
-
-notify_start() {
-    notify-send -p -t 2000 "Luz Noturna" "$1" > "$NOTIFY_ID_FILE"
-}
-
-notify_update() {
-    if [ -f "$NOTIFY_ID_FILE" ]; then
-        notify-send -r "$(cat "$NOTIFY_ID_FILE")" -t 2000 "Luz Noturna" "$1"
-    else
-        notify_start "$1"
-    fi
-}
-
 # ───────── Toggle ─────────
 if pgrep -x hyprsunset > /dev/null; then
     killall hyprsunset
-    notify_update "Off"
+    swayosd-client --custom-message="Luz noturna: Off" --custom-icon="night-light-symbolic"
 else
+    # Ajuste a temperatura conforme sua preferência
     hyprsunset -t 5200 & disown
-    notify_update "On"
+    swayosd-client --custom-message="Luz noturna: On" --custom-icon="night-light-symbolic"
 fi
