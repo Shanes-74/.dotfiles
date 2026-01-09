@@ -23,6 +23,13 @@ export PATH=$PATH:/home/shane/.spicetify
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+# ALIAS
+alias s='paru -Ss'
+alias u='paru -Syu'
+alias i='paru -S'
+alias r='paru -Rns'
+alias sq='paru -Qs'
+
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -126,7 +133,6 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-
 
 # --------------------------------------------------
 # Powerlevel10k theme
