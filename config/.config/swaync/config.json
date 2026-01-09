@@ -1,5 +1,4 @@
 {
-  "$schema": "/etc/xdg/swaync/configSchema.json",
   "positionX": "right",
   "positionY": "top",
   "layer-shell-cover-screen": true,
@@ -8,9 +7,9 @@
   "control-center-layer": "overlay",
   "cssPriority": "user",
   "control-center-width": 400,
-  "control-center-height": 956,
+  "control-center-height": 954,
   "control-center-margin-top": 28,
-  "control-center-margin-bottom": 0,
+  "control-center-margin-bottom": 28,
   "control-center-margin-right": 28,
   "control-center-margin-left": 0,
   "notification-window-width": 400,
@@ -73,19 +72,23 @@
       "actions": [
         {
           "label": "",
-          "command": "nmgui"
+          "command": "exec nmgui"
         },
         {
           "label": "",
-          "command": "blueman-manager"
+          "command": "exec blueman-manager"
         },
         {
           "label": "",
-          "command": "pavucontrol"
+          "command": "exec pavucontrol"
         },
         {
           "label": "󰖔",
-          "command": "night-mode"
+          "command": "exec night-mode"
+        },
+        {
+          "label": "",
+          "command": "exec config"
         }
       ]
     }
