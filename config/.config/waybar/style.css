@@ -3,7 +3,7 @@
 * {
     font-family: "Google Sans Display", "JetBrainsMono Nerd Font Propo";
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 700;
     transition:
         background-color 75ms ease,
         color 75ms ease,
@@ -17,10 +17,10 @@
 
 
 #workspaces {
-    background: @surface_container_high;
+    background: @surface_container;
     margin: 16px 2px;
     padding: 0px;
-    border-radius: 999px;
+    border-radius: 9999px;
     border: 1px solid @outline_variant;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.8);
 }
@@ -30,8 +30,8 @@
     font-weight: bold;
     color: @on_surface_variant;
     border: 3px solid @primary;
-    background: @surface_container_high;
-    border-radius: 999px;
+    background: @surface_container;
+    border-radius: 9999px;
     margin: 8px;
     padding: 0 4px;
 }
@@ -96,13 +96,13 @@
 #custom-clipboard,
 #custom-pacman,
 #mpris {
-    font-size: 24px;
+    font-size: 22px;
     color: @primary;
-    border-radius: 999px;
+    border-radius: 9999px;
     border: 1px solid @outline_variant;
-    background: @surface_container_high;
+    background: @surface_container;
     margin: 16px 4px;
-    padding: 2px 12px;
+    padding: 2px 14px;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.8);
     transition:
         background-color 200ms ease,
@@ -138,13 +138,11 @@
 #mpris {
     font-size: 20px;
 }
-
-#mpris.paused:hover {
-    color: @surface_container_high;
-}
-
 #mpris.paused {
-    color: rgba(255, 255, 255, 0.3);
+    color: alpha(@on_surface_variant,.5);
+}
+#mpris.paused:hover {
+    color: alpha(@surface_container_high,.5);
 }
 
 
