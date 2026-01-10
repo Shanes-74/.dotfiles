@@ -1,26 +1,13 @@
 #!/usr/bin/env bash
 
-LOCK_FILE="/tmp/hyprsunset_toggle.lock"
-INTERVALO=1  # Tempo em segundos para permitir nova execução
-
-# Verifica se o script foi executado recentemente
-if [ -f "$LOCK_FILE" ]; then
-    exit 0
-fi
-
-# Cria a trava
-touch "$LOCK_FILE"
-
-# ───────── Toggle ─────────
+# ───────── Toggle Instantâneo ─────────
 if pgrep -x hyprsunset > /dev/null; then
     killall hyprsunset
-    swayosd-client --custom-icon="night-light-symbolic" --custom-message="Luz noturna: Off"
+    # Ícone de "Sol" ou brilho para indicar que a luz noturna saiu
+    swayosd-client --custom-icon="display-brightness-symbolic" --custom-message="Luz noturna: Off"
 else
     # Ajuste a temperatura conforme sua preferência
     hyprsunset -t 5200 & disown
-    swayosd-client --custom-icon="night-light-symbolic" --custom-message="Luz noturna: On "
+    # Ícone de "Lua" para indicar modo noturno ativo
+    swayosd-client --custom-icon="night-light-symbolic" --custom-message="Luz noturna: On"
 fi
-
-# Aguarda o intervalo e remove a trava
-sleep "$INTERVALO"
-rm -f "$LOCK_FILE"
