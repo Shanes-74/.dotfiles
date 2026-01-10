@@ -72,23 +72,23 @@
       "actions": [
         {
           "label": "",
-          "command": "exec nmgui"
+          "command": "swaync-client -cp && nmgui"
         },
         {
-          "label": "",
-          "command": "exec blueman-manager"
+          "label": "󰂯",
+          "command": "swaync-client -cp && blueman-manager"
         },
         {
           "label": "",
-          "command": "exec pavucontrol"
+          "command": "swaync-client -cp && pavucontrol"
         },
         {
           "label": "󰖔",
-          "command": "exec night-mode"
+          "command": "night-mode"
         },
         {
           "label": "",
-          "command": "exec config"
+          "command": "swaync-client -cp && config"
         }
       ]
     }
