@@ -13,7 +13,7 @@
 /* Janela OSD Principal */
 window#osd {
   /* No M3, os cantos são arredondados, mas não necessariamente uma pílula completa para a janela */
-  border-radius: 28px; 
+  border-radius: 9999px; 
   background: @surface_container;
   /* Retirando a borda pesada para um look mais limpo */
   border: 1px solid @outline_variant;
