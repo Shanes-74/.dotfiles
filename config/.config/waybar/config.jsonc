@@ -40,15 +40,15 @@
     },
     
     "mpris": {
-    "player": "spotify",
-    "format": "  {artist} - {title}",
-    "format-paused": "  {artist} - {title}",
-    "tooltip-format": "{album} - {title}\n{artist}",
-    "max-length": 30,
-    "on-click": "playerctl -p spotify play-pause",
-    "on-scroll-up": "playerctl -p spotify next",
-    "on-scroll-down": "playerctl -p spotify previous",
-    "on-click-right": "spotwindow"
+        "player": "spotify",
+        "format": "  {artist} - {title}",
+        "format-paused": "  {artist} - {title}",
+        "tooltip-format": "{album} - {title}\n{artist}",
+        "max-length": 30,
+        "on-click": "playerctl -p spotify play-pause",
+        "on-scroll-up": "playerctl -p spotify next",
+        "on-scroll-down": "playerctl -p spotify previous",
+        "on-click-right": "spotwindow"
     },
 
     "tray": {
@@ -59,7 +59,7 @@
     "clock": {
         "timezone": "America/Sao_Paulo",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format": "{:%I:%M}",
+        "format": "{:%H:%M}",  // %H define o formato de 24h
         "on-click-right": "gnome-calendar",
         "format-alt": "{:%d/%m/%y}"
     },
@@ -76,9 +76,9 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "{icon}", // Padrão (descarregando)
+        "format": "{icon} {capacity}%", // Padrão (descarregando)
         "format-full": "{icon}",
-        "format-charging": "{icon}", // Use "{icon}" para o ícone animado/graduado
+        "format-charging": "{icon} {capacity}%", // Use "{icon}" para o ícone animado/graduado
         "format-plugged": "", // Opcional: Se quiser um ícone estático quando estiver ligado/cheio
     
         // ATENÇÃO: format-icons deve ser um OBJETO, não uma LISTA
@@ -86,7 +86,7 @@
     
         "tooltip-format": "{capacity}% - Descarregado em: {time}",
         "tooltip-format-charging": "{capacity}% - Carregado em: {time}",
-
+        "interval": 5
     },
         
     "network": {
@@ -97,7 +97,7 @@
         "format-linked": "",
         "format-disconnected": "⚠",
         "on-click": "nmgui",
-        "tooltip-format": "{essid} ({signalStrength}%)\n{ipaddr}",
+        "tooltip-format": "{essid} ({signalStrength}%)\n{ipaddr}"
     },
 
     "pulseaudio": {
@@ -121,7 +121,7 @@
             "car": "",
             "default": ["", "", ""]
         },
-        "tooltip-format": "{desc}",
+        "tooltip-format": "{desc}"
     },
     
     "custom/menu": {
@@ -174,10 +174,11 @@
     "return-type": "json",
     "format-icons": {
         "pending-updates": " ",
-        "updated": ""          
+        "updated": ""          
     },
     "exec-if": "which waybar-updates",
     "exec": "waybar-updates",
     "on-click": "kitty sudo pacman -Syu",
+    "hide-if-empty": true
     }
 }
