@@ -1,0 +1,176 @@
+/* --- 1. Configurações Globais e Fonte --- */
+* {
+    font-weight: 500;
+    font-family: "Google Sans Display", sans-serif;
+}
+
+/* --- 2. Definições de Cores (Template Matugen) --- */
+/* Ajustei o accent_bg_color para usar 'primary' em vez de 'primary_container' 
+   para garantir que os botões fiquem com a cor forte e não desbotada */
+@define-color accent_color {{colors.primary.default.hex}};
+@define-color accent_bg_color {{colors.primary.default.hex}};
+@define-color accent_fg_color {{colors.on_primary.default.hex}};
+
+@define-color destructive_color {{colors.error.default.hex}};
+@define-color destructive_bg_color {{colors.error_container.default.hex}};
+@define-color destructive_fg_color {{colors.on_error_container.default.hex}};
+
+@define-color success_color {{colors.secondary.default.hex}};
+@define-color success_bg_color {{colors.secondary_container.default.hex}};
+@define-color success_fg_color {{colors.on_secondary_container.default.hex}};
+
+@define-color warning_color {{colors.tertiary.default.hex}};
+@define-color warning_bg_color {{colors.tertiary_container.default.hex}};
+@define-color warning_fg_color {{colors.on_tertiary_container.default.hex}};
+
+@define-color error_color {{colors.error.default.hex}};
+@define-color error_bg_color {{colors.error_container.default.hex}};
+@define-color error_fg_color {{colors.on_error_container.default.hex}};
+
+@define-color window_bg_color {{colors.surface.default.hex}};
+@define-color window_fg_color {{colors.on_surface.default.hex}};
+
+@define-color view_bg_color {{colors.surface.default.hex}};
+@define-color view_fg_color {{colors.on_surface.default.hex}};
+
+@define-color headerbar_bg_color @window_bg_color;
+@define-color headerbar_fg_color @window_fg_color;
+@define-color headerbar_border_color @window_bg_color;
+@define-color headerbar_backdrop_color @window_bg_color;
+@define-color headerbar_shade_color @window_bg_color;
+
+@define-color card_bg_color {{colors.surface_container_high.default.hex}};
+@define-color card_fg_color {{colors.on_surface.default.hex}};
+@define-color card_shade_color rgba(0, 0, 0, 0.07);
+
+@define-color dialog_bg_color @card_bg_color;
+@define-color dialog_fg_color @card_fg_color;
+
+@define-color popover_bg_color @card_bg_color;
+@define-color popover_fg_color @card_fg_color;
+
+@define-color shade_color rgba(0, 0, 0, 0.36);
+@define-color scrollbar_outline_color rgba(139, 145, 152, 0.5);
+
+@define-color sidebar_bg_color {{colors.surface_container_low.default.hex}};
+@define-color secondary_sidebar_bg_color @sidebar_bg_color;
+@define-color sidebar_backdrop_color @sidebar_bg_color;
+@define-color secondary_sidebar_backdrop_color @sidebar_bg_color;
+
+
+/* --- GTK4 / libadwaita bridge (necessário p/ GNOME Calendar - dia atual) --- */
+/* GNOME Calendar ignora @define-color e usa apenas CSS variables */
+:root {
+    --accent-bg-color: @accent_bg_color;
+    --accent-fg-color: @accent_fg_color;
+    --accent-color: @accent_color;
+}
+
+
+/* --- 3. Correções de Widgets (Remoção do Azul Padrão) --- */
+
+/* Abas e Navegação (A linha embaixo de "Dispositivos de saída") */
+stackswitcher button:checked,
+stackswitcher button.active {
+    color: @accent_color;
+    box-shadow: inset 0 -3px 0 0 @accent_color;
+}
+
+notebook > header > tabs > tab:checked {
+    box-shadow: inset 0 -3px 0 0 @accent_color;
+    color: @accent_color;
+}
+
+/* Botões de ação sugerida (ex: botão de igual da calculadora, botão "Salvar") */
+button.suggested-action {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+    border-color: @accent_bg_color;
+}
+
+/* Switches (interruptores de Wi-Fi, Bluetooth) quando ligados */
+switch:checked {
+    background-color: @accent_bg_color;
+    border-color: @accent_bg_color;
+}
+switch:checked slider {
+    background-color: @accent_fg_color;
+}
+
+/* Checkboxes e Radio buttons */
+check:checked, radio:checked {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+    border-color: @accent_bg_color;
+}
+
+/* Barras de progresso e Sliders de volume/brilho */
+progressbar progress {
+    background-color: @accent_bg_color;
+    border-color: @accent_bg_color;
+}
+scale highlight {
+    background-color: @accent_bg_color;
+}
+
+/* Seleção de texto e itens em listas */
+selection {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+}
+:selected {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+}
+
+/* Calendário: Dia selecionado */
+calendar-view:selected {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+}
+.highlight {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+}
+
+/* Calendário: Dia atual (Marcador "Hoje") */
+/* GTK4 ignora esses seletores, mas mantidos por compatibilidade */
+calendar-view:indeterminate {
+    color: @accent_color;
+    box-shadow: inset 0 0 0 1px @accent_color;
+}
+.calendar-today-indicator,
+calendar-view .today-indicator {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+}
+
+/* Links e Labels clicáveis */
+link {
+    color: @accent_color;
+}
+label.link {
+    color: @accent_color;
+}
+
+/* Entry fields (Borda ao digitar) */
+entry:focus {
+    border-color: @accent_bg_color;
+}
+
+/* Remove o anel de foco azul padrão global */
+*:focus {
+    outline-color: alpha(@accent_color, 0.5);
+}
+
+
+/* --- 4. Ajustes de Layout e Janela --- */
+headerbar.default-decoration {
+    margin-bottom: 50px;
+    margin-top: -100px;
+}
+
+window.csd,
+window.csd decoration {
+    box-shadow: none;
+}
