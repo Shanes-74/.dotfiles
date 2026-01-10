@@ -1,2 +1,129 @@
 @import url('libadwaita.css');
 @import url('libadwaita-tweaks.css');
+@import 'colors.css';
+
+* {
+    font-weight: 500;
+    font-family: "Google Sans Display", sans-serif;
+    transition: background-color 200ms ease-in-out, border-radius 200ms ease-in-out;
+}
+
+
+
+dialog button,
+.dialog-action-area button,
+messagedialog button {
+    background-color: @card_bg_color;
+    color: @window_fg_color;
+    border-radius: 9999px;
+    padding: 8px 20px;
+    margin: 4px;
+}
+
+button.suggested-action {
+    background-color: @accent_bg_color !important;
+    color: @accent_fg_color !important;
+}
+
+entry {
+    border-radius: 12px;
+    padding: 8px;
+}
+
+
+
+card,
+.card,
+popover contents {
+    border-radius: 24px;
+    padding: 12px;
+}
+
+dialog {
+    border-radius: 24px;
+    padding: 0;
+}
+
+dialog > box {
+    padding: 12px;
+}
+
+
+
+stackswitcher button:checked,
+stackswitcher button.active {
+    color: @accent_color;
+    box-shadow: inset 0 -3px 0 0 @accent_color;
+    border-radius: 12px 12px 0 0;
+}
+
+notebook > header > tabs > tab:checked {
+    box-shadow: inset 0 -3px 0 0 @accent_color;
+    color: @accent_color;
+}
+
+switch {
+    border-radius: 9999px;
+}
+
+switch:checked {
+    background-color: @accent_bg_color;
+    border-color: @accent_bg_color;
+}
+
+switch:checked slider {
+    background-color: @accent_fg_color;
+    margin: 2px;
+}
+
+check,
+radio {
+    border-radius: 8px;
+}
+
+radio {
+    border-radius: 9999px;
+}
+
+check:checked,
+radio:checked {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+    border-color: @accent_bg_color;
+}
+
+progressbar progress,
+scale highlight {
+    border-radius: 9999px;
+}
+
+progressbar progress {
+    background-color: @accent_bg_color;
+    border-color: @accent_bg_color;
+}
+
+selection,
+:selected,
+.highlight {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+    border-radius: 12px;
+}
+
+entry:focus {
+    border-color: @accent_bg_color;
+    outline: 2px solid @accent_bg_color;
+}
+
+
+
+headerbar.default-decoration {
+    margin-bottom: 50px;
+    margin-top: -100px;
+}
+
+window.csd,
+window.csd decoration {
+    box-shadow: none;
+    border-radius: 28px;
+}
