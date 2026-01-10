@@ -12,13 +12,17 @@ output_path = '~/.config/waybar/colors.css'
 input_path = '~/.config/matugen/templates/kitty-colors.conf'
 output_path = '~/.config/kitty/colors.conf'
 
-[templates.btop]
-input_path = '~/.config/matugen/templates/btop.theme'
-output_path = '~/.config/btop/themes/matugen.theme'
-
 [templates.rofi]
 input_path = '~/.config/matugen/templates/rofi-colors.rasi'
 output_path = '~/.config/rofi/colors.rasi'
+
+[templates.hyprlock]
+input_path = '~/.config/matugen/templates/hyprland-colors.conf'
+output_path = '~/.config/hypr/colors.conf'
+
+[templates.wlogout]
+input_path = '~/.config/matugen/templates/colors.css'
+output_path = '~/.config/wlogout/colors.css'
 
 [templates.swaync]
 input_path = '~/.config/matugen/templates/colors.css'
@@ -43,3 +47,16 @@ output_path = '~/.config/qt5ct/colors/matugen.conf'
 [templates.qt6ct]
 input_path = '~/.config/matugen/templates/qt-colors.conf'
 output_path = '~/.config/qt6ct/colors/matugen.conf'
+
+[templates.btop]
+input_path = '~/.config/matugen/templates/btop.theme'
+output_path = '~/.config/btop/themes/matugen.theme'
+
+[templates.cava]
+input_path = '~/.config/matugen/templates/cava-colors.ini'
+output_path = '~/.config/cava/themes/matugen'
+
+[templates.micro]
+input_path = '~/.config/matugen/templates/micro.micro'
+output_path = '~/.config/micro/colorschemes/matugen.micro'
+
