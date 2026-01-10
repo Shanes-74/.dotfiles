@@ -1,61 +1,55 @@
-/* =========================
-   WLOGOUT - Preto & Branco
-   ========================= */
+@import "colors.css";
 
 * {
-  all: unset;
-  font-family: "JetBrainsMono Nerd Font", monospace;
-  font-size: 16px;
+    font-family: "Google Sans Display", "JetBrainsMono Nerd Font Propo";
+    font-size: 20px;
+    font-weight: 700;
+	background-image: none;
+	box-shadow: none;
 }
 
-/* Fundo da tela */
 window {
-  background-color: rgba(0, 0, 0, 0.85);
+	background-color: rgba(12, 12, 12, 0.5);
 }
 
-/* Container dos botões */
-#container {
-  padding: 40px;
-}
-
-/* Botões */
 button {
-  background-color: #000000;
-  color: #ffffff;
-  border: 2px solid #ffffff;
-  border-radius: 8px;
-
-  margin: 12px;
-  padding: 20px;
-
-  min-width: 160px;
-  min-height: 160px;
-
-  transition: background-color 0.15s ease,
-              color 0.15s ease,
-              transform 0.1s ease;
+    border-radius: 20px;
+    border-color: black;
+	text-decoration-color: #FFFFFF;
+    color: #FFFFFF;
+	background-color: #1E1E1E;
+	border-style: solid;
+	border-width: 1px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 25%;
 }
 
-/* Hover */
-button:hover {
-  background-color: #ffffff;
-  color: #000000;
-  transform: scale(1.05);
+button:focus, button:active, button:hover {
+	background-color: #3700B3;
+	outline-style: none;
 }
 
-/* Clique */
-button:active {
-  background-color: #dddddd;
-  color: #000000;
+#lock {
+    background-image: image(url("/usr/share/wlogout/icons/lock.png"), url("/usr/local/share/wlogout/icons/lock.png"));
 }
 
-/* Ícone */
-button image {
-  margin-bottom: 10px;
+#logout {
+    background-image: image(url("/usr/share/wlogout/icons/logout.png"), url("/usr/local/share/wlogout/icons/logout.png"));
 }
 
-/* Texto */
-button label {
-  font-size: 14px;
-  letter-spacing: 1px;
+#suspend {
+    background-image: image(url("/usr/share/wlogout/icons/suspend.png"), url("/usr/local/share/wlogout/icons/suspend.png"));
+}
+
+#hibernate {
+    background-image: image(url("/usr/share/wlogout/icons/hibernate.png"), url("/usr/local/share/wlogout/icons/hibernate.png"));
+}
+
+#shutdown {
+    background-image: image(url("/usr/share/wlogout/icons/shutdown.png"), url("/usr/local/share/wlogout/icons/shutdown.png"));
+}
+
+#reboot {
+    background-image: image(url("/usr/share/wlogout/icons/reboot.png"), url("/usr/local/share/wlogout/icons/reboot.png"));
 }
