@@ -1,51 +1,67 @@
 @import 'colors.css';
 
+* {
+    font-family: "Google Sans Display", "JetBrainsMono Nerd Font Propo";
+    font-size: 20px;
+    font-weight: 700;
+    transition:
+        background-color 200ms ease,
+        color 200ms ease,
+        border-color 200ms ease
+}
+
 /* Janela OSD Principal */
 window#osd {
-  border-radius: 999px; /* Cantos arredondados M3 */
-  background: @surface_container_high;
+  /* No M3, os cantos são arredondados, mas não necessariamente uma pílula completa para a janela */
+  border-radius: 28px; 
+  background: @surface_container;
+  /* Retirando a borda pesada para um look mais limpo */
   border: 1px solid @outline_variant;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.8);
-  margin: 10px;
-  padding: 4px;
+  /* Shadow mais suave (Elevation 2 ou 3) */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 12px;
 }
 
 /* Conteúdo interno */
 window#osd #container {
-  margin: 16px;
+  /* Organiza ícone e barra de forma harmônica */
+  margin: 8px;
+  spacing: 12px;
 }
 
-/* Ícones e Texto */
+/* Ícones */
 window#osd image {
-  color: @primary;
-  font-size: 24px;
-  margin-right: 12px;
+  color: @on_surface_variant;
+  font-size: 22px;
+  /* No Android, o ícone costuma ter um peso visual menor que a barra */
 }
 
+/* Texto (caso apareça a porcentagem) */
 window#osd label {
   color: @on_surface;
-  font-weight: bold;
-  margin-left: 12px;
 }
 
-/* Barra de progresso - O AJUSTE ESTÁ AQUI */
+/* Barra de progresso (Slider Estilo Android) */
 window#osd progressbar {
-  min-height: 12px;
-  min-width: 200px; /* Isso garante que a barra seja longa e não uma pílula curta */
-  border-radius: 999px;
+  /* O segredo do Android: barras bem grossas */
+  min-height: 24px; 
+  min-width: 240px;
+  border-radius: 16px;
   background: transparent;
 }
 
-/* Fundo da barra */
+/* Fundo da barra (Trough) */
 window#osd trough {
   min-height: inherit;
   border-radius: inherit;
+  /* Fundo mais discreto */
   background: @surface_variant;
 }
 
-/* Progresso ativo */
+/* Progresso ativo (Progress) */
 window#osd progress {
   min-height: inherit;
   border-radius: inherit;
+  /* A cor vibrante do Material You */
   background: @primary;
 }
