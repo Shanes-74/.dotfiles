@@ -19,7 +19,7 @@ window {
 /* ───────── Layout ───────── */
 
 mainbox {
-    background-color: @surface-container-high;
+    background-color: @surface-container;
     border:           1px;
     border-color:     @outline-variant;
     border-radius:    20px;
