@@ -101,7 +101,7 @@
     },
 
     "pulseaudio": {
-        // "scroll-step": 1, // %, can be a float
+        "scroll-step": 1, // %, can be a float
         "format": "{icon}",
         "format-bluetooth": "󰂱",
         "format-bluetooth-muted": "󰂲",
@@ -132,7 +132,7 @@
 
     "custom/power": {
         "format" : "",
-        "on-click": "wlogout",
+        "on-click": "wlogout -b 4 -T 350 -B 325 -c 10",
 		"tooltip": false
     },
 
