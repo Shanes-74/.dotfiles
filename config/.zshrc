@@ -139,3 +139,12 @@ source ~/.oh-my-zsh/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Define o cursor como bloco piscante
+echo -ne '\e[1 q'
+
+# Garante que ele continue assim ao iniciar novas linhas
+function zle-line-init {
+    echo -ne '\e[1 q'
+}
+zle -N zle-line-init
