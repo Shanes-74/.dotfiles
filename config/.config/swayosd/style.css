@@ -20,6 +20,7 @@ window#osd {
   /* Shadow mais suave (Elevation 2 ou 3) */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   padding: 12px;
+  margin: 12px
 }
 
 /* Conteúdo interno */
