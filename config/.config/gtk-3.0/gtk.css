@@ -1,58 +1,18 @@
 @import 'colors.css';
 
+/* --- Configurações Globais e Fonte --- */
 * {
     font-weight: 500;
     font-family: "Google Sans Display", sans-serif;
-    transition: background-color 200ms ease-in-out, border-radius 200ms ease-in-out;
 }
 
+/* --- Correções de Widgets --- */
 
-
-dialog button,
-.dialog-action-area button,
-messagedialog button {
-    background-color: @card_bg_color;
-    color: @window_fg_color;
-    border-radius: 9999px;
-    padding: 8px 20px;
-    margin: 4px;
-}
-
-button.suggested-action {
-    background-color: @accent_bg_color !important;
-    color: @accent_fg_color !important;
-}
-
-entry {
-    border-radius: 12px;
-    padding: 8px;
-}
-
-
-
-card,
-.card,
-popover contents {
-    border-radius: 24px;
-    padding: 12px;
-}
-
-dialog {
-    border-radius: 24px;
-    padding: 0;
-}
-
-dialog > box {
-    padding: 12px;
-}
-
-
-
+/* Abas e Navegação */
 stackswitcher button:checked,
 stackswitcher button.active {
     color: @accent_color;
     box-shadow: inset 0 -3px 0 0 @accent_color;
-    border-radius: 12px 12px 0 0;
 }
 
 notebook > header > tabs > tab:checked {
@@ -60,61 +20,71 @@ notebook > header > tabs > tab:checked {
     color: @accent_color;
 }
 
-switch {
-    border-radius: 9999px;
+/* Botões de ação sugerida */
+button.suggested-action {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+    border-color: @accent_bg_color;
 }
 
+/* Switches */
 switch:checked {
     background-color: @accent_bg_color;
     border-color: @accent_bg_color;
 }
-
 switch:checked slider {
     background-color: @accent_fg_color;
-    margin: 2px;
 }
 
-check,
-radio {
-    border-radius: 8px;
-}
-
-radio {
-    border-radius: 9999px;
-}
-
-check:checked,
-radio:checked {
+/* Checkboxes e Radio buttons */
+check:checked, radio:checked {
     background-color: @accent_bg_color;
     color: @accent_fg_color;
     border-color: @accent_bg_color;
 }
 
-progressbar progress,
-scale highlight {
-    border-radius: 9999px;
-}
-
+/* Progressbars e Sliders */
 progressbar progress {
     background-color: @accent_bg_color;
     border-color: @accent_bg_color;
 }
+scale highlight {
+    background-color: @accent_bg_color;
+}
 
-selection,
-:selected,
-.highlight {
+/* Seleção e Destaque */
+selection, :selected, .highlight {
     background-color: @accent_bg_color;
     color: @accent_fg_color;
-    border-radius: 12px;
 }
 
+/* Calendário */
+calendar-view:selected {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+}
+calendar-view:indeterminate {
+    color: @accent_color;
+    box-shadow: inset 0 0 0 1px @accent_color;
+}
+.calendar-today-indicator,
+calendar-view .today-indicator {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+}
+
+/* Links e Foco */
+link, label.link {
+    color: @accent_color;
+}
 entry:focus {
     border-color: @accent_bg_color;
-    outline: 2px solid @accent_bg_color;
+}
+*:focus {
+    outline-color: alpha(@accent_color, 0.5);
 }
 
-
-
+/* --- Ajustes de Layout e Janela --- */
 headerbar.default-decoration {
     margin-bottom: 50px;
     margin-top: -100px;
@@ -123,5 +93,4 @@ headerbar.default-decoration {
 window.csd,
 window.csd decoration {
     box-shadow: none;
-    border-radius: 28px;
 }
