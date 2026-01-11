@@ -142,7 +142,7 @@
     color: alpha(@on_surface_variant,.5);
 }
 #mpris.paused:hover {
-    color: alpha(@surface_container_high,.5);
+    color: alpha(@surface_container_high,.65);
 }
 
 
