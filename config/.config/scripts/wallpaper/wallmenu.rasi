@@ -71,6 +71,8 @@ listview {
     spacing:          20px;
     scrollbar:        false;
     background-color: transparent;
+    fixed-height:     false;
+    fixed-width:      false;
 }
 
 /* ───────── Element ───────── */
