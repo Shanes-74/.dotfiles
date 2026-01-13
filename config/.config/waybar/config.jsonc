@@ -12,7 +12,9 @@
     // Choose the order of the modules
     "modules-left": [
         "custom/menu",
-        "clock",
+        //"clock",
+        "custom/clock",
+        "custom/weather",
         "mpris"
     ],
     "modules-center": [
@@ -22,6 +24,7 @@
     ],
     "modules-right": [
         "tray",
+        "memory",
         "custom/pacman",
         "custom/clipboard",
         "pulseaudio",
@@ -46,8 +49,8 @@
         "tooltip-format": "{album} - {title}\n{artist}",
         "max-length": 30,
         "on-click": "playerctl -p spotify play-pause",
-        "on-scroll-up": "playerctl -p spotify next",
-        "on-scroll-down": "playerctl -p spotify previous",
+        "on-scroll-up": "playerctl -p spotify previous",
+        "on-scroll-down": "playerctl -p spotify next",
         "on-click-right": "spotwindow"
     },
 
@@ -58,11 +61,14 @@
 
     "clock": {
         "timezone": "America/Sao_Paulo",
+        "format": "{:%H:%M}",
+        "format-alt": "{:%d/%m/%y}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format": "{:%H:%M}",  // %H define o formato de 24h
-        "on-click-right": "gnome-calendar",
-        "format-alt": "{:%d/%m/%y}"
+        "interval": 1,
+        "exec": "test -f ~/.cache/waybar-clock-alt",
+        "on-click-right": "~/.local/bin/clock-toggle"
     },
+
 
     "backlight": {
         // "device": "acpi_video1",
@@ -97,7 +103,7 @@
         "format-linked": "",
         "format-disconnected": "⚠",
         "on-click": "nmgui",
-        "tooltip-format": "{essid} ({signalStrength}%)\n{ipaddr}"
+        "tooltip-format": "{essid}\nSinal: {signalStrength}%\nIP: {ipaddr}"
     },
 
     "pulseaudio": {
@@ -124,6 +130,22 @@
         "tooltip-format": "{desc}"
     },
     
+    "memory": {
+        "interval": 5,
+        "format": "󰍛 {percentage}%",
+        "tooltip": true,
+        "tooltip-format": "RAM:  {total:0.1f}/{used:0.1f} GiB\nSWAP:  {swapTotal:0.1f}/{swapUsed:0.1f} GiB"
+    },
+
+    "custom/clock": {
+        "exec": "~/.config/waybar/custom-modules/clock/clock.sh",
+        "interval": 1,
+        "return-type": "json",
+        "on-click": "~/.config/waybar/custom-modules/clock/click_toggle.py open",
+        "on-click-right": "~/.config/waybar/custom-modules/clock/click_toggle.py toggle",
+        "tooltip": true
+    },
+
     "custom/menu": {
         "on-click": "rofi -show drun",
         "format": "󰣇",
@@ -143,7 +165,6 @@
     },
 
     "custom/notification": {
-        "tooltip": true,
         "format": "{icon}",
         "format-icons": {
             "notification": "󰆈",
@@ -180,5 +201,13 @@
     "exec": "waybar-updates",
     "on-click": "kitty sudo pacman -Syu",
     "hide-if-empty": true
+    },
+
+    "custom/weather": {
+        "exec": "waybar-weather -config ~/.config/waybar/custom-modules/waybar-weather/config.toml",
+        "restart-interval": 60,
+        "return-type": "json",
+        "hide-empty-text": true,
+        "on-click": "gnome-weather"
     }
 }
