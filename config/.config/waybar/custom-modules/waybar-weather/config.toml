@@ -1,0 +1,58 @@
+## -----------------------------------------------------------------------------
+## Geral
+## -----------------------------------------------------------------------------
+
+units = "metric"
+locale = "pt-BR"
+loglevel = 0
+
+
+## -----------------------------------------------------------------------------
+## Weather
+## -----------------------------------------------------------------------------
+[weather]
+forecast_hours = 5
+
+
+## -----------------------------------------------------------------------------
+## Intervals
+## -----------------------------------------------------------------------------
+[intervals]
+weather_update = "30m"
+output = "15s"
+
+
+## -----------------------------------------------------------------------------
+## Templates
+## -----------------------------------------------------------------------------
+[templates]
+
+# Texto principal da Waybar
+# Ícone Nerd Font + temperatura
+text = "{{ floatFormat .Current.Temperature 1 }}{{ .TempUnit }}"
+
+# Tooltip completo (estilo print do repo)
+tooltip = """
+<b>{{ .Address.City }}, {{ .Address.Country }}</b>
+{{ .Current.Condition }} {{ .Current.ConditionIcon }}
+{{ loc "apparent" }}: {{ floatFormat .Current.ApparentTemperature 0 }}{{ .TempUnit }}
+{{ loc "humidity" }}: {{ floatFormat .Current.Humidity 0 }}%
+{{ loc "pressure" }}: {{ floatFormat .Current.PressureMSL 1 }} {{ .PressureUnit }}
+
+🌅 {{ timeFormat .SunriseTime "15:04" }}   •   🌇 {{ timeFormat .SunsetTime "15:04" }}"""
+## -----------------------------------------------------------------------------
+## Geolocation
+## -----------------------------------------------------------------------------
+[geolocation]
+disable_geoip = false
+disable_geoapi = false
+disable_geolocation_file = true
+disable_ichnaea = false
+disable_gpsd = true
+
+
+## -----------------------------------------------------------------------------
+## Geocoder
+## -----------------------------------------------------------------------------
+[geocoder]
+provider = "nominatim"
