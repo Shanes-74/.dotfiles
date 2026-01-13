@@ -32,6 +32,11 @@
             "keyColor": "green"
         },
         {
+            "type": "gpu",
+            "key": "│ ├",
+            "keyColor": "green"
+        },
+        {
             "type": "memory",
             "key": "│ ├󰍛",
             "keyColor": "green"
