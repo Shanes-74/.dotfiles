@@ -99,21 +99,21 @@
         // "interface": "wlp2*", // (Optional) To force the use of this interface
         "format-wifi": "{icon}",
         "format-icons": ["󰤫", "󰤟", "󰤢", "󰤥", "󰤨"],
-        "format-ethernet": "",
-        "format-linked": "",
-        "format-disconnected": "⚠",
+        "format-ethernet": "",
+        "format-linked": "",
+        "format-disconnected": "",
         "on-click": "nmgui",
         "tooltip-format": "{essid}\nSinal: {signalStrength}%\nIP: {ipaddr}"
     },
 
     "pulseaudio": {
         "scroll-step": 1, // %, can be a float
-        "format": "{icon}",
+        "format": "{icon}{format_source}",
         "format-bluetooth": "󰂱",
         "format-bluetooth-muted": "󰂲",
         "format-muted": "",
         "format-source": "",
-        "format-source-muted": "",
+        "format-source-muted": " ",
         "on-click": "pavucontrol",
         "on-click-right": "swayosd-client --output-volume mute-toggle",
         "on-scroll-up": "swayosd-client --output-volume +5",
@@ -134,7 +134,8 @@
         "interval": 5,
         "format": "󰍛 {percentage}%",
         "tooltip": true,
-        "tooltip-format": "RAM:  {total:0.1f}/{used:0.1f} GiB\nSWAP:  {swapTotal:0.1f}/{swapUsed:0.1f} GiB"
+        "tooltip-format": "RAM:  {total:0.1f}/{used:0.1f} GiB\nSWAP:  {swapTotal:0.1f}/{swapUsed:0.1f} GiB",
+       	"on-click": "kitty btop"
     },
 
     "custom/clock": {
