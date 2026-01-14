@@ -72,15 +72,15 @@
       "actions": [
         {
           "label": "",
-          "command": "swaync-client -cp && nmgui"
+          "command": "swaync-client -t && nmgui"
         },
         {
           "label": "󰂯",
-          "command": "swaync-client -cp && blueman-manager"
+          "command": "swaync-client -t -cp && blueman-manager"
         },
         {
           "label": "",
-          "command": "swaync-client -cp && pavucontrol"
+          "command": "swaync-client -t && pavucontrol"
         },
         {
           "label": "󰔎",
@@ -92,7 +92,7 @@
         },
         {
           "label": "",
-          "command": "swaync-client -cp && config"
+          "command": "swaync-client -t && config"
         }
       ]
     }
