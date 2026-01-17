@@ -8,6 +8,7 @@
         }
     },
     "display": {
+        "separator": "    ",
         "size": {
             "ndigits": 0, // Número de dígitos decimais (opcional)
             // Use "jedec" para GB (10^9 bytes) ao invés de "iec" para GiB (2^30 bytes)
@@ -18,69 +19,60 @@
         },
         "bar": {
             "char": {
-                "elapsed": "=",
-                "total": "-"
+                "elapsed": "",
+                "total": ""
             },
             "width": 12
         },
         "percent": {
-            "type": 2
+            "type": 3
         }
     },
     "modules": [
         "break",
         {
             "type": "custom",
-            "format": "\u001b[90m┌────────────────────────────────────────────────┐"
+            "format": "\u001b[90m╭─────────────────────────────────────────────────────╮"
         },
         {
             "type": "title",
-            "key": "  ",
-            "keyColor": "yellow"
+            "key": " \u001b[33m "
         },
         {
             "type": "host",
-            "key": "  󰟀",
-            "keyColor": "yellow"
+            "key": " \u001b[33m 󰟀"
         },
         {
             "type": "os",
-            "key": "  ",
-            "keyColor": "yellow"
+            "key": " \u001b[33m 󰌽"
         },
         {
             "type": "kernel",
-            "key": "  󰗮",
-            "keyColor": "yellow"
+            "key": " \u001b[33m "
         },
         {
             "type": "memory",
-            "key": "  󰍛",
-            "keyColor": "yellow"
+            "key": " \u001b[33m 󰍛"
         },
         {
             "type": "swap",
-            "key": "  󰍛",
-            "keyColor": "yellow"
+            "key": " \u001b[33m 󰿡"
         },
         {
             "type": "disk",
-            "key": "  󰥠",
-            "keyColor": "yellow"
+            "key": " \u001b[33m 󰥠"
         },
         {
             "type": "packages",
-            "key": "  󰏓",
-            "keyColor": "yellow"
+            "key": " \u001b[33m 󰆧"
         },
         {
             "type": "uptime",
-            "key": "  󱑂",
-            "keyColor": "yellow"
+            "key": " \u001b[33m 󱑂"
         },
         {
             "type": "custom",
-            "format": "\u001b[90m└────────────────────────────────────────────────┘"
+            "format": "\u001b[90m╰─────────────────────────────────────────────────────╯"
         },
         {
             "type": "colors",
