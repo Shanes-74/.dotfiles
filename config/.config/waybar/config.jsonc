@@ -34,6 +34,7 @@
     ],
 
     "hyprland/workspaces": {
+        "interval": 5,
         "format": "",
         "on-scroll-up": "hyprctl dispatch workspace e+1",
         "on-scroll-down": "hyprctl dispatch workspace e-1",
@@ -200,7 +201,7 @@
     },
     "exec-if": "which waybar-updates",
     "exec": "waybar-updates",
-    "on-click": "kitty sudo pacman -Syu",
+    "on-click": "kitty paru -Syu",
     "hide-if-empty": true
     },
 
