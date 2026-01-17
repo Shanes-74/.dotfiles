@@ -40,9 +40,9 @@ def apply_hooks():
         "pkill -USR1 kitty",
         "swaync-client -R -rs",
         "killall -q swayosd-server",
-        "pkill -USR2 waybar",
         "killall -q xdg-desktop-portal-gtk",
-        "killall -q gnome-clocks"
+        "killall -q gnome-clocks",
+        "pkill -USR2 waybar"
     ]
     for cmd in hooks:
         subprocess.run(cmd, shell=True, capture_output=True)
