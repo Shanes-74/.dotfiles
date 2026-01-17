@@ -5,21 +5,25 @@
 {
     "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
     "logo": {
-        "type": "builtin",
-        "height": 16,
-        "width": 10,
+        "type": "file",
+        "source": "~/.config/fastfetch/logos/proxy_logo.txt",
+        "position": "top",
+        "height": 1,
+        "width": 1,
         "padding": {
-            "top": 5,
-            "left": 6,
-            "right": 8
+            "top": 1,
+            "left": 6
         }
     },
     "modules": [
-        "break",
-        "break",
+        {
+            "type": "colors",
+            "paddingLeft": 2,
+            "symbol": "circle"
+        },
         {
             "type": "custom",
-            "format": "\u001b[90m┌──────────────────────── Hardware ────────────────────────┐"
+            "format": "\u001b[90m╭──────────────────────── Hardware ────────────────────────╮"
         },
         {
             "type": "host",
@@ -43,17 +47,17 @@
         },
         {
             "type": "disk",
-            "key": "└ └",
+            "key": "╰ ╰",
             "keyColor": "green"
         },
         {
             "type": "custom",
-            "format": "\u001b[90m└──────────────────────────────────────────────────────────┘"
+            "format": "\u001b[90m╰──────────────────────────────────────────────────────────╯"
         },
         "break",
         {
             "type": "custom",
-            "format": "\u001b[90m┌──────────────────────── Software ────────────────────────┐"
+            "format": "\u001b[90m╭──────────────────────── Software ────────────────────────╮"
         },
         {
             "type": "os",
@@ -77,7 +81,7 @@
         },
         {
             "type": "shell",
-            "key": "└ └",
+            "key": "╰ ╰",
             "keyColor": "yellow"
         },
         "break",
@@ -103,49 +107,43 @@
         },
         {
             "type": "terminal",
-            "key": "└ └",
+            "key": "╰ ╰",
             "keyColor": "blue"
         },
         {
             "type": "custom",
-            "format": "\u001b[90m└──────────────────────────────────────────────────────────┘"
+            "format": "\u001b[90m╰──────────────────────────────────────────────────────────╯"
         },
         "break",
         {
             "type": "custom",
-            "format": "\u001b[90m┌─────────────────── Uptime / Age / DT ────────────────────┐"
+            "format": "\u001b[90m╭─────────────────── Uptime / Age / DT ────────────────────╮"
         },
         {
             "type": "command",
-            "key": "  OS Age ",
+            "key": "  OS Age",
             "keyColor": "magenta",
             "text": "birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days"
         },
         {
             "type": "uptime",
-            "key": "  Uptime ",
+            "key": "  Uptime",
             "keyColor": "magenta"
         },
         {
             "type": "datetime",
-            "key": "  DateTime ",
+            "key": "  DateTime",
             "keyColor": "magenta"
         },
         {
             "type": "custom",
-            "format": "\u001b[90m└──────────────────────────────────────────────────────────┘"
+            "format": "\u001b[90m╰──────────────────────────────────────────────────────────╯"
         },
-
-//        {
-//            "type": "colors"
-//        },
-
         {
             "type": "colors",
             "paddingLeft": 2,
             "symbol": "circle"
         }
- 
     ]
 }
 
