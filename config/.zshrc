@@ -141,10 +141,10 @@ source ~/.oh-my-zsh/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Define o cursor como bloco piscante
-echo -ne '\e[1 q'
+echo -ne '\e[3 q'
 
 # Garante que ele continue assim ao iniciar novas linhas
 function zle-line-init {
-    echo -ne '\e[1 q'
+    echo -ne '\e[3 q'
 }
 zle -N zle-line-init
