@@ -11,7 +11,7 @@
 }
 
 #waybar {
-    background-color: transparent;
+    background: transparent;
 }
 
 
@@ -100,16 +100,17 @@
 #custom-clock {
     font-size: 22px;
     color: @primary;
+    background: @surface_container;
     border-radius: 9999px;
     border: 1px solid @outline_variant;
-    background: @surface_container;
     margin: 16px 4px;
     padding: 2px 14px;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.8);
     transition:
+        transform 180ms cubic-bezier(.4,0,.2,1),
         background-color 200ms ease,
         color 200ms ease,
-        border-color 200ms ease
+        border-color 200ms ease;
 }
 
 #clock:hover,
@@ -129,10 +130,9 @@
 #custom-clock:hover {
     background: @primary;
     color: @surface_container_high;
-    transition:
-        background-color 200ms ease,
-        color 200ms ease,
-        border-color 200ms ease
+    font-size: 24px;
+    margin: 13px 2.5px;
+    padding: 2.5px 16.875px;
 }
 
 #tray {
@@ -141,6 +141,9 @@
 
 #mpris {
     font-size: 20px;
+}
+#mpris:hover {
+    font-size: 21px;
 }
 #mpris.paused {
     color: alpha(@on_surface_variant,.5);
