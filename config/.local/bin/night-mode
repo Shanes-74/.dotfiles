@@ -7,7 +7,7 @@ if pgrep -x hyprsunset > /dev/null; then
     swayosd-client --custom-icon="display-brightness-symbolic" --custom-message="Luz noturna: Off"
 else
     # Ajuste a temperatura conforme sua preferência
-    hyprsunset -t 5200 & disown
+    hyprsunset -t 3800 & disown
     # Ícone de "Lua" para indicar modo noturno ativo
     swayosd-client --custom-icon="night-light-symbolic" --custom-message="Luz noturna: On"
 fi
