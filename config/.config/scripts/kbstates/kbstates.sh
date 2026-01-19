@@ -1,46 +1,42 @@
 #!/bin/bash
 
-# Diretório para salvar o estado (em RAM para ser rápido)
-STATE_DIR="/tmp/kbstates"
-mkdir -p "$STATE_DIR"
-
-# Arquivos de estado
-CAPS_STATE_FILE="$STATE_DIR/caps_state"
-NUM_STATE_FILE="$STATE_DIR/num_state"
-
-# Ícones
+# Delay necessário para o kernel atualizar o estado do LED após input
+LED_DELAY=0.128
 ICON_CAPS_ON="caps-lock-on"
 ICON_CAPS_OFF="caps-lock-off"
 ICON_NUM_ON="num-lock-on"
 ICON_NUM_OFF="num-lock-off"
 
-# Inicializa os arquivos se não existirem (baseado no estado atual real)
-if [ ! -f "$CAPS_STATE_FILE" ]; then
-    brightnessctl --device='*::capslock' get > "$CAPS_STATE_FILE"
-fi
-if [ ! -f "$NUM_STATE_FILE" ]; then
-    brightnessctl --device='*::numlock' get > "$NUM_STATE_FILE"
-fi
+read_led() {
+    tr -d '\n[:space:]' < "$1"
+}
 
-case $1 in
+show_state() {
+    local NAME="$1"
+    local FILE="$2"
+    local ICON_ON="$3"
+    local ICON_OFF="$4"
+
+    sleep "$LED_DELAY"
+
+    STATE=$(read_led "$FILE")
+
+    if [ "$STATE" = "1" ]; then
+        swayosd-client --custom-message "$NAME: On" --custom-icon "$ICON_ON"
+    else
+        swayosd-client --custom-message "$NAME: Off" --custom-icon "$ICON_OFF"
+    fi
+}
+
+case "$1" in
     caps)
-        CURRENT=$(cat "$CAPS_STATE_FILE")
-        if [ "$CURRENT" -eq "0" ]; then
-            swayosd-client --custom-message "Caps Lock: On" --custom-icon "$ICON_CAPS_ON"
-            echo "1" > "$CAPS_STATE_FILE"
-        else
-            swayosd-client --custom-message "Caps Lock: Off" --custom-icon "$ICON_CAPS_OFF"
-            echo "0" > "$CAPS_STATE_FILE"
-        fi
+        show_state "Caps Lock" \
+            "/sys/class/leds/input3::capslock/brightness" \
+            "$ICON_CAPS_ON" "$ICON_CAPS_OFF"
         ;;
     num)
-        CURRENT=$(cat "$NUM_STATE_FILE")
-        if [ "$CURRENT" -eq "0" ]; then
-            swayosd-client --custom-message "Num Lock: On" --custom-icon "$ICON_NUM_ON"
-            echo "1" > "$NUM_STATE_FILE"
-        else
-            swayosd-client --custom-message "Num Lock: Off" --custom-icon "$ICON_NUM_OFF"
-            echo "0" > "$NUM_STATE_FILE"
-        fi
+        show_state "Num Lock" \
+            "/sys/class/leds/input3::numlock/brightness" \
+            "$ICON_NUM_ON" "$ICON_NUM_OFF"
         ;;
 esac
