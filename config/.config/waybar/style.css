@@ -4,10 +4,6 @@
     font-family: "Google Sans Display", "JetBrainsMono Nerd Font Propo";
     font-size: 16px;
     font-weight: 700;
-    transition:
-        background-color 75ms ease,
-        color 75ms ease,
-        border-color 75ms ease
 }
 
 #waybar {
