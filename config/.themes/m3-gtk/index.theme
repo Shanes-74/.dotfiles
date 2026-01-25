@@ -1,0 +1,6 @@
+[X-GNOME-Metatheme]
+Name=m3-gtk
+Type=X-GNOME-Metatheme
+Comment=Material 3 theme based on adw-gtk3 with Matugen colors
+Encoding=UTF-8
+GtkTheme=m3-gtk
