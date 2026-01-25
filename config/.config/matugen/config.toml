@@ -34,11 +34,11 @@ output_path = '~/.config/swayosd/colors.css'
 
 [templates.gtk3]
 input_path = '~/.config/matugen/templates/gtk.css'
-output_path = '~/.themes/m3-gtk/gtk-3.0/colors.css'
+output_path = '~/.config/gtk-3.0/colors.css'
 
 [templates.gtk4]
 input_path = '~/.config/matugen/templates/gtk.css'
-output_path = '~/.themes/m3-gtk/gtk-4.0/colors.css'
+output_path = '~/.config/gtk-4.0/colors.css'
 
 [templates.qt5ct]
 input_path = '~/.config/matugen/templates/qt-colors.conf'
