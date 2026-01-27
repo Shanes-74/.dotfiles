@@ -6,7 +6,7 @@
   "layer": "overlay",
   "control-center-layer": "overlay",
   "cssPriority": "user",
-  "control-center-width": 400,
+  "control-center-width": 500,
   "control-center-height": 954,
   "control-center-margin-top": 28,
   "control-center-margin-bottom": 28,
@@ -88,7 +88,7 @@
         },
         {
           "label": "󰖔",
-          "command": "night-mode"
+          "command": "night-mode disown"
         },
         {
           "label": "",
