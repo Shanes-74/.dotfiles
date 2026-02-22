@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
-# ───────── Toggle Instantâneo ─────────
-if pgrep -x hyprsunset > /dev/null; then
-    killall hyprsunset
-    # Ícone de "Sol" ou brilho para indicar que a luz noturna saiu
-    swayosd-client --custom-icon="display-brightness-symbolic" --custom-message="Luz noturna: Off"
+if pgrep -x hyprsunset >/dev/null; then
+    pkill hyprsunset
+
+    swayosd-client \
+      --custom-icon="display-brightness-symbolic" \
+      --custom-message="Luz noturna: Off"
 else
-    # Ajuste a temperatura conforme sua preferência
-    hyprsunset -t 4000 & disown
-    # Ícone de "Lua" para indicar modo noturno ativo
-    swayosd-client --custom-icon="night-light-symbolic" --custom-message="Luz noturna: On"
+    setsid hyprsunset -t 4000 >/dev/null 2>&1 &
+
+    swayosd-client \
+      --custom-icon="night-light-symbolic" \
+      --custom-message="Luz noturna: On"
 fi
