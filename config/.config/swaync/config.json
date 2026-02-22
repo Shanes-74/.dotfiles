@@ -7,7 +7,7 @@
   "control-center-layer": "overlay",
   "cssPriority": "user",
   "control-center-width": 500,
-  "control-center-height": 954,
+  "control-center-height": 960,
   "control-center-margin-top": 28,
   "control-center-margin-bottom": 28,
   "control-center-margin-right": 28,
@@ -72,15 +72,15 @@
       "actions": [
         {
           "label": "",
-          "command": "swaync-client -t && nmgui"
+          "command": "swaync-client -cp && nohup nmgui"
         },
         {
           "label": "󰂯",
-          "command": "swaync-client -t -cp && blueman-manager"
+          "command": "swaync-client -cp -cp && nohup blueman-manager"
         },
         {
           "label": "",
-          "command": "swaync-client -t && pavucontrol"
+          "command": "swaync-client -cp && nohup pavucontrol"
         },
         {
           "label": "󰔎",
@@ -88,11 +88,11 @@
         },
         {
           "label": "󰖔",
-          "command": "night-mode disown"
+          "command": "night-mode"
         },
         {
           "label": "",
-          "command": "swaync-client -t && config"
+          "command": "swaync-client -cp && nohup config"
         }
       ]
     }
