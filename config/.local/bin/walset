@@ -1,115 +1,222 @@
-#!/usr/bin/env python3
-import os
-import sys
-import subprocess
-import random
-import glob
-import json
-from pathlib import Path
+#!/usr/bin/env bash
 
-# --- CONFIGURAÇÕES ---
-HOME = str(Path.home())
-CACHE_DIR = os.path.join(HOME, ".cache", "walset")
-STATE_FILE = os.path.join(CACHE_DIR, "state.json")
-WALLPAPER_DIR = os.path.join(HOME, "Imagens/Wallpapers")
-CONFIG_MATUGEN = os.path.join(HOME, ".config/matugen/config.toml")
+# =====================================================
+# WALSET — Clean Theme Manager
+# =====================================================
 
-os.makedirs(CACHE_DIR, exist_ok=True)
 
-# --- RECONSTRUÇÃO DO AMBIENTE ---
-uid = os.getuid()
-os.environ["PATH"] = f"{HOME}/.local/bin:/usr/local/bin:/usr/bin:/bin:{os.environ.get('PATH', '')}"
-os.environ["XDG_RUNTIME_DIR"] = f"/run/user/{uid}"
+# ---------------- CONFIG ----------------
 
-def save_state(wallpaper, scheme, mode):
-    state = {"wallpaper": wallpaper, "scheme": scheme, "mode": mode}
-    with open(STATE_FILE, "w") as f:
-        json.dump(state, f, indent=4)
+HOME_DIR="$HOME"
 
-def load_state():
-    if os.path.exists(STATE_FILE):
-        try:
-            with open(STATE_FILE, "r") as f:
-                return json.load(f)
-        except: return {}
-    return {}
+CACHE_DIR="$HOME_DIR/.cache/walset"
+STATE_FILE="$CACHE_DIR/state.json"
 
-def apply_hooks():
-    hooks = [
-        "hyprctl reload",
-        "pkill -USR1 kitty",
-        "swaync-client -R -rs",
-        "killall -q swayosd-server",
-        "killall -q xdg-desktop-portal-gtk",
-        "killall -q gnome-clocks",
-        "pkill -USR2 waybar"
-    ]
-    for cmd in hooks:
-        subprocess.run(cmd, shell=True, capture_output=True)
+WALLPAPER_DIR="$HOME_DIR/Imagens/Wallpapers"
+CONFIG_MATUGEN="$HOME_DIR/.config/matugen/config.toml"
 
-def main():
-    state = load_state()
-    
-    # 1. Wallpaper
-    if len(sys.argv) > 1:
-        wallpaper = sys.argv[1]
-    else:
-        files = glob.glob(f"{WALLPAPER_DIR}/**/*.*", recursive=True)
-        valid_files = [f for f in files if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))]
-        if not valid_files:
-            sys.exit(1)
-        wallpaper = random.choice(valid_files)
+ROFI_THEME="$HOME_DIR/.config/rofi/rofi.rasi"
 
-    # 2. Esquema de Cores
-    if len(sys.argv) > 2:
-        selected_clean = sys.argv[2]
-    else:
-        schemes = {
-            "Conteúdo": "content", "Expressivo": "expressive", "Fidelidade": "fidelity",
-            "Salada de Frutas": "fruit-salad", "Monocromático": "monochrome",
-            "Neutro": "neutral", "Arco-Íris": "rainbow", "Ponto Tonal": "tonal-spot", "Vibrante": "vibrant"
-        }
-        input_s = "\n".join(schemes.keys())
-        rofi = subprocess.Popen(["rofi", "-dmenu", "-i", "-p", "Esquema de Cores", "-l", "9"], 
-                                stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
-        res, _ = rofi.communicate(input=input_s)
-        res = res.strip()
-        selected_clean = schemes.get(res, state.get("scheme", "content"))
+# SDDM
+SDDM_ASSETS_DIR="$HOME_DIR/.dotfiles/sddm/sddm-current/assets"
+SDDM_BG="$SDDM_ASSETS_DIR/background.jpg"
 
-    # 3. Modo
-    if len(sys.argv) > 3:
-        mode_val = sys.argv[3]
-    else:
-        mode_val = state.get("mode", "dark") 
 
-    # 4. SWWW - Execução Direta
-    try:
-        # Escolhe a animação aleatória
-        trans = random.choice(["outer", "center", "wipe", "wave", "grow"])
-        
-        # Executa o comando diretamente presumindo que o daemon já está ativo
-        subprocess.run([
-            "swww", "img", wallpaper, 
-            "--transition-type", trans, 
-            "--transition-duration", "1.7", 
-            "--transition-fps", "90"
-        ])
-    except Exception as e:
-        print(f"Erro ao aplicar wallpaper com swww: {e}")
+# ---------------- ENV ----------------
 
-    # 5. Matugen
-    try:
-        matugen_cmd = [
-            "matugen", "-c", CONFIG_MATUGEN, "image", wallpaper, 
-            "-m", mode_val, "-t", f"scheme-{selected_clean}"
-        ]
-        subprocess.run(matugen_cmd, check=True)
-    except Exception as e:
-        print(f"Erro Matugen: {e}")
+mkdir -p "$CACHE_DIR"
 
-    # 6. Salva Estado e Hooks
-    save_state(wallpaper, selected_clean, mode_val)
-    apply_hooks()
+export PATH="$HOME_DIR/.local/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
 
-if __name__ == "__main__":
-    main()
+
+# ---------------- CORE ----------------
+
+run_step() {
+
+    local name="$1"
+    shift
+
+    if "$@"; then
+        return 0
+    else
+        echo "❌ Erro em: $name" >&2
+        exit 1
+    fi
+}
+
+
+save_state() {
+
+cat > "$STATE_FILE" <<EOF
+{
+  "wallpaper": "$1",
+  "scheme": "$2",
+  "mode": "$3"
+}
+EOF
+
+}
+
+
+load_state() {
+
+SCHEME="content"
+MODE="dark"
+
+if [[ -f "$STATE_FILE" ]]; then
+
+    SCHEME=$(grep '"scheme"' "$STATE_FILE" | cut -d'"' -f4)
+    MODE=$(grep '"mode"' "$STATE_FILE" | cut -d'"' -f4)
+
+fi
+
+}
+
+
+apply_hooks() {
+
+hyprctl reload >/dev/null 2>&1
+
+pkill -USR1 kitty >/dev/null 2>&1
+
+swaync-client -rs >/dev/null 2>&1
+
+killall -q swayosd-server >/dev/null 2>&1
+killall -q xdg-desktop-portal-gtk >/dev/null 2>&1
+killall -q gnome-clocks >/dev/null 2>&1
+
+pkill waybar >/dev/null 2>&1
+waybar >/dev/null 2>&1 &
+
+}
+
+
+update_sddm() {
+
+    mkdir -p "$SDDM_ASSETS_DIR"
+
+    cp "$WALLPAPER" "$SDDM_BG"
+
+    # Recarrega o tema do SDDM sem reiniciar sessão
+    if command -v sddm-sync >/dev/null 2>&1; then
+        sddm-sync
+    fi
+
+}
+
+
+# ---------------- MAIN ----------------
+
+
+# ---------- LOAD STATE ----------
+
+load_state
+
+
+# ---------- WALLPAPER ----------
+
+if [[ -n "${1:-}" ]]; then
+
+    WALLPAPER="$1"
+
+else
+
+    mapfile -t FILES < <(
+        find "$WALLPAPER_DIR" -type f \
+        \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.webp" \)
+    )
+
+    if [[ ${#FILES[@]} -eq 0 ]]; then
+        echo "❌ Nenhum wallpaper encontrado" >&2
+        exit 1
+    fi
+
+    WALLPAPER="${FILES[RANDOM % ${#FILES[@]}]}"
+
+fi
+
+
+# ---------- SCHEME ----------
+
+if [[ -n "${2:-}" ]]; then
+
+    SELECTED="$2"
+
+else
+
+CHOICE=$(
+cat <<EOF | rofi -dmenu -i -p "Esquema de Cores" -l 9 -theme "$ROFI_THEME"
+Conteúdo
+Expressivo
+Fidelidade
+Salada de Frutas
+Monocromático
+Neutro
+Arco-Íris
+Ponto Tonal
+Vibrante
+EOF
+)
+
+case "$CHOICE" in
+    "Conteúdo") SELECTED="content" ;;
+    "Expressivo") SELECTED="expressive" ;;
+    "Fidelidade") SELECTED="fidelity" ;;
+    "Salada de Frutas") SELECTED="fruit-salad" ;;
+    "Monocromático") SELECTED="monochrome" ;;
+    "Neutro") SELECTED="neutral" ;;
+    "Arco-Íris") SELECTED="rainbow" ;;
+    "Ponto Tonal") SELECTED="tonal-spot" ;;
+    "Vibrante") SELECTED="vibrant" ;;
+    *) SELECTED="$SCHEME" ;;
+esac
+
+fi
+
+
+# ---------- MODE ----------
+
+if [[ -n "${3:-}" ]]; then
+    MODE="$3"
+fi
+
+
+# ---------- SWWW ----------
+
+TRANS=(outer center wipe wave grow)
+
+T="${TRANS[RANDOM % 5]}"
+
+run_step "Wallpaper (swww)" \
+    swww img "$WALLPAPER" \
+    --transition-type "$T" \
+    --transition-duration 1.7 \
+    --transition-fps 90
+
+
+# ---------- MATUGEN ----------
+
+run_step "Geração de cores (matugen)" \
+    matugen \
+    -c "$CONFIG_MATUGEN" \
+    image "$WALLPAPER" \
+    -m "$MODE" \
+    -t "scheme-$SELECTED"
+
+
+# ---------- SAVE + HOOKS ----------
+
+save_state "$WALLPAPER" "$SELECTED" "$MODE"
+
+apply_hooks
+
+
+# ---------- SDDM ----------
+
+run_step "Atualização do SDDM" update_sddm
+
+
+# ---------- FINAL ----------
+
+echo "✅ Tema aplicado com sucesso."
