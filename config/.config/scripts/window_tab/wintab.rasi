@@ -24,7 +24,7 @@ mainbox {
     border-radius:    20px;
     margin:           -1px; 
     padding:          20px;
-    children:         [inputbar, message, listview]; 
+    children:         [listview]; 
     spacing:          15px;
 }
 
@@ -61,7 +61,7 @@ entry {
 
 listview {
     columns:          10;
-    lines:            2;
+    lines:            1;
     scrollbar:        false; 
     margin:           0 5px; 
     background-color: transparent;
