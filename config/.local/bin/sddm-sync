@@ -1,0 +1,6 @@
+#!/bin/bash
+
+SRC="$HOME/.dotfiles/sddm/sddm-current/"
+DST="/usr/share/sddm/themes/sddm-current/"
+
+rsync -av --delete "$SRC" "$DST"
