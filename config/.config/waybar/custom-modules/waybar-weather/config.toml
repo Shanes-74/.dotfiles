@@ -11,7 +11,7 @@ loglevel = 0
 ## Weather
 ## -----------------------------------------------------------------------------
 [weather]
-forecast_hours = 5
+forecast_hours = 3
 
 
 ## -----------------------------------------------------------------------------
@@ -27,19 +27,23 @@ output = "15s"
 ## -----------------------------------------------------------------------------
 [templates]
 
-# Texto principal da Waybar
-# Ícone Nerd Font + temperatura
-text = "{{ floatFormat .Current.Temperature 1 }}{{ .TempUnit }}"
+# Texto principal na Waybar
+text = "{{ floatFormat .Current.Temperature 0 }}°C"
 
-# Tooltip completo (estilo print do repo)
+# Tooltip principal
 tooltip = """
-<b>{{ .Address.City }}, {{ .Address.Country }}</b>
-{{ .Current.Condition }} {{ .Current.ConditionIcon }}
-{{ loc "apparent" }}: {{ floatFormat .Current.ApparentTemperature 0 }}{{ .TempUnit }}
-{{ loc "humidity" }}: {{ floatFormat .Current.Humidity 0 }}%
-{{ loc "pressure" }}: {{ floatFormat .Current.PressureMSL 1 }} {{ .PressureUnit }}
+Local: <b>{{ .Address.City }}, {{ .Address.Country }}</b>
 
-🌅 {{ timeFormat .SunriseTime "15:04" }}   •   🌇 {{ timeFormat .SunsetTime "15:04" }}"""
+Temp:  {{ floatFormat .Current.Temperature 1 }}°C - {{ floatFormat .Forecast.Temperature 1 }}°C
+Prev:  {{ .Forecast.Condition }}  
+Sen:  {{ floatFormat .Current.ApparentTemperature 0 }}°C
+Press:  {{ floatFormat .Current.PressureMSL 1 }} hPa
+Lua:  {{ .MoonPhase }} {{ .MoonPhaseIcon }}
+
+╭─────────────────╮
+    🌅 {{ timeFormat .SunriseTime "15:04" }}   |   🌇 {{ timeFormat .SunsetTime "15:04" }}
+╰─────────────────╯"""
+
 ## -----------------------------------------------------------------------------
 ## Geolocation
 ## -----------------------------------------------------------------------------
@@ -49,7 +53,6 @@ disable_geoapi = false
 disable_geolocation_file = true
 disable_ichnaea = false
 disable_gpsd = true
-
 
 ## -----------------------------------------------------------------------------
 ## Geocoder
