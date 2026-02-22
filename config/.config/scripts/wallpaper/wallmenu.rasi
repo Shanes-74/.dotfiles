@@ -1,117 +1,141 @@
-@import "colors.rasi"
+/*****----- Configuration -----*****/
+configuration {
+    disable-history:            false;
+    show-icons:                 true;
+}
+
+/*****----- Global Properties -----*****/
+@import                         "colors.rasi"
 
 * {
-    background-color: transparent;
+    font:                       "Google Sans Display Medium 14";
+    background-color:           transparent;
 }
 
-/* ───────── Window ───────── */
-
+/*****----- Main Window -----*****/
 window {
-    width:            50%;
-    transparency:     "real"; 
-    background-color: #00000050; 
-    border:           6px;                  /* pseudo-sombra */
-    border-color:     #00000040;          /* preto semi-transparente */
-    border-radius:    22px;                 
-    font:             "Google Sans Display Medium 14";
+    transparency:               "real";
+    location:                   center;
+    anchor:                     center;
+    fullscreen:                 false;
+    width:                      50%;
+    x-offset:                   0px;
+    y-offset:                   0px;
+
+    /* properties for all widgets */
+    enabled:                    true;
+    margin:                     0px;
+    padding:                    0px;
+    cursor:                     "default";
+    background-color:           transparent;
 }
 
-/* ───────── Layout ───────── */
-
+/*****----- Main Box -----*****/
 mainbox {
-    background-color: @surface-container;
-    border:           1px;
-    border-color:     @outline-variant;
-    border-radius:    20px;
-    margin:           -1px; 
-    padding:          20px;
-    children:         [inputbar, message, listview]; 
-    spacing:          15px; 
+    enabled:                    true;
+    spacing:                    15px;
+    margin:                     0px;
+    children:                   [ "inputbar", "listview" ];
+    
 }
 
-/* ───────── Input ───────── */
-
+/*****----- Inputbar -----*****/
 inputbar {
-    border:           1px; 
-    border-color:     @outline-variant;
-    border-radius:    999px; 
-    margin:           4px; 
-    padding:          15px;
-    /* Cor mais clara para criar contraste de profundidade (esmaecimento) */
-    background-color: @surface-container-highest;
-    children:         [prompt, textbox-prompt-colon, entry]; 
+    enabled:                    true;
+    spacing:                    12px;
+    margin:                     0px;
+    padding:                    15px;
+    border:                     2px;
+    border-radius:              9999px;
+    border-color:               @outline-variant;
+    background-color:           @surface-container;
+    children:                   [ "entry" ];
 }
 
-/* Prompt fixo com : e cor @primary */
 prompt {
-    text-color: @primary;
-    background-color: transparent;
+    enabled:                    true;
+    background-color:           transparent;
+    text-color:                 @primary;
 }
 
 textbox-prompt-colon {
-    expand:           false; 
-    str:              ": "; 
-    text-color:       @on-surface-variant;
-    background-color: transparent;
+    enabled:                    true;
+    expand:                     false;
+    str:                        ": ";
+    background-color:           transparent;
+    text-color:                 @on-surface-variant;
 }
 
 entry {
-    cursor-color:     @primary;
-    placeholder-color:@on-surface-variant;
-    background-color: transparent;
-    placeholder:      "Selecione um Wallpaper 1, 2, ...";
-    text-color:       @on-surface;
+    enabled:                    true;
+    background-color:           transparent;
+    text-color:                 @on-surface;
+    cursor:                     text;
+    placeholder:                "Seleção de Wallpaper..";
+    placeholder-color:          @outline;
 }
 
-/* ───────── Grid ───────── */
-
+/*****----- Listview -----*****/
 listview {
-    columns:          4;
-    lines:            1;
-    spacing:          20px;
-    scrollbar:        false;
-    background-color: transparent;
-    fixed-height:     false;
-    fixed-width:      false;
+    enabled:                    true;
+    spacing:                    20px;
+    columns:                    4;
+    lines:                      1;
+    cycle:                      true;
+    dynamic:                    true;
+    scrollbar:                  false;
+    layout:                     vertical;
+    reverse:                    false;
+    fixed-height:               false;
+    fixed-columns:              true;
+
+    spacing:                    15px;
+    margin:                     0px;
+    padding:                    20px;
+    border:                     2px;
+    border-radius:              20px;
+    border-color:               @outline-variant;
+    background-color:           @surface-container;
+    cursor:                     "default";
 }
 
-/* ───────── Element ───────── */
-
+/*****----- Elements -----*****/
 element {
-    orientation:      vertical;
-    padding:          8px;
-    spacing:          6px;
-    border-radius:    20px;
-    background-color: transparent;
-
-    /* REMOVE highlight padrão */
-    highlight:        none;
+    enabled:                    true;
+    orientation:                vertical;
+    padding:                    8px;
+    spacing:                    6px;
+    border-radius:              20px;
+    background-color:           transparent;
+    highlight:                  none;
 }
-
-/* ───────── Image ───────── */
 
 element-icon {
-    size:             280px;
-    horizontal-align: 0.5;
-    border-radius:    20px;
-    background-color: transparent;
+    size:                       280px;
+    horizontal-align:           0.5;
+    border-radius:              20px;
+    background-color:           transparent;
 }
-
-/* ───────── Text (remove “barra”) ───────── */
 
 element-text {
-    enabled:          false;
+    enabled:                    false;
 }
 
-/* ───────── States (igual ao teu tema base) ───────── */
+/****----- Estados de Selção -----****/
 
 element normal normal {
-    background-color: transparent;
-    text-color:       @on-surface;
+    background-color:           transparent;
+    text-color:                 @on-surface;
 }
 
 element selected normal {
-    background-color: @primary;
-    text-color:       @on-primary;
-    border-radius:    20px;
+    background-color:           @primary;
+    text-color:                 @on-primary;
+    border-radius:              20px;
+}
+
+message {
+    padding:                    10px;
+    background-color:           @surface-container-low;
+    border-radius:              12px;
 }
