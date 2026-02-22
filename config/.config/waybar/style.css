@@ -13,8 +13,8 @@
 
 
 #workspaces {
-    background: @surface_container;
-    margin: 16px 2px;
+    background: alpha(@surface_container, 0.7);
+    margin: 18px 4px;
     padding: 0px;
     border-radius: 9999px;
     border: 1px solid @outline_variant;
@@ -24,9 +24,9 @@
 #workspaces button {
     font-size: 24px;
     font-weight: bold;
-    color: @on_surface_variant;
+    color: alpha(@primary, 0.51);
     border: 3px solid @primary;
-    background: @surface_container;
+    background: alpha(@surface_container, 0.51);
     border-radius: 9999px;
     margin: 8px;
     padding: 0 4px;
@@ -93,14 +93,15 @@
 #custom-pacman,
 #mpris,
 #custom-weather, 
-#custom-clock {
+#custom-clock,
+#custom-expand-icon {
     font-size: 22px;
     color: @primary;
-    background: @surface_container;
+    background: alpha(@surface_container, 0.7);
     border-radius: 9999px;
     border: 1px solid @outline_variant;
-    margin: 16px 4px;
-    padding: 2px 14px;
+    margin: 18px 4px;
+    padding: 0px 13px;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.8);
     transition:
         transform 180ms cubic-bezier(.4,0,.2,1),
@@ -108,6 +109,8 @@
         color 200ms ease,
         border-color 200ms ease;
 }
+
+
 
 #clock:hover,
 #battery:hover,
@@ -127,8 +130,14 @@
     background: @primary;
     color: @surface_container_high;
     font-size: 24px;
-    margin: 13px 2.5px;
-    padding: 2.5px 16.875px;
+    margin: 14px 2px;
+    padding: 1px 17px;
+}
+
+#custom-expand-icon {
+	font-size: 20px;
+    margin: 26px 4px;
+    padding: 0px 12px;
 }
 
 #tray {
