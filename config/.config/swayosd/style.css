@@ -14,7 +14,7 @@
 window#osd {
   /* No M3, os cantos são arredondados, mas não necessariamente uma pílula completa para a janela */
   border-radius: 9999px; 
-  background: @surface_container;
+  background: alpha(@surface_container, 0.7);
   /* Retirando a borda pesada para um look mais limpo */
   border: 1px solid @outline_variant;
   /* Shadow mais suave (Elevation 2 ou 3) */
