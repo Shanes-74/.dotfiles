@@ -64,3 +64,6 @@ output_path = '~/.config/micro/colorschemes/matugen.micro'
 input_path = '~/.config/matugen/templates/midnight-discord.css'
 output_path = '~/.config/Vencord/themes/matugen.css'
 
+[templates.sddm]
+input_path = '~/.config/matugen/templates/sddm.conf'
+output_path = '~/.dotfiles/sddm/sddm-current/theme.conf'
