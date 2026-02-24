@@ -55,24 +55,19 @@ load_state() {
 
 apply_hooks() {
 
-    # Recarrega Hyprland
     hyprctl reload >/dev/null 2>&1 || true
-
-    # Recarrega kitty (tema)
     pkill -USR1 kitty >/dev/null 2>&1 || true
-
-    # Reinicia notificações
     swaync-client -rs >/dev/null 2>&1 || true
 
-    # Mata serviços que precisam reiniciar
     killall -q swayosd-server >/dev/null 2>&1 || true
     killall -q xdg-desktop-portal-gtk >/dev/null 2>&1 || true
     killall -q gnome-clocks >/dev/null 2>&1 || true
 
-    # Reinicia Waybar
+    pkill -x polkit-gnome-authentication-agent-1 >/dev/null 2>&1 || true
+    /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 >/dev/null 2>&1 &
+
     pkill waybar >/dev/null 2>&1 || true
     waybar >/dev/null 2>&1 &
-
 }
 
 update_sddm() {
