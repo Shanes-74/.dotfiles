@@ -1,106 +1,142 @@
-/* --- CONFIGURAÇÕES GERAIS --- */
+/* ===================================================== */
+/* ================ CONFIGURAÇÕES GLOBAIS ============== */
+/* ===================================================== */
+
 @import "colors.css";
 
 * {
   font-family: "Google Sans Display", "JetBrainsMono Nerd Font Propo";
-  font-weight: 700;
+  font-weight: 500;
   color: @on_surface;
-  border-color: none;
-  outline: none !important;
-  box-shadow: none !important;
-  -gtk-outline-radius: 0 !important;
-  -gtk-outline-width: 0 !important;
-  outline-color: transparent !important;
-  outline-style: none !important;
   transition:
-        background-color 200ms ease,
-        color 200ms ease,
-        border-color 200ms ease,
-        transform 200ms ease,
-        box-shadow 200ms ease
+    background-color 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    transform 200ms ease,
+    box-shadow 200ms ease;
 }
 
-/* Força o estado de foco a não ter estilo visual */
-*:focus, *:active, *:checked, *:hover {
-    outline: none !important;
-    outline-style: none !important;
-    box-shadow: none !important;
-}
 
-/* Especificamente para a estrutura interna de listas/caixas do SwayNC */
-row, box, button, label {
-    outline: none !important;
-    box-shadow: none !important;
-}
+/* ===================================================== */
+/* =================== CONTROL CENTER ================== */
+/* ===================================================== */
 
 .control-center {
-  background-color: alpha(@surface_container, 0.7);
-  border: 1px solid @outline_variant;
-  border-radius: 20px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.8);
-  padding: 6px;
   margin: -10px;
+  padding: 6px;
+
+  border-radius: 20px;
+
+  background-color: alpha(@surface_container, 0.7);
+
+  border: 1px solid @outline_variant;
+
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.8);
 }
+
+
+/* ===================================================== */
+/* ================= CONTAINER NOTIF =================== */
+/* ===================================================== */
 
 #notifications,
 #notification-list {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 20px;
+  border-radius: 20px;
+
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
-/* --- NOTIFICAÇÕES --- */
-.notification {
-  background-color: alpha(@surface_container, 0.7);
-  border: 1px solid @outline_variant;
-  border-radius: 20px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.8);
-  transition: background-color 0.1s ease;
+.floating-notifications {
+  margin-top: -4px;
+  margin-right: -4px;
   padding: 10px;
+}
+
+
+/* ===================================================== */
+/* ===================== NOTIFICAÇÃO =================== */
+/* ===================================================== */
+
+.notification {
   margin: 6px 0;
+  padding: 10px;
+
+  border-radius: 20px;
+
+  background-color: alpha(@surface_container, 0.7);
+
+  border: 1px solid @outline_variant;
+
+  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.8);
+
+  transition: background-color 0.1s ease;
 }
 
 .notification:hover {
-  background-color: @surface_container_high;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.8),
-  inset 0 0 12px 0 alpha(@primary, 0.4);
-  }
+  background-color: @primary;
+
+  border: 2px solid @primary;
+}
+
+.notification:hover label {
+  color: @surface;
+}
 
 .notification-group {
   background: transparent;
   border: none;
 }
 
-.floating-notifications {
-  padding: 10px;
-  margin-top: -4px;
-  margin-right: -4px;
-}
+
+/* ===================================================== */
+/* ============== ELEMENTOS DA NOTIF =================== */
+/* ===================================================== */
 
 .notification-action {
   margin-left: 3px;
-  color: @on_primary_container;
-  background-color: @primary_container;
-  border: 1px solid @primary;
+
   border-radius: 8px;
+
+  background-color: @surface_container;
+
+  border: 1px solid @primary;
+}
+
+.notification-action label {
+  color: @primary;
+}
+
+.notification-action:hover {
+  background-color: @primary;
+}
+
+.notification-action:hover label {
+  color: @on_primary;
 }
 
 .notification-default-action:hover,
-.notification-content:hover,
-.notification-action:hover {
+.notification-content:hover {
   background-color: transparent;
 }
 
-/* Botão de fechar da notificação */
+
+/* ---------------- BOTÃO FECHAR ---------------- */
+
 .close-button {
-  background: @surface_container;
-  color: white;
-  padding: 0;
-  border-radius: 999px;
   margin-top: 14px;
   margin-right: 8px;
+  padding: 0;
+
   min-width: 24px;
   min-height: 24px;
+
+  border-radius: 999px;
+
+  background: @surface_container;
+  color: white;
+
   border: none;
+
   box-shadow: none;
 }
 
@@ -114,30 +150,44 @@ row, box, button, label {
   color: black;
 }
 
-/* --- WIDGETS (Títulos e Botões) --- */
+
+/* ===================================================== */
+/* ===================== WIDGETS ======================= */
+/* ===================================================== */
+
 .widget-title {
-  color: @primary;
+  margin-bottom: 10px;
+
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 10px;
+
+  color: @primary;
 }
 
-/* --- GRID DE BOTÕES (AJUSTADO: PILL + INVERSÃO NO HOVER) --- */
+
+/* ---------------- GRID BOTÕES ---------------- */
+
 .widget-buttons-grid {
-  background-color: rgba(0, 0, 0, 0.2);
-  padding: 10px;
   margin: 12px;
+  padding: 10px;
+
   border-radius: 24px;
+
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .widget-buttons-grid button {
+  margin: 2px;
+  padding: 10px 20px;
+
+  font-size: 18px;
+
+  border-radius: 999px;
+
   background: @secondary_container;
   color: @on_secondary_container;
-  border: none; /* Removida borda para look M3 */
-  margin: 2px;
-  padding: 10px 20px; 
-  font-size: 18px;
-  border-radius: 999px; /* Formato Pill */
+
+  border: none;
 }
 
 .widget-buttons-grid button image {
@@ -145,9 +195,15 @@ row, box, button, label {
 }
 
 .widget-buttons-grid button:hover {
-  background: @on_secondary_container; /* Inversão de fundo */
-  color: @secondary_container; /* Inversão de cor */
+  background: @on_secondary_container;
+  color: @secondary_container;
+
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.widget-buttons-grid button:hover label,
+.widget-buttons-grid button:hover image {
+  color: @surface_container;
 }
 
 .widget-buttons-grid button:checked {
@@ -160,16 +216,18 @@ row, box, button, label {
   color: @primary;
 }
 
-.widget-buttons-grid button:hover label,
-.widget-buttons-grid button:hover image {
-color: @surface_container;
-}
+
+/* ---------------- SWITCH ---------------- */
 
 switch {
-  border-radius: 999px;
-  border: 1px solid @outline;
-  background-color: @surface_container_highest;
   padding: 0px;
+
+  border-radius: 999px;
+
+  background-color: @surface_container_highest;
+
+  border: 1px solid @outline;
+
   transition: all 200ms ease;
 }
 
@@ -179,33 +237,41 @@ switch:checked {
 }
 
 switch slider {
-  /* Mantendo a margem fixa para um deslize linear */
   margin: 4px;
-  background-color: @outline;
+
   border-radius: 999px;
+
+  background-color: @outline;
+
   transition: all 200ms ease;
 }
 
 switch:checked slider {
   background-color: @on_primary;
-  /* 20px é o valor ideal para uma largura de 44px sem vazar */
   transform: translateX(2px);
 }
 
-/* --- SLIDERS (AFINADOS - ANDROID 15) --- */
-.widget-volume, .widget-backlight {
+
+/* ---------------- SLIDERS ---------------- */
+
+.widget-volume,
+.widget-backlight {
   margin: 4px 10px;
 }
 
-.widget-volume image, .widget-backlight image {
+.widget-volume image,
+.widget-backlight image {
   font-size: 24px;
 }
 
 scale.horizontal trough {
-  background-color: @surface_container_highest;
-  border: none;
+  min-height: 18px;
+
   border-radius: 999px;
-  min-height: 18px; /* Afinado conforme solicitado */
+
+  background-color: @surface_container_highest;
+
+  border: none;
 }
 
 .widget-volume scale trough highlight,
@@ -215,22 +281,30 @@ scale.horizontal trough {
 }
 
 scale slider {
-  background-color: @surface_container_high;
-  border: 1px solid @surface_container_low;
-  padding: 6px 14px;
-  border-radius: 999px;
   margin: -6px;
+  padding: 6px 14px;
+
+  border-radius: 999px;
+
+  background-color: @surface_container_high;
+
+  border: 1px solid @surface_container_low;
 }
 
-/* --- BOTÃO AO LADO DO SLIDER (REDONDINHO) --- */
+
+/* ---------------- BOTÃO AO LADO DO SLIDER ---------------- */
+
 .widget-volume > box > button {
-  background: @secondary_container;
-  border: 1px solid @surface_container_high;
-  border-radius: 999px;
-  color: @on_secondary_container;
-  padding: 0px 4px;
   margin: 4px;
   margin-left: 5px;
+  padding: 0px 4px;
+
+  border-radius: 999px;
+
+  background: @secondary_container;
+  color: @on_secondary_container;
+
+  border: 1px solid @surface_container_high;
 }
 
 .widget-volume > box > button:hover {
@@ -240,19 +314,29 @@ scale slider {
 
 .widget-volume > box > button:hover image,
 .widget-volume > box > button:hover label {
-color: @on_primary;
-
+  color: @on_primary;
 }
 
-.mpris {
-    color: white;
+
+/* ===================================================== */
+/* ===================== OUTROS ======================== */
+/* ===================================================== */
+
+.widget-mpris *,
+.widget-mpris * label{
+  color: rgba(255, 255, 255, 0.8);
 }
 
-/* --- SCROLLBAR --- */
-scrollbar, scrollbar slider, scrollbar trough {
+/* ---------------- SCROLLBAR ---------------- */
+
+scrollbar,
+scrollbar slider,
+scrollbar trough {
+  margin: 0;
+  padding: 0;
+
   background: transparent;
   color: transparent;
+
   border: none;
-  padding: 0;
-  margin: 0;
 }
