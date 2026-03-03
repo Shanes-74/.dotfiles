@@ -65,8 +65,7 @@
       "show-per-app": true
     },
     "backlight": {
-      "label": "󰃞",
-      "device": "intel_backlight"
+      "label": "󰃞"
     },
     "buttons-grid": {
       "actions": [
