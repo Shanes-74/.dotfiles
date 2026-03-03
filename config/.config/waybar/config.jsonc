@@ -34,7 +34,6 @@
     ],
 
     "hyprland/workspaces": {
-        "interval": 5,
         "format": "",
         "on-scroll-up": "hyprctl dispatch workspace e+1",
         "on-scroll-down": "hyprctl dispatch workspace e-1",
@@ -45,8 +44,8 @@
     
     "mpris": {
         "player": "spotify",
-        "format": "  {artist} - {title}",
-        "format-paused": "  {artist} - {title}",
+        "format": " {artist} - {title}",
+        "format-paused": " {artist} - {title}",
         "tooltip-format": "{album} - {title}\n{artist}",
         "max-length": 30,
         "on-click": "playerctl -p spotify play-pause",
@@ -58,18 +57,14 @@
 	"group/tray-expander": {
 			"orientation": "inherit",
 			"drawer": {
-				"transition-duration": 600,
+				"transition-duration": 500,
 				"children-class": "tray-group-item"
 			},
 			"modules": ["custom/expand-icon", "tray"]
 	},
 	"custom/expand-icon": {
 			"format": "󰅁",
-			"tooltip": false,
-			"on-scroll-up": "",
-			"on-scroll-down": "",
-			"on-scroll-left": "",
-			"on-scroll-right": ""
+			"tooltip": false
 	},
     "tray": {
         "icon-size": 24,
@@ -101,8 +96,8 @@
         },
         "format": "{icon} {capacity}%", // Padrão (descarregando)
         "format-full": "{icon}",
-        "format-charging": "{icon} {capacity}%", // Use "{icon}" para o ícone animado/graduado
-        "format-plugged": "", // Opcional: Se quiser um ícone estático quando estiver ligado/cheio
+        "format-charging": " {capacity}%", // Use "{icon}" para o ícone animado/graduado
+        //"format-plugged": "", // Opcional: Se quiser um ícone estático quando estiver ligado/cheio
     
         // ATENÇÃO: format-icons deve ser um OBJETO, não uma LISTA
         "format-icons": ["", "", "", "", ""],
@@ -144,7 +139,7 @@
             "car": "",
             "default": ["", "", ""]
         },
-        "tooltip-format": "{desc}"
+        "tooltip-format": "Saida: {desc} - ({volume}%)\nEntrada: {source_desc}"
     },
     
     "memory": {
