@@ -1,82 +1,89 @@
+/* ===================================================== */
+/* ================== IMPORT & GLOBAL ================== */
+/* ===================================================== */
+
 @import "colors.css";
 
 * {
     font-family: "Google Sans Display", "JetBrainsMono Nerd Font Propo";
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 500;
 }
+
+/* ===================================================== */
+/* =================== WAYBAR ROOT ===================== */
+/* ===================================================== */
 
 #waybar {
     background: transparent;
 }
 
-
+/* ===================================================== */
+/* ==================== WORKSPACES ===================== */
+/* ===================================================== */
 
 #workspaces {
-    background: alpha(@surface_container, 0.7);
     margin: 18px 4px;
-    padding: 0px;
-    border-radius: 9999px;
+    padding: 0;
+
+    background: alpha(@surface_container, 0.7);
+
     border: 1px solid @outline_variant;
-    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.8);
+    border-radius: 9999px;
+
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
 }
 
 #workspaces button {
-    font-size: 24px;
-    font-weight: bold;
-    color: alpha(@primary, 0.51);
-    border: 3px solid @primary;
-    background: alpha(@surface_container, 0.51);
-    border-radius: 9999px;
     margin: 8px;
     padding: 0 4px;
+
+    font-size: 24px;
+    font-weight: bold;
+
+    color: alpha(@primary, 0.51);
+    background: alpha(@surface_container, 0.51);
+
+    border: 3px solid @primary;
+    border-radius: 9999px;
+
+    transition: all 180ms cubic-bezier(.4,0,.2,1);
 }
 
+/* States */
+
 #workspaces button.empty {
-    color: transparent
+    color: transparent;
 }
 
 #workspaces button.active {
-    font-size: 24px;
-    font-weight: bold;
-    border-color: @primary;
     color: @primary;
+    border-color: @primary;
 }
 
 #workspaces button.urgent {
-    background-color: red;
-    color: white;
+    color: @on_error;
+    background-color: @error;
 }
 
 #workspaces button:hover {
+    color: @on_primary;
     background-color: @primary;
-    color: rgba(0, 0, 0, 0.6);
 }
 
-#workspaces button.active:hover {
-    background-color: @primary;
-    color: rgba(0, 0, 0, 0.6);
-}
+/* Edge alignment */
 
-#workspaces button.empty:hover {
-    background-color: @primary;
-    color: transparent;
-
-}
-
-
-
-/* If workspaces is the leftmost module, omit left margin */
-.modules-left>widget:first-child>#workspaces {
+.modules-left > widget:first-child > #workspaces {
     margin-left: 0;
 }
 
-/* If workspaces is the rightmost module, omit right margin */
-.modules-right>widget:last-child>#workspaces {
+.modules-right > widget:last-child > #workspaces {
     margin-right: 0;
 }
 
-
+/* ===================================================== */
+/* ===================== MODULE BASE =================== */
+/* ===================================================== */
 
 #clock,
 #battery,
@@ -92,17 +99,23 @@
 #custom-clipboard,
 #custom-pacman,
 #mpris,
-#custom-weather, 
+#custom-weather,
 #custom-clock,
 #custom-expand-icon {
+
+    margin: 18px 4px;
+    padding: 0 13px;
+
     font-size: 22px;
+
     color: @primary;
     background: alpha(@surface_container, 0.7);
-    border-radius: 9999px;
+
     border: 1px solid @outline_variant;
-    margin: 18px 4px;
-    padding: 0px 13px;
+    border-radius: 9999px;
+
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.8);
+
     transition:
         transform 180ms cubic-bezier(.4,0,.2,1),
         background-color 200ms ease,
@@ -110,7 +123,7 @@
         border-color 200ms ease;
 }
 
-
+/* Hover (shared) */
 
 #clock:hover,
 #battery:hover,
@@ -127,54 +140,77 @@
 #custom-pacman:hover,
 #custom-weather:hover,
 #custom-clock:hover {
-    background: @primary;
-    color: @surface_container_high;
-    font-size: 24px;
+
     margin: 14px 2px;
     padding: 1px 17px;
+
+    font-weight: 700;
+
+    color: @on_primary;
+    background: @primary;
+
+    border: 2px solid @primary;
 }
+    
+/* ===================================================== */
+/* ================== MODULE EXCEPTIONS ================= */
+/* ===================================================== */
 
 #custom-expand-icon {
-	font-size: 20px;
     margin: 26px 4px;
-    padding: 0px 12px;
+    padding: 0 12px;
+
+    font-size: 20px;
 }
 
 #tray {
     padding: 0 10px;
 }
 
+/* ---------------- MPRIS ---------------- */
+
 #mpris {
     font-size: 20px;
 }
+
 #mpris:hover {
     font-size: 21px;
 }
+
 #mpris.paused {
-    color: alpha(@on_surface_variant,.5);
+    color: alpha(@on_surface, 0.5);
 }
+
 #mpris.paused:hover {
-    color: alpha(@surface_container_high,.65);
+    color: alpha(@surface_container_high, 0.6);
 }
 
-
+/* ===================================================== */
+/* ==================== BATTERY ======================== */
+/* ===================================================== */
 
 #battery.charging,
 #battery.plugged {
     color: green;
 }
 
+#battery.charging:hover,
+#battery.plugged:hover {
+    color: greenyellow;
+}
+
 @keyframes blink {
     to {
-        background-color: @primary;
         color: @surface_container_high;
+        background-color: @primary;
     }
 }
 
-/* Using steps() instead of linear as a timing function to limit cpu usage */
 #battery.critical:not(.charging) {
-    background-color: red;
-    color: @surface_container_high;
+
+    color: @on_error;
+    background-color: @error;
+
     animation-name: blink;
     animation-duration: 0.5s;
     animation-timing-function: steps(12);
@@ -182,13 +218,19 @@
     animation-direction: alternate;
 }
 
+/* ===================================================== */
+/* ======================= TRAY ======================== */
+/* ===================================================== */
 
+#tray {
+    border-radius: 9999px;
+}
 
-#tray>.passive {
+#tray > .passive {
     -gtk-icon-effect: dim;
 }
 
-#tray>.needs-attention {
+#tray > .needs-attention {
+    background-color: @error;
     -gtk-icon-effect: highlight;
-    background-color: red;
 }
