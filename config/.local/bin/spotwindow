@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configurações
-APP_COMMAND="spotify-launcher"
+APP_COMMAND="spotify"
 # Procuramos pelo processo real do spotify, não o script
 REAL_PROCESS="spotify"
 HIDDEN_WS="special:magic_spotify"
