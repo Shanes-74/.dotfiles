@@ -1,4 +1,6 @@
 @import url("colors.css");
+@import url("libadwaita-tweaks.css");
+@import url("libadwaita.css");
 
 * {
     font-weight: 500;
