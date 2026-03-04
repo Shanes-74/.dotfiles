@@ -6,23 +6,37 @@
     font-family: "Google Sans Display", sans-serif;
 }
 
-stackswitcher button:checked,
-stackswitcher button.active {
-    color: @accent_color;
-    box-shadow: inset 0 -3px 0 0 @accent_color;
-}
-
-notebook > header > tabs > tab:checked {
-    box-shadow: inset 0 -3px 0 0 @accent_color;
-    color: @accent_color;
-}
-
+/* ========== BOTÕES ========== */
 button.suggested-action {
     background-color: @accent_bg_color;
     color: @accent_fg_color;
     border-color: @accent_bg_color;
 }
 
+button.destructive-action {
+    background-color: @destructive_bg_color;
+    color: @destructive_fg_color;
+    border-color: @destructive_bg_color;
+}
+
+button:checked {
+    background-color: alpha(@accent_bg_color, 0.2);
+    color: @accent_color;
+}
+
+/* ========== STACKSWITCHER & NOTEBOOK ========== */
+stackswitcher button:checked,
+stackswitcher button.active {
+    color: @accent_color;
+    box-shadow: inset 0 -3px 0 0 @accent_color;
+}
+
+notebook tab:checked {
+    box-shadow: inset 0 -3px 0 0 @accent_color;
+    color: @accent_color;
+}
+
+/* ========== SWITCHES ========== */
 switch:checked {
     background-color: @accent_bg_color;
     border-color: @accent_bg_color;
@@ -31,106 +45,219 @@ switch:checked slider {
     background-color: @accent_fg_color;
 }
 
+/* ========== CHECKBOXES & RADIOS ========== */
 check:checked, radio:checked {
     background-color: @accent_bg_color;
     color: @accent_fg_color;
     border-color: @accent_bg_color;
 }
 
+/* ========== PROGRESSBAR ========== */
 progressbar progress {
     background-color: @accent_bg_color;
     border-color: @accent_bg_color;
 }
-scale highlight {
+
+/* ========== SCALE (GTK3) ========== */
+scale trough highlight {
     background-color: @accent_bg_color;
 }
 
+/* ========== LEVELBAR (GTK3) ========== */
+levelbar block.filled {
+    background-color: @accent_bg_color;
+}
+
+/* ========== SELEÇÃO / HIGHLIGHT ========== */
 selection, :selected, .highlight {
     background-color: @accent_bg_color;
     color: @accent_fg_color;
 }
 
-calendar-view:selected {
+/* ========== CALENDAR (GTK3) ========== */
+calendar:selected {
     background-color: @accent_bg_color;
     color: @accent_fg_color;
 }
-calendar-view:indeterminate {
-    color: @accent_color;
-    box-shadow: inset 0 0 0 1px @accent_color;
+calendar .calendar-day.other-month {
+    color: alpha(@window_fg_color, 0.5);
 }
-.calendar-today-indicator,
-calendar-view .today-indicator {
+calendar .calendar-day.today {
     background-color: @accent_bg_color;
     color: @accent_fg_color;
 }
 
+/* ========== LINKS & ENTRIES ========== */
 link, label.link {
     color: @accent_color;
 }
 entry:focus {
     border-color: @accent_bg_color;
 }
-*:focus {
-    outline-color: alpha(@accent_color, 0.5);
+
+/* ========== SCROLLBARS (GTK3) ========== */
+scrollbar {
+    background-color: @view_bg_color;
+}
+scrollbar slider {
+    background-color: alpha(@window_fg_color, 0.4);
+    border-radius: 8px;
+}
+scrollbar slider:hover {
+    background-color: alpha(@window_fg_color, 0.6);
+}
+scrollbar slider:active {
+    background-color: @accent_bg_color;
 }
 
+/* ========== MENUS (GTK3) ========== */
+menu {
+    background-color: @popover_bg_color;
+    color: @popover_fg_color;
+    border: 1px solid @shade_color;
+}
+menuitem:hover {
+    background-color: alpha(@accent_bg_color, 0.2);
+}
+menuitem:selected {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+}
+
+/* ========== TOOLTIPS (GTK3) ========== */
+tooltip {
+    background-color: @card_bg_color;
+    color: @card_fg_color;
+    border: 1px solid @shade_color;
+    border-radius: 6px;
+}
+tooltip label {
+    color: @card_fg_color;
+}
+
+/* ========== SPINBUTTONS (GTK3) ========== */
+spinbutton button:active {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+}
+
+/* ========== COMBOBOX (GTK3) ========== */
+combobox button:checked {
+    background-color: alpha(@accent_bg_color, 0.2);
+    color: @accent_color;
+}
+
+/* ========== HEADERBAR (GTK3) ========== */
 headerbar.default-decoration {
     margin-bottom: 50px;
     margin-top: -100px;
 }
 
+/* ========== JANELAS (GTK3) ========== */
 window.csd,
 window.csd decoration {
     box-shadow: none;
 }
 
-messagedialog, 
-window.dialog, 
+/* ========== DIÁLOGOS (GTK3) ========== */
+messagedialog,
+window.dialog,
 dialog {
     background-color: @dialog_bg_color;
     color: @dialog_fg_color;
 }
 
-messagedialog button, 
-window.dialog button, 
+/* Botões em diálogos - SEM !important para permitir cores contextuais */
+messagedialog button,
+window.dialog button,
 dialog button {
-    color: @dialog_fg_color !important;
+    color: @dialog_fg_color;
 }
 
-messagedialog button label, 
-window.dialog button label, 
+messagedialog button label,
+window.dialog button label,
 dialog button label {
-    color: @dialog_fg_color !important;
+    color: @dialog_fg_color;
 }
 
-.sidebar, 
-stacksidebar, 
+/* Botão de ação sugerida em diálogos (ex: Cancelar) */
+messagedialog button.suggested-action,
+window.dialog button.suggested-action,
+dialog button.suggested-action {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+    border-color: @accent_bg_color;
+}
+
+messagedialog button.suggested-action label,
+window.dialog button.suggested-action label,
+dialog button.suggested-action label {
+    color: @accent_fg_color;
+}
+
+/* Botão de ação destrutiva em diálogos (ex: Esvaziar lixeira, Excluir) */
+messagedialog button.destructive-action,
+window.dialog button.destructive-action,
+dialog button.destructive-action {
+    background-color: @destructive_bg_color;
+    color: @destructive_fg_color;
+    border-color: @destructive_bg_color;
+}
+
+messagedialog button.destructive-action label,
+window.dialog button.destructive-action label,
+dialog button.destructive-action label {
+    color: @destructive_fg_color;
+}
+
+/* Hover states para botões de diálogo */
+messagedialog button:hover,
+window.dialog button:hover,
+dialog button:hover {
+    opacity: 0.9;
+}
+
+messagedialog button.suggested-action:hover,
+window.dialog button.suggested-action:hover,
+dialog button.suggested-action:hover {
+    background-color: shade(@accent_bg_color, 1.1);
+}
+
+messagedialog button.destructive-action:hover,
+window.dialog button.destructive-action:hover,
+dialog button.destructive-action:hover {
+    background-color: shade(@destructive_bg_color, 1.1);
+}
+
+/* Área de ação do diálogo (onde ficam os botões) */
+messagedialog .dialog-action-area,
+window.dialog .dialog-action-area,
+dialog .dialog-action-area {
+    border-top: 1px solid @shade_color;
+}
+
+/* ========== SIDEBAR (GTK3) ========== */
+.sidebar,
+stacksidebar,
 list.navigation-sidebar {
     background-color: @sidebar_bg_color;
     color: @window_fg_color;
 }
 
-.sidebar label, 
-stacksidebar label, 
-list.navigation-sidebar label {
-    color: inherit;
-}
-
-.sidebar row:hover, 
+.sidebar row:hover,
 stacksidebar row:hover,
 list.navigation-sidebar row:hover {
     background-color: alpha(@window_fg_color, 0.1);
 }
 
-.sidebar row:selected, 
+.sidebar row:selected,
 stacksidebar row:selected,
 list.navigation-sidebar row:selected {
     background-color: @accent_bg_color;
     color: @accent_fg_color;
 }
 
-.sidebar row:selected label, 
-stacksidebar row:selected label,
-list.navigation-sidebar row:selected label {
-    color: @accent_fg_color;
+/* ========== SEPARADORES (GTK3) ========== */
+separator {
+    background-color: @shade_color;
 }
