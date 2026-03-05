@@ -27,8 +27,9 @@
         "memory",
         "custom/pacman",
         "custom/clipboard",
-        "pulseaudio",
-        "network",
+        //"pulseaudio",
+        //"network",
+        "group/controls-expander",
         "battery",
         "custom/power"
     ],
@@ -44,14 +45,14 @@
     
     "mpris": {
         "player": "spotify",
-        "format": " {artist} - {title}",
-        "format-paused": " {artist} - {title}",
+        "format": "  {artist} - {title}",
+        "format-paused": "  {artist} - {title}",
         "tooltip-format": "{album} - {title}\n{artist}",
         "max-length": 30,
         "on-click": "playerctl -p spotify play-pause",
         "on-scroll-up": "playerctl -p spotify previous",
         "on-scroll-down": "playerctl -p spotify next",
-        "on-click-right": "spotwindow"
+        "on-click-right": ".config/scripts/spotify/spotwindow.sh"
     },
 
 	"group/tray-expander": {
@@ -81,34 +82,22 @@
         "on-click-right": "~/.local/bin/clock-toggle"
     },
 
-
+    "group/controls-expander": {
+			"orientation": "inherit",
+			"drawer": {
+				"transition-duration": 500,
+				"children-class": "tray-group-item"
+			},
+			"modules": ["network", "pulseaudio", "backlight"]
+    },
     "backlight": {
-        // "device": "acpi_video1",
-        "format": "{icon}",
+        "format": "{icon}  {percent}%",
         "format-icons": ["󰃚", "󰃛", "󰃜", "󰃝", "󰃞", "󰃟", "󰃠"],
-        "tooltip-format": "Brilho: {percent}%"
+        "on-scroll-up": "swayosd-client --brightness +5",
+        "on-scroll-down": "swayosd-client --brightness -5",
+        "tooltip": false
     },
-
-    "battery": {
-        "states": {
-            "warning": 30,
-            "critical": 15
-        },
-        "format": "{icon} {capacity}%", // Padrão (descarregando)
-        "format-full": "{icon}",
-        "format-charging": " {capacity}%", // Use "{icon}" para o ícone animado/graduado
-        //"format-plugged": "", // Opcional: Se quiser um ícone estático quando estiver ligado/cheio
-    
-        // ATENÇÃO: format-icons deve ser um OBJETO, não uma LISTA
-        "format-icons": ["", "", "", "", ""],
-    
-        "tooltip-format": "{capacity}% - Descarregado em: {time}",
-        "tooltip-format-charging": "{capacity}% - Carregado em: {time}",
-        "interval": 5
-    },
-        
     "network": {
-        // "interface": "wlp2*", // (Optional) To force the use of this interface
         "format-wifi": "{icon}",
         "format-icons": ["󰤫", "󰤟", "󰤢", "󰤥", "󰤨"],
         "format-ethernet": "",
@@ -117,10 +106,8 @@
         "on-click": "nmgui",
         "tooltip-format": "{essid}\nSinal: {signalStrength}%\nIP: {ipaddr}"
     },
-
     "pulseaudio": {
-        "scroll-step": 1, // %, can be a float
-        "format": "{icon}{format_source}",
+        "format": "{icon}  {volume}%{format_source}",
         "format-bluetooth": "󰂱",
         "format-bluetooth-muted": "󰂲",
         "format-muted": "",
@@ -139,9 +126,27 @@
             "car": "",
             "default": ["", "", ""]
         },
-        "tooltip-format": "Saida: {desc} - ({volume}%)\nEntrada: {source_desc}"
+        "tooltip-format": "Saida: {desc}\nEntrada: {source_desc}"
     },
     
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%", // Padrão (descarregando)
+        "format-full": "{icon}",
+        "format-charging": " {capacity}%", // Use "{icon}" para o ícone animado/graduado
+        //"format-plugged": "", // Opcional: Se quiser um ícone estático quando estiver ligado/cheio
+    
+        // ATENÇÃO: format-icons deve ser um OBJETO, não uma LISTA
+        "format-icons": ["", "", "", "", ""],
+    
+        "tooltip-format": "{capacity}% - Descarregado em: {time}",
+        "tooltip-format-charging": "{capacity}% - Carregado em: {time}",
+        "interval": 5
+    },
+
     "memory": {
         "interval": 5,
         "format": "󰍛 {percentage}%",
