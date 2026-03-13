@@ -54,7 +54,6 @@ load_state() {
 }
 
 apply_hooks() {
-
     hyprctl reload >/dev/null 2>&1 || true
     pkill -USR1 kitty >/dev/null 2>&1 || true
     swaync-client -rs >/dev/null 2>&1 || true
@@ -68,6 +67,9 @@ apply_hooks() {
 
     pkill waybar >/dev/null 2>&1 || true
     waybar >/dev/null 2>&1 &
+
+    pkill hypr-dock >/dev/null 2>&1 || true
+    hypr-dock >/dev/null 2>&1 &
 }
 
 update_sddm() {
@@ -81,7 +83,9 @@ update_sddm() {
 
 load_state
 
-# Wallpaper
+# =====================================================
+# 1. Escolha do wallpaper
+# =====================================================
 if [[ -n "${1:-}" ]]; then
     WALLPAPER="$1"
 else
@@ -95,8 +99,29 @@ else
     WALLPAPER="${FILES[RANDOM % ${#FILES[@]}]}"
 fi
 
+# =====================================================
+# 2. Validações do arquivo de imagem
+# =====================================================
+if [[ ! -f "$WALLPAPER" ]]; then
+    echo "❌ Arquivo não encontrado: $WALLPAPER"
+    exit 1
+fi
+if [[ ! -r "$WALLPAPER" ]]; then
+    echo "❌ Sem permissão de leitura: $WALLPAPER"
+    exit 1
+fi
 
-# Scheme
+# (Opcional) Verifica se a imagem é válida (apenas se o ImageMagick estiver disponível)
+if command -v magick &>/dev/null; then
+    if ! magick identify "$WALLPAPER" &>/dev/null; then
+        echo "❌ Arquivo de imagem inválido ou corrompido: $WALLPAPER"
+        exit 1
+    fi
+fi
+
+# =====================================================
+# 3. Escolha do esquema de cores
+# =====================================================
 if [[ -n "${2:-}" ]]; then
     SELECTED="$2"
 else
@@ -121,11 +146,15 @@ else
 fi
 
 
-# Mode
+# =====================================================
+# 4. Modo (claro/escuro)
+# =====================================================
 MODE="${3:-$MODE}"
 
 
-# swww
+# =====================================================
+# 5. Aplicar wallpaper com swww (transição aleatória)
+# =====================================================
 TRANS=(outer center wipe wave grow)
 T="${TRANS[RANDOM % ${#TRANS[@]}]}"
 
@@ -135,16 +164,37 @@ swww img "$WALLPAPER" \
     --transition-fps 90
 
 
-# matugen
-matugen \
+# =====================================================
+# 6. Verificar configuração do matugen
+# =====================================================
+if [[ ! -f "$CONFIG_MATUGEN" ]]; then
+    echo "❌ Arquivo de configuração do matugen não encontrado: $CONFIG_MATUGEN"
+    exit 1
+fi
+
+
+# =====================================================
+# 7. Executar matugen (não interativo) com source-color-index 0
+# =====================================================
+echo "🎨 Gerando cores com matugen (usando primeira cor da paleta)..."
+if ! matugen \
     -c "$CONFIG_MATUGEN" \
     image "$WALLPAPER" \
     -m "$MODE" \
-    -t "scheme-$SELECTED"
+    -t "scheme-$SELECTED" \
+    --source-color-index 0; then
+    echo "❌ Falha na execução do matugen. Abortando."
+    exit 1
+fi
 
 
+# =====================================================
+# 8. Salvar estado e aplicar hooks
+# =====================================================
 save_state "$WALLPAPER" "$SELECTED" "$MODE"
 
 apply_hooks
 
 update_sddm
+
+echo "✅ Tema aplicado com sucesso!"
