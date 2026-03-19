@@ -1,6 +1,5 @@
 /*****----- Configuration -----*****/
 configuration {
-    disable-history:            false;
     show-icons:                 true;
 }
 
@@ -18,12 +17,10 @@ window {
     location:                   center;
     anchor:                     center;
     fullscreen:                 false;
-    width:                      50%;
+    width:                      65%;
     x-offset:                   0px;
     y-offset:                   0px;
 
-    /* properties for all widgets */
-    enabled:                    true;
     margin:                     0px;
     padding:                    0px;
     cursor:                     "default";
@@ -32,86 +29,41 @@ window {
 
 /*****----- Main Box -----*****/
 mainbox {
-    enabled:                    true;
     spacing:                    15px;
     margin:                     0px;
-    children:                   [ "inputbar", "listview" ];
-    
-}
-
-/*****----- Inputbar -----*****/
-inputbar {
-    enabled:                    true;
-    spacing:                    12px;
-    margin:                     0px;
-    padding:                    15px;
-    border:                     2px;
-    border-radius:              9999px;
-    border-color:               @outline-variant;
-    background-color:           @surface-container;
-    children:                   [ "entry" ];
-}
-
-prompt {
-    enabled:                    true;
-    background-color:           transparent;
-    text-color:                 @primary;
-}
-
-textbox-prompt-colon {
-    enabled:                    true;
-    expand:                     false;
-    str:                        ": ";
-    background-color:           transparent;
-    text-color:                 @on-surface-variant;
-}
-
-entry {
-    enabled:                    true;
-    background-color:           transparent;
-    text-color:                 @on-surface;
-    cursor:                     text;
-    placeholder:                "Seleção de Wallpaper..";
-    placeholder-color:          @outline;
+    children:                   [ "listview" ];
 }
 
 /*****----- Listview -----*****/
 listview {
-    enabled:                    true;
-    spacing:                    20px;
+    spacing:                    15px;
     columns:                    4;
     lines:                      1;
     cycle:                      true;
     dynamic:                    true;
     scrollbar:                  false;
     layout:                     vertical;
-    reverse:                    false;
-    fixed-height:               false;
     fixed-columns:              true;
 
-    spacing:                    15px;
     margin:                     0px;
     padding:                    20px;
     border:                     2px;
     border-radius:              20px;
     border-color:               @outline-variant;
     background-color:           @surface-container;
-    cursor:                     "default";
 }
 
 /*****----- Elements -----*****/
 element {
-    enabled:                    true;
     orientation:                vertical;
     padding:                    8px;
     spacing:                    6px;
     border-radius:              20px;
     background-color:           transparent;
-    highlight:                  none;
 }
 
 element-icon {
-    size:                       280px;
+    size:                       400px;
     horizontal-align:           0.5;
     border-radius:              20px;
     background-color:           transparent;
@@ -121,18 +73,14 @@ element-text {
     enabled:                    false;
 }
 
-/****----- Estados de Selção -----****/
+/****----- Estados de Seleção -----****/
 
-element normal normal {
-    background-color:           transparent;
-    text-color:                 @on-surface;
-}
-
-element selected normal {
+element selected {
     background-color:           @primary;
-    text-color:                 @on-primary;
     border-radius:              20px;
 }
+
+/*****----- Message -----*****/
 
 message {
     padding:                    10px;
