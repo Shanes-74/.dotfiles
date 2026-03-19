@@ -8,6 +8,10 @@ output_path = '~/.config/hypr/modules/colors.conf'
 input_path = '~/.config/matugen/templates/colors.css'
 output_path = '~/.config/waybar/colors.css'
 
+[templates.hypr-dock]
+input_path = '~/.config/matugen/templates/colors.css'
+output_path = '~/.config/hypr-dock/themes/lotos/colors.css'
+
 [templates.kitty]
 input_path = '~/.config/matugen/templates/kitty-colors.conf'
 output_path = '~/.config/kitty/colors.conf'
@@ -67,3 +71,7 @@ output_path = '~/.config/Vencord/themes/matugen.css'
 [templates.sddm]
 input_path = '~/.config/matugen/templates/sddm.conf'
 output_path = '~/.dotfiles/sddm/sddm-current/theme.conf'
+
+ [templates.firefox]
+ input_path = "~/.config/matugen/templates/firefox.css"
+ output_path = "~/.config/mozilla/firefox/chrome/websites/colors.css"
