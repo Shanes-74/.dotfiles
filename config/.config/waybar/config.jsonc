@@ -15,6 +15,7 @@
         //"clock",
         "custom/clock",
         "custom/weather",
+        "custom/hypridle",
         "mpris"
     ],
     "modules-center": [
@@ -45,8 +46,8 @@
     
     "mpris": {
         "player": "spotify",
-        "format": "  {artist} - {title}",
-        "format-paused": "  {artist} - {title}",
+        "format": " {artist} - {title}",
+        "format-paused": " {artist} - {title}",
         "tooltip-format": "{album} - {title}\n{artist}",
         "max-length": 30,
         "on-click": "playerctl -p spotify play-pause",
@@ -56,12 +57,12 @@
     },
 
 	"group/tray-expander": {
-			"orientation": "inherit",
-			"drawer": {
-				"transition-duration": 500,
-				"children-class": "tray-group-item"
-			},
-			"modules": ["custom/expand-icon", "tray"]
+		"orientation": "inherit",
+		"drawer": {
+			"transition-duration": 500,
+			"children-class": "tray-group-item"
+		},
+		"modules": ["custom/expand-icon", "tray"]
 	},
 	"custom/expand-icon": {
 			"format": "󰅁",
@@ -83,14 +84,16 @@
     },
 
     "group/controls-expander": {
-			"orientation": "inherit",
-			"drawer": {
-				"transition-duration": 500,
-				"children-class": "tray-group-item"
-			},
-			"modules": ["network", "pulseaudio", "backlight"]
+        "class": "quick-controls",
+		"orientation": "inherit",
+		"drawer": {
+            "transition-duration": 500,
+			"children-class": "quick-controls-group"
+		},
+		"modules": ["network", "pulseaudio", "backlight"]
     },
     "backlight": {
+        "scroll-step": 1,
         "format": "{icon}  {percent}%",
         "format-icons": ["󰃚", "󰃛", "󰃜", "󰃝", "󰃞", "󰃟", "󰃠"],
         "on-scroll-up": "swayosd-client --brightness +5",
@@ -107,10 +110,11 @@
         "tooltip-format": "{essid}\nSinal: {signalStrength}%\nIP: {ipaddr}"
     },
     "pulseaudio": {
+        "scroll-step": 1,
         "format": "{icon}  {volume}%{format_source}",
-        "format-bluetooth": "󰂱",
-        "format-bluetooth-muted": "󰂲",
         "format-muted": "",
+        "format-bluetooth": "󰂱 {volume}%{format_source}",
+        "format-bluetooth-muted": "󰂲",
         "format-source": "",
         "format-source-muted": " ",
         "on-click": "pavucontrol",
@@ -193,13 +197,13 @@
             "inhibited-none": "󱗢",
             "dnd-inhibited-notification": "󰗞",
             "dnd-inhibited-none": "󰆇"
-    },
-    "return-type": "json",
-    "exec-if": "which swaync-client",
-    "exec": "swaync-client -swb",
-    "on-click": "swaync-client -t -sw",
-    "on-click-right": "swaync-client -d -sw",
-    "escape": true
+        },
+        "return-type": "json",
+        "exec-if": "which swaync-client",
+        "exec": "swaync-client -swb",
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": true
     },
 
   "custom/clipboard": {
@@ -209,23 +213,31 @@
     },
 
     "custom/pacman": {
-    "format": "{icon}{0}",
-    "return-type": "json",
-    "format-icons": {
-        "pending-updates": " ",
-        "updated": ""          
-    },
-    "exec-if": "which waybar-updates",
-    "exec": "waybar-updates",
-    "on-click": "kitty paru -Syu",
-    "hide-if-empty": true
+        "format": "{icon}{0}",
+        "return-type": "json",
+        "format-icons": {
+            "pending-updates": " ",
+            "updated": ""          
+        },
+        "exec-if": "which waybar-updates",
+        "exec": "waybar-updates",
+        "on-click": "kitty paru -Syu",
+        "hide-if-empty": true
     },
 
     "custom/weather": {
         "exec": "waybar-weather -config ~/.config/waybar/custom-modules/waybar-weather/config.toml",
-        "restart-interval": 60,
+        "restart-interval": 300,
         "return-type": "json",
         "hide-empty-text": true,
         "on-click": "gnome-weather"
+    },
+
+ 
+    "custom/hypridle": {
+        "exec": "~/.config/waybar/custom-modules/hypridle/hypridle.sh status",
+        "on-click": "~/.config/waybar/custom-modules/hypridle/hypridle.sh toggle",
+        "interval": 2,
+        "return-type": "json"
     }
 }
