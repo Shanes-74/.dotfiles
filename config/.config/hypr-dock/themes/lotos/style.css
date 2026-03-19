@@ -1,0 +1,67 @@
+@import "colors.css";
+
+window {
+  background-color: transparent;
+}
+
+#app {
+  color: @primary;
+  background: alpha(@surface_container, 0.7);
+
+  border: 1px solid @outline_variant;
+  border-radius: 20px;
+
+  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.5);
+
+  padding: 8px 5px 2px 5px;
+  margin: 10px;
+
+  transition:
+      transform 180ms cubic-bezier(.4,0,.2,1),
+      background-color 200ms ease,
+      color 200ms ease,
+      border-color 200ms ease;
+}
+
+button {
+  background-color: transparent;
+  padding: 5px;
+  border-radius: 50px;
+  border: none;
+}
+
+button:hover {
+  background-color: alpha(@primary, 0.4);
+}
+
+#menu-item {
+  padding: 3px;
+  padding-left: 0;
+}
+
+menu {
+  border: none;
+  box-shadow: none;
+  outline: none;
+  background-image: none;
+}
+
+menuitem {
+  padding: 3px 6px;
+}
+
+#pv-item {
+  background: alpha(@surface_container, 0.7);
+  transition: all .2s ease-out;
+  border-radius: 20px;
+  border: 1px solid @outline_variant;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.5);
+  padding: 5px;
+  margin: 5px;
+}
+
+#pv-item.hover {
+  background: alpha(@surface_container_high, 0.7);
+
+
+}
