@@ -155,13 +155,24 @@ MODE="${3:-$MODE}"
 # =====================================================
 # 5. Aplicar wallpaper com swww (transição aleatória)
 # =====================================================
-TRANS=(outer center wipe wave grow)
+TRANS=(fade outer center wipe wave grow)
 T="${TRANS[RANDOM % ${#TRANS[@]}]}"
+
+# Posição aleatória em pixels baseada na resolução da tela
+RESOLUTION=$(swww query | grep -oP '\d+x\d+' | head -1)
+SCREEN_W=$(echo "$RESOLUTION" | cut -dx -f1)
+SCREEN_H=$(echo "$RESOLUTION" | cut -dx -f2)
+
+POS_X=$((RANDOM % SCREEN_W))
+POS_Y=$((RANDOM % SCREEN_H))
 
 swww img "$WALLPAPER" \
     --transition-type "$T" \
     --transition-duration 1.7 \
-    --transition-fps 90
+    --transition-fps 144 \
+    --transition-bezier 0.4,0.0,0.2,1.0 \
+    --transition-step 90 \
+    --transition-pos "${POS_X},${POS_Y}"
 
 
 # =====================================================
