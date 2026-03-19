@@ -31,7 +31,7 @@
 
   border: 1px solid @outline_variant;
 
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.5);
 }
 
 
@@ -67,9 +67,13 @@
 
   border: 1px solid @outline_variant;
 
-  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.5);
 
   transition: background-color 0.1s ease;
+}
+
+.control-center .notification {
+  background-color: @surface_container;
 }
 
 .notification:hover {
@@ -146,9 +150,8 @@
   color: @surface_container;
 }
 
-.close-button:hover label,
 .close-button:hover image {
-  color: black;
+  color: @surface_container;
 }
 
 
