@@ -22,18 +22,6 @@
 /* ==================== WORKSPACES ===================== */
 /* ===================================================== */
 
-#workspaces {
-    margin: 18px 4px;
-    padding: 0;
-
-    background: alpha(@surface_container, 0.7);
-
-    border: 1px solid @outline_variant;
-    border-radius: 9999px;
-
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
-}
-
 #workspaces button {
     margin: 8px;
     padding: 0 4px;
@@ -45,7 +33,7 @@
     background: alpha(@surface_container, 0.51);
 
     border: 3px solid @primary;
-    border-radius: 9999px;
+    border-radius: 50px;
 
     transition: all 180ms cubic-bezier(.4,0,.2,1);
 }
@@ -85,6 +73,7 @@
 /* ===================== MODULE BASE =================== */
 /* ===================================================== */
 
+#workspaces,
 #clock,
 #battery,
 #memory,
@@ -101,7 +90,8 @@
 #mpris,
 #custom-weather,
 #custom-clock,
-#custom-expand-icon {
+#custom-expand-icon,
+#custom-hypridle {
 
     margin: 18px 4px;
     padding: 0 13px;
@@ -112,9 +102,9 @@
     background: alpha(@surface_container, 0.7);
 
     border: 1px solid @outline_variant;
-    border-radius: 9999px;
+    border-radius: 50px;
 
-    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.5);
 
     transition:
         transform 180ms cubic-bezier(.4,0,.2,1),
@@ -139,7 +129,10 @@
 #mpris:hover,
 #custom-pacman:hover,
 #custom-weather:hover,
-#custom-clock:hover {
+#custom-clock:hover,
+#custom-hypridle:hover,
+#battery.charging:hover,
+#battery.plugged:hover {
 
     margin: 14px 2px;
     padding: 1px 17px;
@@ -157,6 +150,10 @@
 /* ===================================================== */
 /* ================== MODULE EXCEPTIONS ================= */
 /* ===================================================== */
+
+#workspaces {
+    padding: 0;
+}
 
 #custom-expand-icon {
     margin: 26px 4px;
@@ -182,8 +179,14 @@
 #mpris.paused {
     color: alpha(@on_surface, 0.5);
 }
-
 #mpris.paused:hover {
+    color: alpha(@surface_container_high, 0.6);
+}
+
+#custom-hypridle.active {
+    color: alpha(@on_surface, 0.5);
+}
+#custom-hypridle.active:hover {
     color: alpha(@surface_container_high, 0.6);
 }
 
@@ -194,11 +197,6 @@
 #battery.charging,
 #battery.plugged {
     color: green;
-}
-
-#battery.charging:hover,
-#battery.plugged:hover {
-    color: greenyellow;
 }
 
 @keyframes blink {
@@ -225,7 +223,7 @@
 /* ===================================================== */
 
 #tray {
-    border-radius: 9999px;
+    border-radius: 50px;
 }
 
 #tray > .passive {
