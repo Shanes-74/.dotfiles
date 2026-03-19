@@ -1,123 +1,132 @@
 #!/usr/bin/env python3
 
-import os
 import hashlib
 import subprocess
-import multiprocessing
+from multiprocessing.pool import ThreadPool
 from pathlib import Path
+import os
 
 
 # --- CONFIG ---
-USER = "shane"
-
-WALL_DIR = Path(f"/home/{USER}/Imagens/Wallpapers")
-THEME = Path(f"/home/{USER}/.config/scripts/wallpaper/wallmenu.rasi")
-ROFI_THEME = Path(f"/home/{USER}/.config/rofi/rofi.rasi")
-THUMB_DIR = Path(f"/home/{USER}/.cache/wallpaper-thumbs")
+WALL_DIR = Path("~/Imagens/Wallpapers").expanduser()
+THEME = Path("~/.config/scripts/wallpaper/wallmenu.rasi").expanduser()
+ROFI_THEME = Path("~/.config/rofi/rofi.rasi").expanduser()
+THUMB_DIR = Path("~/.cache/wallpaper-thumbs").expanduser()
 
 THUMB_DIR.mkdir(parents=True, exist_ok=True)
+
+EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
+
+# tamanho maior das thumbnails
+THUMB_SIZE = 400
 
 
 # --- HELPERS ---
 
 def hash_path(path: Path) -> str:
-    return hashlib.md5(str(path).encode()).hexdigest()
+    return hashlib.sha1(str(path).encode()).hexdigest()
 
 
-def gen_thumb(img_path: str):
-    img_path = Path(img_path)
-    img_hash = hash_path(img_path)
-    thumb_path = THUMB_DIR / f"{img_hash}.jpg"
+def gen_thumb(img: Path):
+    img_hash = hash_path(img)
+    thumb = THUMB_DIR / f"{img_hash}.jpg"
 
-    if not thumb_path.exists() or img_path.stat().st_mtime > thumb_path.stat().st_mtime:
-        cmd = [
-            "convert", str(img_path),
-            "-thumbnail", "400x400^",
-            "-gravity", "center",
-            "-extent", "400x400",
-            str(thumb_path)
-        ]
-        subprocess.run(cmd, capture_output=True, check=True)
+    try:
+        if thumb.exists() and thumb.stat().st_mtime >= img.stat().st_mtime:
+            return img, thumb
 
-    return img_hash
+        subprocess.run(
+            [
+                "convert",
+                str(img),
+                "-thumbnail", f"{THUMB_SIZE}x{THUMB_SIZE}^",
+                "-gravity", "center",
+                "-extent", f"{THUMB_SIZE}x{THUMB_SIZE}",
+                str(thumb),
+            ],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True,
+        )
+
+    except Exception:
+        return None
+
+    return img, thumb
 
 
-def run_rofi(prompt, items, theme=None, extra_args=None):
-    cmd = ["rofi", "-dmenu", "-p", prompt]
+# --- ROFI ---
+
+def run_rofi(items: str, theme: Path, extra=None):
+    cmd = ["rofi", "-dmenu"]
 
     if theme:
         cmd += ["-theme", str(theme)]
 
-    if extra_args:
-        cmd += extra_args
+    if extra:
+        cmd += extra
 
-    proc = subprocess.Popen(
-        cmd,
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        text=True
-    )
-
-    selected, _ = proc.communicate(input=items)
-    return selected.strip()
+    result = subprocess.run(cmd, input=items, text=True, capture_output=True)
+    return result.stdout.strip()
 
 
 # --- MAIN ---
 
 def main():
 
-    folders = sorted([f.name for f in WALL_DIR.iterdir() if f.is_dir()])
+    if not WALL_DIR.exists():
+        return
 
+    folders = sorted(f.name for f in WALL_DIR.iterdir() if f.is_dir())
     if not folders:
-        print("Nenhuma pasta encontrada.")
         return
 
     selected_folder = run_rofi(
-        "Selecione a Pasta",
         "\n".join(folders),
-        theme=ROFI_THEME,
-        extra_args=["-i", "-matching", "fuzzy"]
+        ROFI_THEME,
+        ["-i", "-matching", "fuzzy"]
     )
 
     if not selected_folder:
         return
 
-    full_path = WALL_DIR / selected_folder
+    folder = WALL_DIR / selected_folder
 
-    extensions = {".jpg", ".jpeg", ".png", ".webp"}
-
-    images = sorted([
-        f for f in full_path.iterdir()
-        if f.is_file() and f.suffix.lower() in extensions
-    ])
+    images = [
+        f for f in folder.iterdir()
+        if f.suffix.lower() in EXTENSIONS and f.is_file()
+    ]
 
     if not images:
         return
 
-    # Pool limitado
-    with multiprocessing.Pool(min(4, multiprocessing.cpu_count())) as pool:
-        pool.map(gen_thumb, map(str, images))
+    workers = min(4, os.cpu_count())
 
-    # Construção eficiente da lista
+    with ThreadPool(workers) as pool:
+        results = pool.map(gen_thumb, images)
+
     entries = []
+    path_map = {}
 
-    for img in images:
-        img_hash = hash_path(img)
-        thumb_path = THUMB_DIR / f"{img_hash}.jpg"
-        entries.append(f"{img.name}\0icon\x1f{thumb_path}")
+    for r in results:
+        if not r:
+            continue
 
-    rofi_list = "\n".join(entries)
+        img, thumb = r
+        entries.append(f"{img.name}\0icon\x1f{thumb}")
+        path_map[img.name] = img
 
-    selected_img_name = run_rofi(
-        "Selecione um Wallpaper",
-        rofi_list,
-        theme=THEME,
-        extra_args=["-show-icons"]
+    if not entries:
+        return
+
+    selected = run_rofi(
+        "\n".join(entries),
+        THEME,
+        ["-show-icons", "-no-config"]
     )
 
-    if selected_img_name:
-        selected_full_path = full_path / selected_img_name
-        subprocess.run(["walset", str(selected_full_path)], check=True)
+    if selected in path_map:
+        subprocess.run(["walset", str(path_map[selected])])
 
 
 if __name__ == "__main__":
