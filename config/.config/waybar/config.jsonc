@@ -1,18 +1,19 @@
 // -*- mode: jsonc -*-
 {
-    "layer": "top", // Waybar at top layer
-    "position": "top", // Waybar position (top|bottom|left|right)
-    "height": 20, // Waybar height (to be removed for auto height)
-    "width": 1902, // Waybar width
-    //"spacing": 6, // Gaps between modules (4px)
+    "layer": "top",
+    "position": "top",
+    "height": 20,
+    "width": 1902,
     "margin-top": -5,
     "margin-bottom": -15,
     "fixed-center": true,
-    
-    // Choose the order of the modules
+
+    // ------------------------------------------------------------
+    // MODULES ORDER
+    // ------------------------------------------------------------
+
     "modules-left": [
         "custom/menu",
-        //"clock",
         "custom/clock",
         "custom/weather",
         "custom/hypridle",
@@ -28,22 +29,18 @@
         "memory",
         "custom/pacman",
         "custom/clipboard",
-        //"pulseaudio",
-        //"network",
-        "group/controls-expander",
+        "network",
+        "group/pulseaudio-expander",
+        "group/backlight-expander",
+        "group/quick-controls",
         "battery",
         "custom/power"
     ],
 
-    "hyprland/workspaces": {
-        "format": "",
-        "on-scroll-up": "hyprctl dispatch workspace e+1",
-        "on-scroll-down": "hyprctl dispatch workspace e-1",
-        "persistent-workspaces": { 
-		    "*": 4
-        }
-    },
-    
+    // ------------------------------------------------------------
+    // NON‑CUSTOM MODULE CONFIGURATIONS
+    // ------------------------------------------------------------
+
     "mpris": {
         "player": "spotify",
         "format": " {artist} - {title}",
@@ -56,50 +53,36 @@
         "on-click-right": ".config/scripts/spotify/spotwindow.sh"
     },
 
-	"group/tray-expander": {
-		"orientation": "inherit",
-		"drawer": {
-			"transition-duration": 500,
-			"children-class": "tray-group-item"
-		},
-		"modules": ["custom/expand-icon", "tray"]
-	},
-	"custom/expand-icon": {
-			"format": "󰅁",
-			"tooltip": false
-	},
+    "hyprland/workspaces": {
+        "format": "",
+        "on-scroll-up": "hyprctl dispatch workspace e+1",
+        "on-scroll-down": "hyprctl dispatch workspace e-1",
+        "persistent-workspaces": {
+            "*": 4
+        }
+    },
+
+    "group/tray-expander": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 400,
+            "children-class": "tray-group-item"
+        },
+        "modules": ["custom/expand-icon", "tray"]
+    },
     "tray": {
         "icon-size": 24,
         "spacing": 10
     },
 
-    "clock": {
-        "timezone": "America/Sao_Paulo",
-        "format": "{:%H:%M}",
-        "format-alt": "{:%d/%m/%y}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "interval": 1,
-        "exec": "test -f ~/.cache/waybar-clock-alt",
-        "on-click-right": "~/.local/bin/clock-toggle"
+    "memory": {
+        "interval": 5,
+        "format": "󰍛 {percentage}%",
+        "tooltip": true,
+        "tooltip-format": "RAM:     {used:0.1f}/{total:0.1f} GiB\nSWAP:   {swapUsed:0.1f}/{swapTotal:0.1f} GiB",
+        "on-click": "kitty btop"
     },
 
-    "group/controls-expander": {
-        "class": "quick-controls",
-		"orientation": "inherit",
-		"drawer": {
-            "transition-duration": 500,
-			"children-class": "quick-controls-group"
-		},
-		"modules": ["network", "pulseaudio", "backlight"]
-    },
-    "backlight": {
-        "scroll-step": 1,
-        "format": "{icon}  {percent}%",
-        "format-icons": ["󰃚", "󰃛", "󰃜", "󰃝", "󰃞", "󰃟", "󰃠"],
-        "on-scroll-up": "swayosd-client --brightness +5",
-        "on-scroll-down": "swayosd-client --brightness -5",
-        "tooltip": false
-    },
     "network": {
         "format-wifi": "{icon}",
         "format-icons": ["󰤫", "󰤟", "󰤢", "󰤥", "󰤨"],
@@ -109,14 +92,29 @@
         "on-click": "nmgui",
         "tooltip-format": "{essid}\nSinal: {signalStrength}%\nIP: {ipaddr}"
     },
+
+    "group/pulseaudio-expander": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 400,
+            "children-class": "pulseaudio-value"
+        },
+        "modules": ["pulseaudio", "pulseaudio#value"]
+    },
+    "pulseaudio#value": {
+        "format": " {volume}%",
+        "on-scroll-up": "swayosd-client --output-volume +5",
+        "on-scroll-down": "swayosd-client --output-volume -5",
+        "on-click": "pavucontrol",
+        "on-click-right": "swayosd-client --output-volume mute-toggle"
+    },
     "pulseaudio": {
-        "scroll-step": 1,
-        "format": "{icon}  {volume}%{format_source}",
+        "format": "{format_source}{icon}",
         "format-muted": "",
-        "format-bluetooth": "󰂱 {volume}%{format_source}",
+        "format-bluetooth": "{format_source}󰂱",
         "format-bluetooth-muted": "󰂲",
         "format-source": "",
-        "format-source-muted": " ",
+        "format-source-muted": " ",
         "on-click": "pavucontrol",
         "on-click-right": "swayosd-client --output-volume mute-toggle",
         "on-scroll-up": "swayosd-client --output-volume +5",
@@ -132,31 +130,64 @@
         },
         "tooltip-format": "Saida: {desc}\nEntrada: {source_desc}"
     },
-    
+
+    "group/backlight-expander": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 400,
+            "children-class": "backlight-value"
+        },
+        "modules": ["backlight", "backlight#value"]
+    },
+    "backlight#value": {
+        "format": " {percent}%",
+        "on-scroll-up": "swayosd-client --brightness +5",
+        "on-scroll-down": "swayosd-client --brightness -5"
+    },
+    "backlight": {
+        "format": "󰃟",
+        "on-scroll-up": "swayosd-client --brightness +5",
+        "on-scroll-down": "swayosd-client --brightness -5",
+        "tooltip": false
+    },
+
     "battery": {
         "states": {
             "warning": 30,
             "critical": 15
         },
-        "format": "{icon} {capacity}%", // Padrão (descarregando)
+        "format": "{icon} {capacity}%",
         "format-full": "{icon}",
-        "format-charging": " {capacity}%", // Use "{icon}" para o ícone animado/graduado
-        //"format-plugged": "", // Opcional: Se quiser um ícone estático quando estiver ligado/cheio
-    
-        // ATENÇÃO: format-icons deve ser um OBJETO, não uma LISTA
+        "format-charging": " {capacity}%",
         "format-icons": ["", "", "", "", ""],
-    
         "tooltip-format": "{capacity}% - Descarregado em: {time}",
         "tooltip-format-charging": "{capacity}% - Carregado em: {time}",
         "interval": 5
     },
 
-    "memory": {
-        "interval": 5,
-        "format": "󰍛 {percentage}%",
-        "tooltip": true,
-        "tooltip-format": "RAM:     {used:0.1f}/{total:0.1f} GiB\nSWAP:   {swapUsed:0.1f}/{swapTotal:0.1f} GiB",
-       	"on-click": "kitty btop"
+    "clock": {
+        "timezone": "America/Sao_Paulo",
+        "format": "{:%H:%M}",
+        "format-alt": "{:%d/%m/%y}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "interval": 1,
+        "exec": "test -f ~/.cache/waybar-clock-alt",
+        "on-click-right": "~/.local/bin/clock-toggle"
+    },
+
+    // ------------------------------------------------------------
+    // CUSTOM MODULES
+    // ------------------------------------------------------------
+
+    "custom/expand-icon": {
+        "format": "󰅁",
+        "tooltip": false
+    },
+
+    "custom/menu": {
+        "on-click": "rofi -show drun -theme ~/.config/rofi/rofi.rasi",
+        "format": "󰣇",
+        "tooltip": false
     },
 
     "custom/clock": {
@@ -168,16 +199,19 @@
         "tooltip": true
     },
 
-    "custom/menu": {
-        "on-click": "rofi -show drun -theme ~/.config/rofi/rofi.rasi",
-        "format": "󰣇",
-        "tooltip": false
+    "custom/weather": {
+        "exec": "waybar-weather -config ~/.config/waybar/custom-modules/waybar-weather/config.toml",
+        "restart-interval": 300,
+        "return-type": "json",
+        "hide-empty-text": true,
+        "on-click": "gnome-weather"
     },
 
-    "custom/power": {
-        "format" : "",
-        "on-click": "wlogout -b 4 -T 350 -B 325 -c 10",
-		"tooltip": false
+    "custom/hypridle": {
+        "exec": "~/.config/waybar/custom-modules/hypridle/hypridle.sh status",
+        "on-click": "~/.config/waybar/custom-modules/hypridle/hypridle.sh toggle",
+        "interval": 2,
+        "return-type": "json"
     },
 
     "custom/wallpaper": {
@@ -206,18 +240,12 @@
         "escape": true
     },
 
-  "custom/clipboard": {
-        "format": "󰨸",
-        "on-click": "cliphist list | rofi -dmenu -display-columns 2 | cliphist decode | wl-copy",
-        "tooltip": false
-    },
-
     "custom/pacman": {
         "format": "{icon}{0}",
         "return-type": "json",
         "format-icons": {
             "pending-updates": " ",
-            "updated": ""          
+            "updated": ""
         },
         "exec-if": "which waybar-updates",
         "exec": "waybar-updates",
@@ -225,19 +253,15 @@
         "hide-if-empty": true
     },
 
-    "custom/weather": {
-        "exec": "waybar-weather -config ~/.config/waybar/custom-modules/waybar-weather/config.toml",
-        "restart-interval": 300,
-        "return-type": "json",
-        "hide-empty-text": true,
-        "on-click": "gnome-weather"
+    "custom/clipboard": {
+        "format": "󰨸",
+        "on-click": "cliphist list | rofi -dmenu -display-columns 2 | cliphist decode | wl-copy",
+        "tooltip": false
     },
 
- 
-    "custom/hypridle": {
-        "exec": "~/.config/waybar/custom-modules/hypridle/hypridle.sh status",
-        "on-click": "~/.config/waybar/custom-modules/hypridle/hypridle.sh toggle",
-        "interval": 2,
-        "return-type": "json"
+    "custom/power": {
+        "format": "",
+        "on-click": "~/.config/scripts/power-menu/powermenu.sh",
+        "tooltip": false
     }
 }
