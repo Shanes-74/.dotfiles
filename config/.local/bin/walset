@@ -24,12 +24,53 @@ export XDG_RUNTIME_DIR="/run/user/$(id -u)"
 
 # ---------- DEP CHECK ----------
 
-for cmd in swww matugen rofi jq; do
+for cmd in awww matugen rofi jq; do
     command -v "$cmd" >/dev/null 2>&1 || {
         echo "❌ Dependência faltando: $cmd"
         exit 1
     }
 done
+
+
+# ---------- NOTIFY ----------
+
+NOTIFY_ID=""
+
+notify_start() {
+    if command -v notify-send >/dev/null 2>&1; then
+        NOTIFY_ID=$(notify-send "Walset" "Aplicando tema…" \
+            --icon=preferences-desktop-wallpaper \
+            --urgency=normal \
+            --print-id 2>/dev/null) || {
+            # Fallback para versões sem --print-id
+            NOTIFY_ID=9901
+            notify-send "Walset" "Aplicando tema…" \
+                --icon=preferences-desktop-wallpaper \
+                --urgency=low \
+                --replace-id="$NOTIFY_ID" 2>/dev/null || true
+        }
+    fi
+}
+
+notify_done() {
+    if command -v notify-send >/dev/null 2>&1 && [[ -n "$NOTIFY_ID" ]]; then
+        local wallpaper_name
+        wallpaper_name=$(basename "$WALLPAPER")
+        notify-send "Walset" "Tema aplicado" \
+            --icon=dialog-information \
+            --urgency=low \
+            --replace-id="$NOTIFY_ID" 2>/dev/null || true
+    fi
+}
+
+notify_error() {
+    if command -v notify-send >/dev/null 2>&1 && [[ -n "$NOTIFY_ID" ]]; then
+        notify-send "Walset" "$1" \
+            --icon=dialog-error \
+            --urgency=critical \
+            --replace-id="$NOTIFY_ID" 2>/dev/null || true
+    fi
+}
 
 
 # ---------- FUNCTIONS ----------
@@ -54,7 +95,7 @@ load_state() {
 }
 
 apply_hooks() {
-    hyprctl reload >/dev/null 2>&1 || true
+    #hyprctl reload >/dev/null 2>&1 || true
     pkill -USR1 kitty >/dev/null 2>&1 || true
     swaync-client -rs >/dev/null 2>&1 || true
 
@@ -66,15 +107,17 @@ apply_hooks() {
     /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 >/dev/null 2>&1 &
 
     pkill waybar >/dev/null 2>&1 || true
+    sleep 0.5
     waybar >/dev/null 2>&1 &
-
-    pkill hypr-dock >/dev/null 2>&1 || true
-    hypr-dock >/dev/null 2>&1 &
 }
 
 update_sddm() {
     mkdir -p "$SDDM_ASSETS_DIR"
-    cp "$WALLPAPER" "$SDDM_BG"
+    if cp "$WALLPAPER" "$SDDM_BG"; then
+        echo "🖼  SDDM background atualizado"
+    else
+        echo "⚠️  Falha ao atualizar SDDM background"
+    fi
     command -v sddm-sync >/dev/null 2>&1 && sddm-sync || true
 }
 
@@ -82,6 +125,7 @@ update_sddm() {
 # ---------- MAIN ----------
 
 load_state
+notify_start
 
 # =====================================================
 # 1. Escolha do wallpaper
@@ -94,7 +138,11 @@ else
         \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.webp" \)
     )
 
-    [[ ${#FILES[@]} -eq 0 ]] && { echo "❌ Nenhum wallpaper encontrado"; exit 1; }
+    [[ ${#FILES[@]} -eq 0 ]] && {
+        echo "❌ Nenhum wallpaper encontrado"
+        notify_error "Nenhum wallpaper encontrado em $WALLPAPER_DIR"
+        exit 1
+    }
 
     WALLPAPER="${FILES[RANDOM % ${#FILES[@]}]}"
 fi
@@ -104,17 +152,20 @@ fi
 # =====================================================
 if [[ ! -f "$WALLPAPER" ]]; then
     echo "❌ Arquivo não encontrado: $WALLPAPER"
-    exit 1
-fi
-if [[ ! -r "$WALLPAPER" ]]; then
-    echo "❌ Sem permissão de leitura: $WALLPAPER"
+    notify_error "Arquivo não encontrado: $(basename "$WALLPAPER")"
     exit 1
 fi
 
-# (Opcional) Verifica se a imagem é válida (apenas se o ImageMagick estiver disponível)
+if [[ ! -r "$WALLPAPER" ]]; then
+    echo "❌ Sem permissão de leitura: $WALLPAPER"
+    notify_error "Sem permissão de leitura: $(basename "$WALLPAPER")"
+    exit 1
+fi
+
 if command -v magick &>/dev/null; then
     if ! magick identify "$WALLPAPER" &>/dev/null; then
         echo "❌ Arquivo de imagem inválido ou corrompido: $WALLPAPER"
+        notify_error "Imagem inválida ou corrompida: $(basename "$WALLPAPER")"
         exit 1
     fi
 fi
@@ -145,28 +196,27 @@ else
     SELECTED="${MAP[$CHOICE]:-$SCHEME}"
 fi
 
-
 # =====================================================
 # 4. Modo (claro/escuro)
 # =====================================================
 MODE="${3:-$MODE}"
 
+# =====================================================
+# 5. Aplicar wallpaper com awww (transição aleatória)
+# =====================================================
+echo "🖼  Aplicando wallpaper: $(basename "$WALLPAPER")"
 
-# =====================================================
-# 5. Aplicar wallpaper com swww (transição aleatória)
-# =====================================================
 TRANS=(fade outer center wipe wave grow)
 T="${TRANS[RANDOM % ${#TRANS[@]}]}"
 
-# Posição aleatória em pixels baseada na resolução da tela
-RESOLUTION=$(swww query | grep -oP '\d+x\d+' | head -1)
+RESOLUTION=$(awww query | grep -oP '\d+x\d+' | head -1)
 SCREEN_W=$(echo "$RESOLUTION" | cut -dx -f1)
 SCREEN_H=$(echo "$RESOLUTION" | cut -dx -f2)
 
 POS_X=$((RANDOM % SCREEN_W))
 POS_Y=$((RANDOM % SCREEN_H))
 
-swww img "$WALLPAPER" \
+awww img "$WALLPAPER" \
     --transition-type "$T" \
     --transition-duration 1.7 \
     --transition-fps 144 \
@@ -174,20 +224,20 @@ swww img "$WALLPAPER" \
     --transition-step 90 \
     --transition-pos "${POS_X},${POS_Y}"
 
-
 # =====================================================
 # 6. Verificar configuração do matugen
 # =====================================================
 if [[ ! -f "$CONFIG_MATUGEN" ]]; then
     echo "❌ Arquivo de configuração do matugen não encontrado: $CONFIG_MATUGEN"
+    notify_error "Configuração do matugen não encontrada"
     exit 1
 fi
 
+# =====================================================
+# 7. Executar matugen
+# =====================================================
+echo "🎨 Gerando cores com matugen (esquema: $SELECTED, modo: $MODE)..."
 
-# =====================================================
-# 7. Executar matugen (não interativo) com source-color-index 0
-# =====================================================
-echo "🎨 Gerando cores com matugen (usando primeira cor da paleta)..."
 if ! matugen \
     -c "$CONFIG_MATUGEN" \
     image "$WALLPAPER" \
@@ -195,17 +245,21 @@ if ! matugen \
     -t "scheme-$SELECTED" \
     --source-color-index 0; then
     echo "❌ Falha na execução do matugen. Abortando."
+    notify_error "Falha ao gerar paleta de cores"
     exit 1
 fi
-
 
 # =====================================================
 # 8. Salvar estado e aplicar hooks
 # =====================================================
+echo "💾 Salvando estado..."
 save_state "$WALLPAPER" "$SELECTED" "$MODE"
 
+echo "🔄 Aplicando hooks..."
 apply_hooks
 
+echo "🖥  Atualizando SDDM..."
 update_sddm
 
+notify_done
 echo "✅ Tema aplicado com sucesso!"
