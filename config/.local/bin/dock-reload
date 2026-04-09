@@ -1,0 +1,4 @@
+#!/bin/bash
+kill $(cat /tmp/hypr-dock-autohide.pid 2>/dev/null) 2>/dev/null
+sleep 0.5
+~/.config/scripts/hypr-dock/hypr-dock-autohide.sh &
