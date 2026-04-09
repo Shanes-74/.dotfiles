@@ -1,0 +1,85 @@
+
+/*****----- Configuration -----*****/
+configuration {
+    show-icons:                 false;
+}
+
+/*****----- Global Properties -----*****/
+@import                         "./colors.rasi"
+* {
+    font:                       "GeistMono Nerd Font Mono 48";
+    background-color:           transparent;
+}
+
+/*****----- Main Window -----*****/
+window {
+    transparency:               "real";
+    location:                   center;
+    anchor:                     center;
+    fullscreen:                 false;
+    width:                      556px;
+    height:                     380px;
+    margin:                     0px;
+    padding:                    0px;
+    cursor:                     "default";
+    background-color:           transparent;
+}
+
+/*****----- Main Box -----*****/
+mainbox {
+    spacing:                    16px;
+    margin:                     0px;
+    children:                   [ "listview" ];
+}
+
+/*****----- Listview -----*****/
+listview {
+    columns:                    3;
+    lines:                      2;
+    spacing:                    16px;
+    cycle:                      true;
+    dynamic:                    true;
+    scrollbar:                  false;
+    layout:                     vertical;
+    fixed-columns:              true;
+    margin:                     0px;
+    padding:                    24px;
+    border:                     2px;
+    border-radius:              24px;
+    border-color:               @outline-variant;
+    background-color:           @surface-container;
+}
+
+/*****----- Elements -----*****/
+element {
+    orientation:                vertical;
+    padding:                    34px;
+    spacing:                    24px;
+    border:                     2px;
+    border-color:               @outline-variant;
+    border-radius:              999px;
+    background-color:           @surface-container;
+}
+
+element-text {
+    background-color:           transparent; 
+    text-color:                 inherit;
+    vertical-align:             0.5;
+    horizontal-align:           0.5;
+}
+
+/****----- Estados de Selção -----****/
+element normal {
+    text-color:                 @on-surface; 
+}
+
+element selected normal {
+    background-color:           @primary; 
+    text-color:                 @on-primary;
+}
+
+message {
+    padding:                    10px;
+    background-color:           @surface-container-low;
+    border-radius:              12px;
+}
