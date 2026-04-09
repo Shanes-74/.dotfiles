@@ -14,11 +14,12 @@ with open('$CONFIG') as f:
     c = json.load(f)
 print(c.get('edge', 'bottom'))
 print(c.get('activate_zone', 5))
-print(c.get('safe_zone', 100))
+print(c.get('safe_zone_height', 100))
 print(c.get('safe_zone_popup', 300))
 print(c.get('check_interval', 50))
 print(c.get('hide_delay', 10))
 print(c.get('activation_width', 400))
+print(c.get('safe_zone_width', 600))
 "
 }
 
@@ -32,6 +33,7 @@ load_config() {
     CHECK_INTERVAL=$(echo "$values" | sed -n '5p')
     HIDE_DELAY=$(echo "$values" | sed -n '6p')
     ACTIVATION_WIDTH=$(echo "$values" | sed -n '7p')
+    SAFE_ZONE_WIDTH=$(echo "$values" | sed -n '8p')
     SLEEP_TIME=$(python3 -c "print($CHECK_INTERVAL / 1000)")
 }
 
@@ -84,6 +86,11 @@ popup_is_open() {
     hyprctl layers 2>/dev/null | grep -q "namespace: dock-popup"
 }
 
+get_popup_bounds() {
+    hyprctl layers 2>/dev/null | grep "namespace: dock-popup" | \
+        sed 's/.*xywh: \([0-9]*\) [0-9]* \([0-9]*\).*/\1 \2/'
+}
+
 dock_is_running() {
     pgrep -x hypr-dock > /dev/null 2>&1
 }
@@ -102,11 +109,15 @@ except:
 SCREEN_H=$(get_screen_height)
 SCREEN_W=$(get_screen_width)
 
+# Zona de ativação central
 ACTIVATION_LEFT=$(( (SCREEN_W - ACTIVATION_WIDTH) / 2 ))
 ACTIVATION_RIGHT=$(( ACTIVATION_LEFT + ACTIVATION_WIDTH ))
 
+# Zona horizontal de segurança do dock
+SAFE_LEFT=$(( (SCREEN_W - SAFE_ZONE_WIDTH) / 2 ))
+SAFE_RIGHT=$(( SAFE_LEFT + SAFE_ZONE_WIDTH ))
+
 while true; do
-    # Detecta mudança no JSON e recarrega
     CURRENT_MODIFIED=$(stat -c %Y "$CONFIG")
     if [ "$CURRENT_MODIFIED" != "$LAST_MODIFIED" ]; then
         reload
@@ -136,10 +147,32 @@ while true; do
         right)  IN_ZONE=$(( MOUSE_X >= SCREEN_W - CURRENT_ZONE )) ;;
     esac
 
-    case "$EDGE" in
-        bottom|top) IN_CENTER=$(( MOUSE_X >= ACTIVATION_LEFT && MOUSE_X <= ACTIVATION_RIGHT )) ;;
-        left|right) IN_CENTER=$(( MOUSE_Y >= ACTIVATION_LEFT && MOUSE_Y <= ACTIVATION_RIGHT )) ;;
-    esac
+    # Zona horizontal: ativação, dock visível ou popup aberto
+    if [ "$DOCK_VISIBLE" = "false" ]; then
+        case "$EDGE" in
+            bottom|top) IN_CENTER=$(( MOUSE_X >= ACTIVATION_LEFT && MOUSE_X <= ACTIVATION_RIGHT )) ;;
+            left|right) IN_CENTER=$(( MOUSE_Y >= ACTIVATION_LEFT && MOUSE_Y <= ACTIVATION_RIGHT )) ;;
+        esac
+    elif popup_is_open; then
+        POPUP_BOUNDS=$(get_popup_bounds)
+        POPUP_X=$(echo "$POPUP_BOUNDS" | awk '{print $1}')
+        POPUP_W=$(echo "$POPUP_BOUNDS" | awk '{print $2}')
+        if [ -n "$POPUP_X" ] && [ -n "$POPUP_W" ]; then
+            POPUP_LEFT=$POPUP_X
+            POPUP_RIGHT=$(( POPUP_X + POPUP_W ))
+            case "$EDGE" in
+                bottom|top) IN_CENTER=$(( MOUSE_X >= POPUP_LEFT && MOUSE_X <= POPUP_RIGHT )) ;;
+                left|right) IN_CENTER=$(( MOUSE_Y >= POPUP_LEFT && MOUSE_Y <= POPUP_RIGHT )) ;;
+            esac
+        else
+            IN_CENTER=1
+        fi
+    else
+        case "$EDGE" in
+            bottom|top) IN_CENTER=$(( MOUSE_X >= SAFE_LEFT && MOUSE_X <= SAFE_RIGHT )) ;;
+            left|right) IN_CENTER=$(( MOUSE_Y >= SAFE_LEFT && MOUSE_Y <= SAFE_RIGHT )) ;;
+        esac
+    fi
 
     if [ "$IN_ZONE" = "1" ] && [ "$IN_CENTER" = "1" ]; then
         HIDE_TIMER=0
