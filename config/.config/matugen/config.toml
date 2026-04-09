@@ -1,8 +1,8 @@
 [config]
 
-[templates.hyprland]
-input_path = '~/.config/matugen/templates/hyprland-colors.conf'
-output_path = '~/.config/hypr/modules/colors.conf'
+#[templates.hyprland]
+#input_path = '~/.config/matugen/templates/hyprland-colors.conf'
+#output_path = '~/.config/hypr/modules/colors.conf'
 
 [templates.waybar]
 input_path = '~/.config/matugen/templates/colors.css'
@@ -72,6 +72,14 @@ output_path = '~/.config/Vencord/themes/matugen.css'
 input_path = '~/.config/matugen/templates/sddm.conf'
 output_path = '~/.dotfiles/sddm/sddm-current/theme.conf'
 
- [templates.firefox]
- input_path = "~/.config/matugen/templates/firefox.css"
- output_path = "~/.config/mozilla/firefox/chrome/websites/colors.css"
+[templates.firefox]
+input_path  = "~/.config/matugen/templates/firefox.json"
+output_path = "~/.cache/wal/colors.json"
+
+post_hook = '''
+bash -c '{
+  if command -v pywalfox >/dev/null 2>&1; then
+    pywalfox update
+  fi
+} >/dev/null 2>&1 &'
+'''
