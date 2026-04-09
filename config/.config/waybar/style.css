@@ -1,6 +1,6 @@
-/* ===================================================== */
-/* ================== IMPORT & GLOBAL ================== */
-/* ===================================================== */
+/* ---------------------------------------------
+   IMPORTS & GLOBAL
+--------------------------------------------- */
 
 @import "colors.css";
 
@@ -10,17 +10,18 @@
     font-weight: 500;
 }
 
-/* ===================================================== */
-/* =================== WAYBAR ROOT ===================== */
-/* ===================================================== */
+
+/* ---------------------------------------------
+   WAYBAR ROOT
+--------------------------------------------- */
 
 #waybar {
     background: transparent;
 }
 
-/* ===================================================== */
-/* ==================== WORKSPACES ===================== */
-/* ===================================================== */
+/* ---------------------------------------------
+   WORKSPACES
+--------------------------------------------- */
 
 #workspaces button {
     margin: 8px;
@@ -38,8 +39,7 @@
     transition: all 180ms cubic-bezier(.4,0,.2,1);
 }
 
-/* States */
-
+/* Workspaces - States */
 #workspaces button.empty {
     color: transparent;
 }
@@ -59,8 +59,7 @@
     background-color: @primary;
 }
 
-/* Edge alignment */
-
+/* Workspaces - Edge alignment */
 .modules-left > widget:first-child > #workspaces {
     margin-left: 0;
 }
@@ -69,17 +68,18 @@
     margin-right: 0;
 }
 
-/* ===================================================== */
-/* ===================== MODULE BASE =================== */
-/* ===================================================== */
+
+/* ---------------------------------------------
+   MODULES - BASE STYLES
+--------------------------------------------- */
 
 #workspaces,
 #clock,
 #battery,
 #memory,
-#backlight,
 #network,
-#pulseaudio,
+#backlight-expander,
+#pulseaudio-expander,
 #tray,
 #custom-power,
 #custom-wallpaper,
@@ -92,7 +92,6 @@
 #custom-clock,
 #custom-expand-icon,
 #custom-hypridle {
-
     margin: 18px 4px;
     padding: 0 13px;
 
@@ -104,7 +103,7 @@
     border: 1px solid @outline_variant;
     border-radius: 50px;
 
-    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.5);
 
     transition:
         transform 180ms cubic-bezier(.4,0,.2,1),
@@ -113,14 +112,13 @@
         border-color 200ms ease;
 }
 
-/* Hover (shared) */
-
+/* Modules - Hover state (shared) */
 #clock:hover,
 #battery:hover,
 #memory:hover,
-#backlight:hover,
 #network:hover,
-#pulseaudio:hover,
+#backlight-expander:hover,
+#pulseaudio-expander:hover,
 #custom-power:hover,
 #custom-wallpaper:hover,
 #custom-menu:hover,
@@ -133,7 +131,6 @@
 #custom-hypridle:hover,
 #battery.charging:hover,
 #battery.plugged:hover {
-
     margin: 14px 2px;
     padding: 1px 17px;
 
@@ -146,28 +143,92 @@
 
     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
 }
-    
-/* ===================================================== */
-/* ================== MODULE EXCEPTIONS ================= */
-/* ===================================================== */
 
+
+/* ---------------------------------------------
+   MODULES - SPECIFIC OVERRIDES
+--------------------------------------------- */
+
+/* Network */
+#network {
+    padding: 0 12px;
+}
+
+#network:hover {
+    padding: 1px 15px;
+}
+
+/* Clipboard */
+#custom-clipboard {
+    padding: 0 14px;
+}
+
+/* PulseAudio */
+#pulseaudio {
+    font-size: 22px;
+
+}
+
+.bluetooth {
+    padding: 0 3px;
+}
+
+#pulseaudio-expander{
+    padding: 0 11px;
+}
+
+#pulseaudio-expander:hover * {
+    font-weight: 700;
+}
+
+/* Backlight */
+#backlight {
+    font-size: 22px;
+}
+
+#backlight-expander {
+    padding: 0 12px;
+}
+
+#backlight-expander:hover * {
+    font-weight: 700;
+}
+
+/* Workspaces */
 #workspaces {
     padding: 0;
 }
 
-#custom-expand-icon {
+/* Tray */
+#tray-expander #custom-expand-icon {
     margin: 26px 4px;
     padding: 0 12px;
-
     font-size: 20px;
+}
+
+#tray-expander:hover #custom-expand-icon {
+    color: transparent;
+    background: transparent;
+    border: 0px solid transparent;
+    border-radius: 50px;
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
 }
 
 #tray {
     padding: 0 10px;
+    border-radius: 50px;
 }
 
-/* ---------------- MPRIS ---------------- */
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
 
+#tray > .needs-attention {
+    background-color: @error;
+    -gtk-icon-effect: highlight;
+}
+
+/* MPRIS */
 #mpris {
     font-size: 20px;
 }
@@ -179,24 +240,27 @@
 #mpris.paused {
     color: alpha(@on_surface, 0.5);
 }
+
 #mpris.paused:hover {
     color: alpha(@surface_container_high, 0.6);
 }
 
+/* Hypridle */
 #custom-hypridle.active {
     color: alpha(@on_surface, 0.5);
 }
+
 #custom-hypridle.active:hover {
     color: alpha(@surface_container_high, 0.6);
 }
 
-/* ===================================================== */
-/* ==================== BATTERY ======================== */
-/* ===================================================== */
+/* Battery */
+#battery {
+    padding: 0 12px;
+}
 
-#battery.charging,
-#battery.plugged {
-    color: green;
+#battery:hover {
+    padding: 1px 15px;
 }
 
 @keyframes blink {
@@ -207,7 +271,6 @@
 }
 
 #battery.critical:not(.charging) {
-
     color: @on_error;
     background-color: @error;
 
@@ -216,21 +279,4 @@
     animation-timing-function: steps(12);
     animation-iteration-count: infinite;
     animation-direction: alternate;
-}
-
-/* ===================================================== */
-/* ======================= TRAY ======================== */
-/* ===================================================== */
-
-#tray {
-    border-radius: 50px;
-}
-
-#tray > .passive {
-    -gtk-icon-effect: dim;
-}
-
-#tray > .needs-attention {
-    background-color: @error;
-    -gtk-icon-effect: highlight;
 }
