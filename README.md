@@ -3,7 +3,7 @@
 ## Dependencias
 
 ### Pacotes do extra
-    pacman -S --needed hyprland hyprlock kitty wlogout brightnessctl waybar rofi swww swaync swayosd stow imagemagick pavucontrol blueman thunar nwg-look
+    pacman -S --needed hyprland hyprlock kitty wlogout brightnessctl waybar rofi awww swaync swayosd stow imagemagick pavucontrol blueman thunar nwg-look python
 
 ### Pacotes do AUR (opicional)
     paru -S waybar-weather waybar-updates nmgui
