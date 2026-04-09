@@ -14,7 +14,6 @@ window {
   box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.5);
 
   padding: 8px 5px 2px 5px;
-  margin: 10px;
 
   transition:
       transform 180ms cubic-bezier(.4,0,.2,1),
@@ -61,7 +60,11 @@ menuitem {
 }
 
 #pv-item.hover {
-  background: alpha(@surface_container_high, 0.7);
+  background: alpha(@primary, 0.7);
+  border: 1px solid alpha(@primary, 0.7);
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
 
-
+#pv-item.hover * {
+  color: @surface_container;
 }
