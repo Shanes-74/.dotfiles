@@ -24,13 +24,9 @@
 .control-center {
   margin: -10px;
   padding: 6px;
-
   border-radius: 20px;
-
   background-color: alpha(@surface_container, 0.7);
-
   border: 1px solid @outline_variant;
-
   box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.5);
 }
 
@@ -42,7 +38,6 @@
 #notifications,
 #notification-list {
   border-radius: 20px;
-
   background-color: rgba(0, 0, 0, 0.2);
 }
 
@@ -60,15 +55,10 @@
 .notification {
   margin: 6px 0;
   padding: 10px;
-
   border-radius: 20px;
-
   background-color: alpha(@surface_container, 0.7);
-
   border: 1px solid @outline_variant;
-
   box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.5);
-
   transition: background-color 0.1s ease;
 }
 
@@ -78,7 +68,6 @@
 
 .notification:hover {
   background-color: alpha(@surface_container_high, 0.7);
-  
   border: 1px solid @primary;
 }
 
@@ -94,16 +83,24 @@
 
 .notification-action {
   margin-left: 3px;
-
   border-radius: 50px;
-
   background-color: @surface_container;
-
   border: 1px solid @primary;
 }
 
 .notification .notification-action label {
   color: @primary;
+}
+
+
+.notification-action label {
+  margin: -4px;
+}
+
+.notification-content label {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding-left: 10px;
 }
 
 .notification-action:hover {
@@ -121,23 +118,30 @@
 }
 
 
+/* ===================================================== */
+/* ===================== WIDGETS ======================= */
+/* ===================================================== */
+
+.widget-title {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: @primary;
+}
+
+
 /* ---------------- BOTÃO FECHAR ---------------- */
 
 .close-button {
   margin-top: 14px;
   margin-right: 8px;
   padding: 0;
-
   min-width: 24px;
   min-height: 24px;
-
   border-radius: 50px;
-
   background: @surface_container;
   color: white;
-
   border: none;
-
   box-shadow: none;
 }
 
@@ -151,42 +155,22 @@
 }
 
 
-/* ===================================================== */
-/* ===================== WIDGETS ======================= */
-/* ===================================================== */
-
-.widget-title {
-  margin-bottom: 10px;
-
-  font-size: 18px;
-  font-weight: bold;
-
-  color: @primary;
-}
-
-
 /* ---------------- GRID BOTÕES ---------------- */
 
 .widget-buttons-grid {
   margin: 12px;
   padding: 10px;
-
   border-radius: 24px;
-
   background-color: rgba(0, 0, 0, 0.2);
 }
 
 .widget-buttons-grid button {
   margin: 2px;
   padding: 10px 20px;
-
   font-size: 18px;
-
   border-radius: 50px;
-
   background: @secondary_container;
   color: @on_secondary_container;
-
   border: none;
 }
 
@@ -197,7 +181,6 @@
 .widget-buttons-grid button:hover {
   background: @on_secondary_container;
   color: @secondary_container;
-
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
@@ -221,13 +204,9 @@
 
 switch {
   padding: 0px;
-
   border-radius: 50px;
-
   background-color: @surface_container_highest;
-
   border: 1px solid @outline;
-
   transition: all 200ms ease;
 }
 
@@ -238,11 +217,8 @@ switch:checked {
 
 switch slider {
   margin: 4px;
-
   border-radius: 50px;
-
   background-color: @outline;
-
   transition: all 200ms ease;
 }
 
@@ -266,11 +242,8 @@ switch:checked slider {
 
 scale.horizontal trough {
   min-height: 18px;
-
   border-radius: 50px;
-
   background-color: @surface_container_highest;
-
   border: none;
 }
 
@@ -283,11 +256,8 @@ scale.horizontal trough {
 scale slider {
   margin: -6px;
   padding: 6px 14px;
-
   border-radius: 50px;
-
   background-color: @surface_container_high;
-
   border: 1px solid @surface_container_low;
 }
 
@@ -298,12 +268,9 @@ scale slider {
   margin: 4px;
   margin-left: 5px;
   padding: 0px 4px;
-
   border-radius: 50px;
-
   background: @secondary_container;
   color: @on_secondary_container;
-
   border: 1px solid @surface_container_high;
 }
 
@@ -323,9 +290,10 @@ scale slider {
 /* ===================================================== */
 
 .widget-mpris *,
-.widget-mpris * label{
+.widget-mpris * label {
   color: rgba(255, 255, 255, 0.8);
 }
+
 
 /* ---------------- SCROLLBAR ---------------- */
 
@@ -334,9 +302,7 @@ scrollbar slider,
 scrollbar trough {
   margin: 0;
   padding: 0;
-
   background: transparent;
   color: transparent;
-
   border: none;
 }
