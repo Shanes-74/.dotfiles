@@ -1,52 +1,111 @@
-#!/bin/sh
+#!/usr/bin/env bash
+# printshot - Screenshot tool for Hyprland
+# Usage: printshot [full|region|window|monitor]
 
-MODE="$1"   # full | region
-
-DIR="$HOME/Imagens/Screenshots"
-TIMESTAMP="$(date +'%Y-%m-%d_%H-%M-%S')"
+MODE="${1}"
+DIR="${HYPRSHOT_DIR:-$HOME/Imagens/Screenshots}"
+TIMESTAMP="$(date +'%Y-%m-%d-%H%M%S')"
 FILE="$DIR/screenshot-$TIMESTAMP.png"
+SLURP_SCRIPT="${XDG_CONFIG_HOME:-$HOME/.config}/scripts/slurp/slurp.sh"
 
 mkdir -p "$DIR"
 
 notify_cancel() {
-  notify-send \
-    -a "Screenshot" \
-    -u low \
-    "Captura de tela cancelada"
+    notify-send -a "printshot" -u low "Captura de tela cancelada"
+}
+
+themed_slurp() {
+    if [ -x "$SLURP_SCRIPT" ]; then
+        "$SLURP_SCRIPT" "$@"
+    else
+        slurp "$@"
+    fi
+}
+
+freeze() {
+    if command -v hyprpicker >/dev/null 2>&1; then
+        hyprpicker -r -z &
+        HYPRPICKER_PID=$!
+        sleep 0.2
+    fi
+}
+
+unfreeze() {
+    [ -n "$HYPRPICKER_PID" ] && kill "$HYPRPICKER_PID" 2>/dev/null
+}
+
+capture() {
+    local geom="$1"
+    if [ -n "$geom" ]; then
+        grim -g "$geom" "$FILE"
+    else
+        grim "$FILE"
+    fi
+}
+
+trim_geom() {
+    local geom="$1"
+    hyprctl monitors -j | jq -r \
+        --argjson g "$(echo "$geom" | awk -F'[ ,x]' '{printf "{\"x\":%d,\"y\":%d,\"w\":%d,\"h\":%d}", $1,$2,$3,$4}')" '
+        . as $monitors |
+        ($monitors | map(if (.transform % 2 == 0) then (.x + .width) else (.x + .height) end) | max) as $mw |
+        ($monitors | map(if (.transform % 2 == 0) then (.y + .height) else (.y + .width) end) | max) as $mh |
+        ($monitors | map(.x) | min) as $mx |
+        ($monitors | map(.y) | min) as $my |
+        [$g.x, $mx] | max as $cx |
+        [$g.y, $my] | max as $cy |
+        ([$g.x + $g.w, $mw] | min) - $cx as $cw |
+        ([$g.y + $g.h, $mh] | min) - $cy as $ch |
+        "\($cx),\($cy) \($cw)x\($ch)"'
+}
+
+notify_done() {
+    ACTION=$(notify-send \
+        -a "printshot" \
+        -i "$FILE" \
+        -h "string:image-path:$FILE" \
+        -A "copy=Copiar" \
+        -A "file=Abrir" \
+        -A "folder=Abrir na pasta" \
+        "Screenshot capturada" \
+        "$FILE")
+
+    case "$ACTION" in
+        copy)   wl-copy < "$FILE" ;;
+        file)   xdg-open "$FILE" ;;
+        folder) xdg-open "$DIR" ;;
+    esac
 }
 
 case "$MODE" in
-  full)
-    if ! grim - | tee "$FILE" | wl-copy; then
-      notify_cancel
-      exit 1
-    fi
-    ;;
-  region)
-    GEOM="$(slurp)"
-    if [ -z "$GEOM" ]; then
-      notify_cancel
-      exit 1
-    fi
-
-    if ! grim -g "$GEOM" - | tee "$FILE" | wl-copy; then
-      notify_cancel
-      exit 1
-    fi
-    ;;
-  *)
-    exit 1
-    ;;
+    full)
+        capture || { notify_cancel; exit 1; }
+        notify_done
+        ;;
+    region)
+        freeze
+        GEOM="$(themed_slurp -d)" || { unfreeze; notify_cancel; exit 1; }
+        unfreeze
+        [ -z "$GEOM" ] && { notify_cancel; exit 1; }
+        capture "$GEOM" || { notify_cancel; exit 1; }
+        notify_done
+        ;;
+    window)
+        GEOM="$(hyprctl -j activewindow | \
+            jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"')" || { notify_cancel; exit 1; }
+        [ -z "$GEOM" ] && { notify_cancel; exit 1; }
+        GEOM="$(trim_geom "$GEOM")"
+        capture "$GEOM" || { notify_cancel; exit 1; }
+        notify_done
+        ;;
+    monitor)
+        GEOM="$(themed_slurp -o)" || { notify_cancel; exit 1; }
+        [ -z "$GEOM" ] && { notify_cancel; exit 1; }
+        capture "$GEOM" || { notify_cancel; exit 1; }
+        notify_done
+        ;;
+    *)
+        echo "Uso: printshot [full|region|window|monitor]" >&2
+        exit 1
+        ;;
 esac
-
-ACTION=$(notify-send \
-  -a "Screenshot" \
-  -i "$FILE" \
-  -h string:image-path:"$FILE" \
-  -A open="Abrir" \
-  "Screenshot capturada" \
-  "Clique para abrir")
-
-if [ "$ACTION" = "open" ]; then
-  xdg-open "$FILE"
-fi
