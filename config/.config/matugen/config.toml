@@ -72,6 +72,10 @@ output_path = '~/.config/Vencord/themes/matugen.css'
 input_path = '~/.config/matugen/templates/sddm.conf'
 output_path = '~/.dotfiles/sddm/sddm-current/theme.conf'
 
+[templates.slurp]
+input_path = '~/.config/matugen/templates/slurp.json'
+output_path = '~/.config/scripts/slurp/colors.json'
+
 [templates.firefox]
 input_path  = "~/.config/matugen/templates/firefox.json"
 output_path = "~/.cache/wal/colors.json"
