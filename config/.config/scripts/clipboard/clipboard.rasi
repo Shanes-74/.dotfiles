@@ -1,0 +1,185 @@
+/*****----- Configuration -----*****/
+configuration {
+    disable-history:            false;
+    show-icons:                 true;
+    display-drun:               "";
+    display-run:                "";
+    display-dmenu:              "";
+}
+
+/*****----- Global Properties -----*****/
+@import "colors.rasi"
+
+* {
+    font:                       "Google Sans Display Medium 14";
+    background-color:           transparent;
+}
+
+/*****----- Main Window -----*****/
+window {
+    transparency:               "real";
+    location:                   center;
+    anchor:                     center;
+    fullscreen:                 false;
+    width:                      640px;
+    x-offset:                   0px;
+    y-offset:                   0px;
+    enabled:                    true;
+    margin:                     0px;
+    padding:                    0px;
+    cursor:                     "default";
+    background-color:           transparent;
+}
+
+/*****----- Main Box -----*****/
+mainbox {
+    enabled:                    true;
+    spacing:                    10px;
+    margin:                     0px;
+    padding:                    0px;
+    background-color:           transparent;
+    /* hotkeys no topo, busca, lista */
+    children:                   [ "inputbar", "listview", "message" ];
+}
+
+/*****----- Message (atalhos) -----*****/
+/*
+ * Exibido no TOPO para ficar sempre visível —
+ * mostra "Enter: copiar | Alt+D: deletar | Esc: sair"
+ */
+message {
+    enabled:                    true;
+    margin:                     0px;
+    padding:                    10px 18px;
+    border:                     2px;
+    border-radius:              20px;
+    border-color:               @outline-variant;
+    background-color:           @surface-container;
+}
+textbox {
+    background-color:           transparent;
+    text-color:                 @on-surface-variant;
+    vertical-align:             0.5;
+    horizontal-align:           0.5;    /* centraliza a linha de atalhos */
+}
+
+/*****----- Inputbar -----*****/
+inputbar {
+    enabled:                    true;
+    spacing:                    10px;
+    margin:                     0px;
+    padding:                    14px 18px;
+    border:                     2px;
+    border-radius:              20px;
+    border-color:               @outline-variant;
+    background-color:           @surface-container;
+    children:                   [ "prompt", "entry" ];
+}
+prompt {
+    enabled:                    true;
+    background-color:           transparent;
+    text-color:                 @primary;
+}
+textbox-prompt-colon {
+    enabled:                    false;  /* removido — o prompt já tem ícone */
+}
+entry {
+    enabled:                    true;
+    background-color:           transparent;
+    text-color:                 @on-surface;
+    cursor:                     text;
+    placeholder:                "Buscar no histórico…";
+    placeholder-color:          @outline;
+}
+
+/*****----- Listview -----*****/
+listview {
+    enabled:                    true;
+    columns:                    1;
+    lines:                      6;
+    cycle:                      true;
+    dynamic:                    true;
+    scrollbar:                  false;
+    layout:                     vertical;
+    reverse:                    false;
+    fixed-height:               false;
+    fixed-columns:              true;
+    spacing:                    4px;
+    margin:                     0px;
+    padding:                    10px;
+    border:                     2px;
+    border-radius:              20px;
+    border-color:               @outline-variant;
+    background-color:           @surface-container;
+    cursor:                     "default";
+}
+
+/*****----- Elements -----*****/
+element {
+    enabled:                    true;
+    padding:                    8px 10px;
+    spacing:                    12px;
+    border-radius:              12px;
+    background-color:           transparent;
+    cursor:                     pointer;
+    orientation:                horizontal;
+}
+
+/*
+ * Ícone maior para thumbnails de imagem ficarem legíveis
+ * (o script gera thumbs 256×256, mas 52px aqui é o suficiente para
+ *  distinguir visualmente sem inflar o menu)
+ */
+element-icon {
+    size:                       64px;
+    background-color:           transparent;
+    vertical-align:             0.5;
+    border-radius:              8px;    /* arredonda o canto do thumbnail */
+}
+
+element-text {
+    background-color:           transparent;
+    text-color:                 inherit;
+    vertical-align:             0.5;
+    horizontal-align:           0.0;
+    expand:                     true;
+}
+
+/*****----- Estados de Seleção -----*****/
+element normal normal {
+    text-color:                 @on-surface;
+    background-color:           transparent;
+}
+element normal urgent {
+    text-color:                 @error;
+    background-color:           transparent;
+}
+element normal active {
+    text-color:                 @primary;
+    background-color:           transparent;
+}
+element selected normal {
+    background-color:           @primary;
+    text-color:                 @on-primary;
+    border-radius:              12px;
+}
+element selected urgent {
+    background-color:           @error;
+    text-color:                 @on-error;
+}
+element selected active {
+    background-color:           @secondary;
+    text-color:                 @on-secondary;
+}
+element alternate normal {
+    background-color:           transparent;
+    text-color:                 @on-surface;
+}
+element alternate urgent {
+    background-color:           transparent;
+    text-color:                 @error;
+}
+element alternate active {
+    background-color:           transparent;
+    text-color:                 @primary;
+}
