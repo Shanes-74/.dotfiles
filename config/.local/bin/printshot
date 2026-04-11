@@ -11,7 +11,7 @@ SLURP_SCRIPT="${XDG_CONFIG_HOME:-$HOME/.config}/scripts/slurp/slurp.sh"
 mkdir -p "$DIR"
 
 notify_cancel() {
-    notify-send -a "printshot" -u low "Captura de tela cancelada"
+    notify-send -a "Printshot" -u low "Captura de tela cancelada"
 }
 
 themed_slurp() {
@@ -61,19 +61,17 @@ trim_geom() {
 
 notify_done() {
     ACTION=$(notify-send \
-        -a "printshot" \
+        -a "Printshot" \
         -i "$FILE" \
         -h "string:image-path:$FILE" \
         -A "copy=Copiar" \
         -A "file=Abrir" \
-        -A "folder=Abrir na pasta" \
         "Screenshot capturada" \
         "$FILE")
 
     case "$ACTION" in
         copy)   wl-copy < "$FILE" ;;
         file)   xdg-open "$FILE" ;;
-        folder) xdg-open "$DIR" ;;
     esac
 }
 
