@@ -2,17 +2,42 @@
 @import url("libadwaita-tweaks.css");
 @import url("libadwaita.css");
 
-/* ========== GLOBAL ========== */
+/* ══════════════════════════════════════════
+   GLOBAL
+══════════════════════════════════════════ */
 * {
     font-weight: 500;
     font-family: "Google Sans Display", sans-serif;
 }
 
-/* ========== BOTÕES ========== */
+/* ══════════════════════════════════════════
+   JANELAS & DECORAÇÕES
+══════════════════════════════════════════ */
+window.csd,
+window.csd decoration {
+    box-shadow: none;
+}
+
+headerbar.default-decoration {
+    margin-bottom: 50px;
+    margin-top: -100px;
+}
+
+/* ══════════════════════════════════════════
+   BOTÕES
+══════════════════════════════════════════ */
+button {
+    transition: background-color 150ms ease, opacity 150ms ease;
+}
+
 button.suggested-action {
     background-color: @accent_bg_color;
     color: @accent_fg_color;
     border-color: @accent_bg_color;
+}
+
+button.suggested-action:hover {
+    background-color: shade(@accent_bg_color, 1.1);
 }
 
 button.destructive-action {
@@ -21,12 +46,109 @@ button.destructive-action {
     border-color: @destructive_bg_color;
 }
 
+button.destructive-action:hover {
+    background-color: shade(@destructive_bg_color, 1.1);
+}
+
 button:checked {
     background-color: alpha(@accent_bg_color, 0.2);
     color: @accent_color;
 }
 
-/* ========== STACKSWITCHER & NOTEBOOK ========== */
+/* ══════════════════════════════════════════
+   SPINBUTTONS — CORREÇÃO PRINCIPAL
+══════════════════════════════════════════ */
+spinbutton {
+    background-color: @view_bg_color;
+    color: @view_fg_color;
+    border-radius: 6px;
+}
+
+spinbutton text {
+    color: @view_fg_color;
+}
+
+spinbutton button {
+    background: transparent;
+    background-image: none;
+    border: none;
+    box-shadow: none;
+    color: @window_fg_color;
+    min-width: 28px;
+    min-height: 28px;
+    padding: 4px 6px;
+    opacity: 1;
+    -gtk-icon-size: 16px;
+}
+
+spinbutton button:hover {
+    background-color: alpha(@window_fg_color, 0.12);
+    color: @window_fg_color;
+    opacity: 1;
+}
+
+spinbutton button:active {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+    opacity: 1;
+}
+
+spinbutton button > image,
+spinbutton button > label,
+spinbutton button * {
+    color: inherit;
+    opacity: 1;
+    -gtk-icon-size: 16px;
+}
+
+/* ══════════════════════════════════════════
+   SWITCHES
+══════════════════════════════════════════ */
+switch {
+    transition: background-color 200ms ease;
+}
+
+switch:checked {
+    background-color: @accent_bg_color;
+    border-color: @accent_bg_color;
+}
+
+switch:checked slider {
+    background-color: @accent_fg_color;
+}
+
+/* ══════════════════════════════════════════
+   CHECKBOXES & RADIOS
+══════════════════════════════════════════ */
+check:checked,
+radio:checked {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+    border-color: @accent_bg_color;
+}
+
+/* ══════════════════════════════════════════
+   PROGRESSBAR, SCALE & LEVELBAR
+══════════════════════════════════════════ */
+progressbar progress {
+    background-color: @accent_bg_color;
+    border-color: @accent_bg_color;
+    border-radius: 4px;
+}
+
+scale highlight {
+    background-color: @accent_bg_color;
+    border-radius: 4px;
+}
+
+levelbar block.filled {
+    background-color: @accent_bg_color;
+    border-radius: 3px;
+}
+
+/* ══════════════════════════════════════════
+   STACKSWITCHER & NOTEBOOK
+══════════════════════════════════════════ */
 stackswitcher button:checked,
 stackswitcher button.active {
     color: @accent_color;
@@ -38,39 +160,9 @@ notebook > header > tabs > tab:checked {
     color: @accent_color;
 }
 
-/* ========== SWITCHES ========== */
-switch:checked {
-    background-color: @accent_bg_color;
-    border-color: @accent_bg_color;
-}
-
-switch:checked slider {
-    background-color: @accent_fg_color;
-}
-
-/* ========== CHECKBOXES & RADIOS ========== */
-check:checked,
-radio:checked {
-    background-color: @accent_bg_color;
-    color: @accent_fg_color;
-    border-color: @accent_bg_color;
-}
-
-/* ========== PROGRESSBAR & SCALE ========== */
-progressbar progress {
-    background-color: @accent_bg_color;
-    border-color: @accent_bg_color;
-}
-
-scale highlight {
-    background-color: @accent_bg_color;
-}
-
-levelbar block.filled {
-    background-color: @accent_bg_color;
-}
-
-/* ========== SELEÇÃO / HIGHLIGHT ========== */
+/* ══════════════════════════════════════════
+   SELEÇÃO
+══════════════════════════════════════════ */
 selection,
 :selected,
 .highlight {
@@ -78,15 +170,19 @@ selection,
     color: @accent_fg_color;
 }
 
-/* ========== CALENDAR (GTK4) ========== */
+/* ══════════════════════════════════════════
+   CALENDAR
+══════════════════════════════════════════ */
 calendar-view:selected {
     background-color: @accent_bg_color;
     color: @accent_fg_color;
+    border-radius: 50%;
 }
 
 calendar-view:indeterminate {
     color: @accent_color;
     box-shadow: inset 0 0 0 1px @accent_color;
+    border-radius: 50%;
 }
 
 .calendar-today-indicator,
@@ -95,52 +191,72 @@ calendar-view .today-indicator {
     color: @accent_fg_color;
 }
 
-/* ========== LINKS & ENTRIES ========== */
+/* ══════════════════════════════════════════
+   LINKS & ENTRIES
+══════════════════════════════════════════ */
 link,
 label.link {
     color: @accent_color;
 }
 
+entry {
+    border-radius: 6px;
+    transition: border-color 150ms ease;
+}
+
 entry:focus {
     border-color: @accent_bg_color;
+    box-shadow: 0 0 0 2px alpha(@accent_bg_color, 0.25);
 }
 
 *:focus {
     outline-color: alpha(@accent_color, 0.5);
 }
 
-/* ========== SCROLLBARS ========== */
+/* ══════════════════════════════════════════
+   SCROLLBARS
+══════════════════════════════════════════ */
 scrollbar {
-    background-color: @view_bg_color;
+    background-color: transparent;
 }
 
 scrollbar slider {
-    background-color: alpha(@window_fg_color, 0.4);
+    background-color: alpha(@window_fg_color, 0.3);
     border-radius: 8px;
+    min-width: 6px;
+    min-height: 6px;
+    margin: 2px;
+    transition: background-color 150ms ease;
 }
 
 scrollbar slider:hover {
-    background-color: alpha(@window_fg_color, 0.6);
+    background-color: alpha(@window_fg_color, 0.5);
 }
 
 scrollbar slider:active {
     background-color: @accent_bg_color;
 }
 
-/* ========== MENUS ========== */
+/* ══════════════════════════════════════════
+   MENUS & POPOVERS
+══════════════════════════════════════════ */
 menu,
 popover menu {
     background-color: @popover_bg_color;
     color: @popover_fg_color;
-    border: 1px solid @shade_color;
+    border: 1px solid alpha(@window_fg_color, 0.1);
+    border-radius: 8px;
+    padding: 4px;
 }
 
 menuitem {
-    padding: 6px 12px;
+    padding: 7px 12px;
+    border-radius: 5px;
 }
 
 menuitem:hover {
-    background-color: alpha(@accent_bg_color, 0.2);
+    background-color: alpha(@accent_bg_color, 0.18);
+    color: @window_fg_color;
 }
 
 menuitem:selected {
@@ -148,73 +264,32 @@ menuitem:selected {
     color: @accent_fg_color;
 }
 
-/* ========== TOOLTIPS ========== */
+/* ══════════════════════════════════════════
+   TOOLTIPS
+══════════════════════════════════════════ */
 tooltip.background {
     background-color: @card_bg_color;
     color: @card_fg_color;
-    border: 1px solid @shade_color;
-    border-radius: 6px;
+    border: 1px solid alpha(@window_fg_color, 0.1);
+    border-radius: 8px;
+    padding: 4px 8px;
 }
 
 tooltip label {
     color: @card_fg_color;
 }
 
-/* ========== SPINBUTTONS ========== */
-spinbutton {
-    background-color: @view_bg_color;
-    color: @view_fg_color;
-}
-
-spinbutton button {
-    background-color: transparent;
-    color: @window_fg_color;
-    border: none;
-    min-width: 24px;
-    min-height: 24px;
-    padding: 4px;
-    opacity: 1;
-}
-
-spinbutton button:hover {
-    background-color: alpha(@window_fg_color, 0.1);
-}
-
-spinbutton button:active {
-    background-color: @accent_bg_color;
-    color: @accent_fg_color;
-}
-
-spinbutton button image,
-spinbutton button label {
-    color: @window_fg_color;
-    opacity: 1;
-}
-
-spinbutton button:active image,
-spinbutton button:active label {
-    color: @accent_fg_color;
-}
-
-/* ========== COMBOBOX ========== */
+/* ══════════════════════════════════════════
+   COMBOBOX
+══════════════════════════════════════════ */
 combobox button:checked {
     background-color: alpha(@accent_bg_color, 0.2);
     color: @accent_color;
 }
 
-/* ========== HEADERBAR ========== */
-headerbar.default-decoration {
-    margin-bottom: 50px;
-    margin-top: -100px;
-}
-
-/* ========== JANELAS ========== */
-window.csd,
-window.csd decoration {
-    box-shadow: none;
-}
-
-/* ========== DIÁLOGOS ========== */
+/* ══════════════════════════════════════════
+   DIÁLOGOS
+══════════════════════════════════════════ */
 messagedialog,
 window.dialog,
 dialog {
@@ -231,7 +306,7 @@ dialog button {
 messagedialog button label,
 window.dialog button label,
 dialog button label {
-    color: @dialog_fg_color;
+    color: inherit;
 }
 
 messagedialog button.suggested-action,
@@ -265,28 +340,34 @@ dialog button.destructive-action label {
 messagedialog button:hover,
 window.dialog button:hover,
 dialog button:hover {
-    opacity: 0.9;
+    opacity: 0.88;
 }
 
 messagedialog button.suggested-action:hover,
 window.dialog button.suggested-action:hover,
 dialog button.suggested-action:hover {
     background-color: shade(@accent_bg_color, 1.1);
+    opacity: 1;
 }
 
 messagedialog button.destructive-action:hover,
 window.dialog button.destructive-action:hover,
 dialog button.destructive-action:hover {
     background-color: shade(@destructive_bg_color, 1.1);
+    opacity: 1;
 }
 
 messagedialog .dialog-action-area,
 window.dialog .dialog-action-area,
 dialog .dialog-action-area {
-    border-top: 1px solid @shade_color;
+    border-top: 1px solid alpha(@window_fg_color, 0.1);
+    padding: 8px;
+    gap: 6px;
 }
 
-/* ========== SIDEBAR ========== */
+/* ══════════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════════ */
 .sidebar,
 stacksidebar,
 list.navigation-sidebar {
@@ -300,10 +381,18 @@ list.navigation-sidebar label {
     color: inherit;
 }
 
+.sidebar row,
+stacksidebar row,
+list.navigation-sidebar row {
+    border-radius: 8px;
+    margin: 1px 6px;
+    transition: background-color 150ms ease;
+}
+
 .sidebar row:hover,
 stacksidebar row:hover,
 list.navigation-sidebar row:hover {
-    background-color: alpha(@window_fg_color, 0.1);
+    background-color: alpha(@window_fg_color, 0.08);
 }
 
 .sidebar row:selected,
@@ -319,7 +408,11 @@ list.navigation-sidebar row:selected label {
     color: @accent_fg_color;
 }
 
-/* ========== SEPARADORES ========== */
+/* ══════════════════════════════════════════
+   SEPARADORES
+══════════════════════════════════════════ */
 separator {
-    background-color: @shade_color;
+    background-color: alpha(@window_fg_color, 0.1);
+    min-height: 1px;
+    min-width: 1px;
 }
