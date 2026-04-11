@@ -1,6 +1,6 @@
 {
     "edge": "bottom",
-    "activate_zone": 20,
+    "activate_zone": 1,
     "safe_zone_height": 125,
     "safe_zone_width": 700,
     "safe_zone_popup": 325,
