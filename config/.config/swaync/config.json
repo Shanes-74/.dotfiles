@@ -1,44 +1,46 @@
 {
   "positionX": "right",
   "positionY": "top",
-  "layer-shell-cover-screen": true,
+
   "layer-shell": true,
+  "layer-shell-cover-screen": true,
   "layer": "overlay",
   "control-center-layer": "overlay",
+
   "cssPriority": "user",
-  "control-center-width": 500,
+
+  "fit-to-screen": false,
+  "keyboard-shortcuts": true,
+  "image-visibility": "when-available",
+  "transition-time": 200,
+
+  "control-center-width": 550,
   "control-center-height": 960,
   "control-center-margin-top": 28,
   "control-center-margin-bottom": 28,
   "control-center-margin-right": 28,
   "control-center-margin-left": 0,
-  "notification-window-width": 400,
+
+  "notification-window-width": 500,
   "notification-icon-size": 48,
-  "notification-body-image-height": 160,
-  "notification-body-image-width": 200,
-  "timeout": 4,
+  "notification-body-image-height": 240,
+  "notification-body-image-width": 240,
+
   "timeout-low": 2,
+  "timeout": 4,
   "timeout-critical": 6,
-  "fit-to-screen": false,
-  "keyboard-shortcuts": true,
-  "image-visibility": "when-available",
-  "transition-time": 200,
+
   "hide-on-clear": false,
   "hide-on-action": false,
   "script-fail-notify": true,
+
   "scripts": {
     "example-script": {
       "exec": "echo 'Do something...'",
       "urgency": "Normal"
     }
   },
-  "notification-visibility": {
-    "example-name": {
-      "state": "muted",
-      "urgency": "Low",
-      "app-name": "Spotify"
-    }
-  },
+
   "widgets": [
     "title",
     "dnd",
@@ -46,17 +48,18 @@
     "mpris",
     "notifications"
   ],
+
   "widget-config": {
-    "dnd": {
-      "text": "Não Perturbe"
-    },
     "title": {
       "text": "Notificações",
       "button-text": "Limpar Tudo"
     },
+    "dnd": {
+      "text": "Não Perturbe"
+    },
     "mpris": {
       "image-size": 96,
-      "image-radius": 12
+      "image-radius": 50
     },
     "volume": {
       "label": "",
@@ -67,30 +70,12 @@
     },
     "buttons-grid": {
       "actions": [
-        {
-          "label": "",
-          "command": "swaync-client -cp && nohup nmgui"
-        },
-        {
-          "label": "󰂯",
-          "command": "swaync-client -cp -cp && nohup blueman-manager"
-        },
-        {
-          "label": "",
-          "command": "swaync-client -cp && nohup pavucontrol"
-        },
-        {
-          "label": "󰔎",
-          "command": "~/.config/scripts/theme/themetoggle.py"
-        },
-        {
-          "label": "󰖔",
-          "command": "night-mode"
-        },
-        {
-          "label": "",
-          "command": "swaync-client -cp && nohup hyprmod"
-        }
+        { "label": "",   "command": "swaync-client -cp && nohup nmgui" },
+        { "label": "󰂯", "command": "swaync-client -cp && nohup blueman-manager" },
+        { "label": "",   "command": "swaync-client -cp && nohup pavucontrol" },
+        { "label": "󰔎", "command": "~/.config/scripts/theme/themetoggle.py" },
+        { "label": "󰖔", "command": "night-mode" },
+        { "label": "",   "command": "swaync-client -cp && nohup hyprmod" }
       ]
     }
   }
