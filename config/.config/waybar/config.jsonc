@@ -236,7 +236,7 @@
         "exec-if": "which swaync-client",
         "exec": "swaync-client -swb",
         "on-click": "swaync-client -t -sw",
-        "on-click-right": "swaync-client -d -sw",
+        "on-click-right": "swaync-client -d -sw -R -rs",
         "escape": true
     },
 
@@ -255,7 +255,7 @@
 
     "custom/clipboard": {
         "format": "󰨸",
-        "on-click": "cliphist list | rofi -dmenu -display-columns 2 | cliphist decode | wl-copy",
+        "on-click": "~/.config/scripts/clipboard/clipboard.sh",
         "tooltip": false
     },
 
