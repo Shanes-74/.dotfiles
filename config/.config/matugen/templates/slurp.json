@@ -1,0 +1,5 @@
+{
+  "background": "{{ colors.primary.default.hex }}33",
+  "border":     "{{ colors.primary.default.hex }}ff",
+  "selection":  "{{ colors.on_surface.default.hex }}00"
+}
