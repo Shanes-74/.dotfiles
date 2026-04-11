@@ -34,13 +34,23 @@ unfreeze() {
     [ -n "$HYPRPICKER_PID" ] && kill "$HYPRPICKER_PID" 2>/dev/null
 }
 
+hide_cursor() {
+    hyprctl keyword cursor:no_hardware_cursors 1 >/dev/null
+}
+
+show_cursor() {
+    hyprctl keyword cursor:no_hardware_cursors 0 >/dev/null
+}
+
 capture() {
     local geom="$1"
+    hide_cursor
     if [ -n "$geom" ]; then
         grim -g "$geom" "$FILE"
     else
         grim "$FILE"
     fi
+    show_cursor
 }
 
 trim_geom() {
@@ -66,18 +76,26 @@ notify_done() {
         -h "string:image-path:$FILE" \
         -A "copy=Copiar" \
         -A "file=Abrir" \
+        -A "folder=Abrir na pasta" \
         "Screenshot capturada" \
         "$FILE")
 
     case "$ACTION" in
-        copy)   wl-copy < "$FILE" ;;
+        copy)
+    if wl-copy < "$FILE"; then
+        notify-send -a "Printshot" -i "$FILE" -u low "Copiado para a área de transferência"
+    else
+        notify-send -a "Printshot" -u critical "Erro ao copiar imagem"
+    fi
+    ;;
         file)   xdg-open "$FILE" ;;
+        folder) xdg-open "$DIR" ;;
     esac
 }
 
 case "$MODE" in
     full)
-        capture || { notify_cancel; exit 1; }
+        capture || { show_cursor; notify_cancel; exit 1; }
         notify_done
         ;;
     region)
@@ -85,7 +103,7 @@ case "$MODE" in
         GEOM="$(themed_slurp -d)" || { unfreeze; notify_cancel; exit 1; }
         unfreeze
         [ -z "$GEOM" ] && { notify_cancel; exit 1; }
-        capture "$GEOM" || { notify_cancel; exit 1; }
+        capture "$GEOM" || { show_cursor; notify_cancel; exit 1; }
         notify_done
         ;;
     window)
@@ -93,13 +111,13 @@ case "$MODE" in
             jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"')" || { notify_cancel; exit 1; }
         [ -z "$GEOM" ] && { notify_cancel; exit 1; }
         GEOM="$(trim_geom "$GEOM")"
-        capture "$GEOM" || { notify_cancel; exit 1; }
+        capture "$GEOM" || { show_cursor; notify_cancel; exit 1; }
         notify_done
         ;;
     monitor)
         GEOM="$(themed_slurp -o)" || { notify_cancel; exit 1; }
         [ -z "$GEOM" ] && { notify_cancel; exit 1; }
-        capture "$GEOM" || { notify_cancel; exit 1; }
+        capture "$GEOM" || { show_cursor; notify_cancel; exit 1; }
         notify_done
         ;;
     *)
