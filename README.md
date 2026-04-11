@@ -6,7 +6,7 @@
     pacman -S --needed hyprland hyprlock kitty wlogout brightnessctl waybar rofi awww swaync swayosd stow imagemagick pavucontrol blueman thunar nwg-look python
 
 ### Pacotes do AUR (opicional)
-    paru -S waybar-weather waybar-updates nmgui
+    paru -S waybar-weather waybar-updates nmgui hyprmod-git
 
 ## Instalação Automatica
     curl -sL https://raw.githubusercontent.com/Shanes-74/.dotffiles/main/install.sh | bash
