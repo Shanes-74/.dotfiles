@@ -97,18 +97,21 @@ load_state() {
 apply_hooks() {
     #hyprctl reload >/dev/null 2>&1 || true
     pkill -USR1 kitty >/dev/null 2>&1 || true
+
     swaync-client -rs >/dev/null 2>&1 || true
 
-    killall -q swayosd-server >/dev/null 2>&1 || true
-    killall -q xdg-desktop-portal-gtk >/dev/null 2>&1 || true
-    killall -q gnome-clocks >/dev/null 2>&1 || true
-
-    pkill -x polkit-gnome-authentication-agent-1 >/dev/null 2>&1 || true
-    /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 >/dev/null 2>&1 &
-
     pkill waybar >/dev/null 2>&1 || true
-    sleep 0.5
     waybar >/dev/null 2>&1 &
+
+    killall -q swayosd-server >/dev/null 2>&1 || true
+    
+    killall -q xdg-desktop-portal-gtk >/dev/null 2>&1 || true
+    
+    killall -q gnome-clocks >/dev/null 2>&1 || true
+    
+    pkill -x polkit-gnome-authentication-agent-1 >/dev/null 2>&1 || true
+    sleep 0.5
+    /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 >/dev/null 2>&1 &
 }
 
 update_sddm() {
