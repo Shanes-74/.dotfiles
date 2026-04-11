@@ -28,4 +28,4 @@ bg=$(get_color "background" "$BG_DEFAULT")
 border=$(get_color "border"    "$BORDER_DEFAULT")
 sel=$(get_color "selection"    "$SEL_DEFAULT")
 
-exec slurp -b "$bg" -c "$border" -s "$sel" -w 3 "$@"
+exec slurp -b "$bg" -c "$border" -s "$sel" -w 2 "$@"
