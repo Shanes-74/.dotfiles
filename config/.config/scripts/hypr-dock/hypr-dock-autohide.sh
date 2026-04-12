@@ -14,12 +14,10 @@ with open('$CONFIG') as f:
     c = json.load(f)
 print(c.get('edge', 'bottom'))
 print(c.get('activate_zone', 5))
-print(c.get('safe_zone_height', 100))
 print(c.get('safe_zone_popup', 300))
 print(c.get('check_interval', 50))
 print(c.get('hide_delay', 10))
 print(c.get('activation_width', 400))
-print(c.get('safe_zone_width', 600))
 "
 }
 
@@ -28,12 +26,10 @@ load_config() {
     values=$(read_config)
     EDGE=$(echo "$values" | sed -n '1p')
     ACTIVATE_ZONE=$(echo "$values" | sed -n '2p')
-    SAFE_ZONE=$(echo "$values" | sed -n '3p')
-    SAFE_ZONE_POPUP=$(echo "$values" | sed -n '4p')
-    CHECK_INTERVAL=$(echo "$values" | sed -n '5p')
-    HIDE_DELAY=$(echo "$values" | sed -n '6p')
-    ACTIVATION_WIDTH=$(echo "$values" | sed -n '7p')
-    SAFE_ZONE_WIDTH=$(echo "$values" | sed -n '8p')
+    SAFE_ZONE_POPUP=$(echo "$values" | sed -n '3p')
+    CHECK_INTERVAL=$(echo "$values" | sed -n '4p')
+    HIDE_DELAY=$(echo "$values" | sed -n '5p')
+    ACTIVATION_WIDTH=$(echo "$values" | sed -n '6p')
     SLEEP_TIME=$(python3 -c "print($CHECK_INTERVAL / 1000)")
 }
 
@@ -82,13 +78,20 @@ for m in monitors:
 "
 }
 
-popup_is_open() {
-    hyprctl layers 2>/dev/null | grep -q "namespace: dock-popup"
+# Retorna "x y w h" da layer hypr-dock
+get_dock_bounds() {
+    hyprctl layers 2>/dev/null | grep "namespace: hypr-dock" | \
+        sed 's/.*xywh: \([0-9]*\) \([0-9]*\) \([0-9]*\) \([0-9]*\).*/\1 \2 \3 \4/'
 }
 
+# Retorna "x w" do popup
 get_popup_bounds() {
     hyprctl layers 2>/dev/null | grep "namespace: dock-popup" | \
         sed 's/.*xywh: \([0-9]*\) [0-9]* \([0-9]*\).*/\1 \2/'
+}
+
+popup_is_open() {
+    hyprctl layers 2>/dev/null | grep -q "namespace: dock-popup"
 }
 
 dock_is_running() {
@@ -109,13 +112,8 @@ except:
 SCREEN_H=$(get_screen_height)
 SCREEN_W=$(get_screen_width)
 
-# Zona de ativação central
 ACTIVATION_LEFT=$(( (SCREEN_W - ACTIVATION_WIDTH) / 2 ))
 ACTIVATION_RIGHT=$(( ACTIVATION_LEFT + ACTIVATION_WIDTH ))
-
-# Zona horizontal de segurança do dock
-SAFE_LEFT=$(( (SCREEN_W - SAFE_ZONE_WIDTH) / 2 ))
-SAFE_RIGHT=$(( SAFE_LEFT + SAFE_ZONE_WIDTH ))
 
 while true; do
     CURRENT_MODIFIED=$(stat -c %Y "$CONFIG")
@@ -132,12 +130,24 @@ while true; do
         HIDE_TIMER=0
     fi
 
+    # Pega bounds do dock dinamicamente
+    if [ "$DOCK_VISIBLE" = "true" ]; then
+        DOCK_BOUNDS=$(get_dock_bounds)
+        DOCK_X=$(echo "$DOCK_BOUNDS" | awk '{print $1}')
+        DOCK_Y=$(echo "$DOCK_BOUNDS" | awk '{print $2}')
+        DOCK_W=$(echo "$DOCK_BOUNDS" | awk '{print $3}')
+        DOCK_H=$(echo "$DOCK_BOUNDS" | awk '{print $4}')
+    fi
+
+    # Zona vertical
     if [ "$DOCK_VISIBLE" = "false" ]; then
         CURRENT_ZONE=$ACTIVATE_ZONE
     elif popup_is_open; then
         CURRENT_ZONE=$SAFE_ZONE_POPUP
+    elif [ -n "$DOCK_H" ]; then
+        CURRENT_ZONE=$DOCK_H
     else
-        CURRENT_ZONE=$SAFE_ZONE
+        CURRENT_ZONE=120
     fi
 
     case "$EDGE" in
@@ -147,7 +157,7 @@ while true; do
         right)  IN_ZONE=$(( MOUSE_X >= SCREEN_W - CURRENT_ZONE )) ;;
     esac
 
-    # Zona horizontal: ativação, dock visível ou popup aberto
+    # Zona horizontal
     if [ "$DOCK_VISIBLE" = "false" ]; then
         case "$EDGE" in
             bottom|top) IN_CENTER=$(( MOUSE_X >= ACTIVATION_LEFT && MOUSE_X <= ACTIVATION_RIGHT )) ;;
@@ -167,11 +177,15 @@ while true; do
         else
             IN_CENTER=1
         fi
-    else
+    elif [ -n "$DOCK_X" ] && [ -n "$DOCK_W" ]; then
+        DOCK_LEFT=$DOCK_X
+        DOCK_RIGHT=$(( DOCK_X + DOCK_W ))
         case "$EDGE" in
-            bottom|top) IN_CENTER=$(( MOUSE_X >= SAFE_LEFT && MOUSE_X <= SAFE_RIGHT )) ;;
-            left|right) IN_CENTER=$(( MOUSE_Y >= SAFE_LEFT && MOUSE_Y <= SAFE_RIGHT )) ;;
+            bottom|top) IN_CENTER=$(( MOUSE_X >= DOCK_LEFT && MOUSE_X <= DOCK_RIGHT )) ;;
+            left|right) IN_CENTER=$(( MOUSE_Y >= DOCK_LEFT && MOUSE_Y <= DOCK_RIGHT )) ;;
         esac
+    else
+        IN_CENTER=1
     fi
 
     if [ "$IN_ZONE" = "1" ] && [ "$IN_CENTER" = "1" ]; then
