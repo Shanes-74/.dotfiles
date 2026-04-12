@@ -1,8 +1,0 @@
-{
-    "edge": "bottom",
-    "activate_zone": 1,
-    "safe_zone_popup": 350,
-    "check_interval": 100,
-    "hide_delay": 10,
-    "activation_width": 650
-}
