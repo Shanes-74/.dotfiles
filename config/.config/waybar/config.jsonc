@@ -50,7 +50,7 @@
         "on-click": "playerctl -p spotify play-pause",
         "on-scroll-up": "playerctl -p spotify previous",
         "on-scroll-down": "playerctl -p spotify next",
-        "on-click-right": ".config/scripts/spotify/spotwindow.sh"
+        "on-click-right": "spotify"
     },
 
     "hyprland/workspaces": {
@@ -163,16 +163,6 @@
         "tooltip-format": "{capacity}% - Descarregado em: {time}",
         "tooltip-format-charging": "{capacity}% - Carregado em: {time}",
         "interval": 5
-    },
-
-    "clock": {
-        "timezone": "America/Sao_Paulo",
-        "format": "{:%H:%M}",
-        "format-alt": "{:%d/%m/%y}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "interval": 1,
-        "exec": "test -f ~/.cache/waybar-clock-alt",
-        "on-click-right": "~/.local/bin/clock-toggle"
     },
 
     // ------------------------------------------------------------
