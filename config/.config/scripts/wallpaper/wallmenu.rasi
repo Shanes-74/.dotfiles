@@ -17,7 +17,7 @@ window {
     location:                   center;
     anchor:                     center;
     fullscreen:                 false;
-    width:                      65%;
+    width:                      75%;
     x-offset:                   0px;
     y-offset:                   0px;
 
@@ -37,7 +37,7 @@ mainbox {
 /*****----- Listview -----*****/
 listview {
     spacing:                    15px;
-    columns:                    4;
+    columns:                    5;
     lines:                      1;
     cycle:                      true;
     dynamic:                    true;
@@ -48,7 +48,7 @@ listview {
     margin:                     0px;
     padding:                    20px;
     border:                     2px;
-    border-radius:              20px;
+    border-radius:              25px;
     border-color:               @outline-variant;
     background-color:           @surface-container;
 }
@@ -58,14 +58,14 @@ element {
     orientation:                vertical;
     padding:                    8px;
     spacing:                    6px;
-    border-radius:              20px;
+    border-radius:              25px;
     background-color:           transparent;
 }
 
 element-icon {
     size:                       400px;
     horizontal-align:           0.5;
-    border-radius:              20px;
+    border-radius:              25px;
     background-color:           transparent;
 }
 
@@ -77,7 +77,7 @@ element-text {
 
 element selected {
     background-color:           @primary;
-    border-radius:              20px;
+    border-radius:              25px;
 }
 
 /*****----- Message -----*****/
