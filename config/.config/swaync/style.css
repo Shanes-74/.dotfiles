@@ -9,11 +9,10 @@
   font-weight: 500;
   color: @on_surface;
   transition:
-    background-color 200ms ease,
-    color 200ms ease,
-    border-color 200ms ease,
-    transform 200ms ease,
-    box-shadow 200ms ease;
+        transform 180ms cubic-bezier(.4,0,.2,1),
+        background-color 200ms ease,
+        color 200ms ease,
+        border-color 200ms ease;
 }
 
 
@@ -24,10 +23,10 @@
 .control-center {
   margin: -10px;
   padding: 6px;
-  border-radius: 20px;
+  border-radius: 25px;
   background-color: alpha(@surface_container, 0.7);
   border: 1px solid @outline_variant;
-  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.5);
 }
 
 
@@ -37,7 +36,7 @@
 
 #notifications,
 #notification-list {
-  border-radius: 20px;
+  border-radius: 25px;
   background-color: rgba(0, 0, 0, 0.2);
 }
 
@@ -55,11 +54,10 @@
 .notification {
   margin: 6px 0;
   padding: 10px;
-  border-radius: 20px;
+  border-radius: 25px;
   background-color: alpha(@surface_container, 0.7);
   border: 1px solid @outline_variant;
   box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.5);
-  transition: background-color 0.1s ease;
 }
 
 .control-center .notification {
@@ -67,7 +65,7 @@
 }
 
 .notification:hover {
-  background-color: alpha(@surface_container_high, 0.7);
+  background-color: alpha(@surface_container_high, 0.8);
   border: 1px solid @primary;
 }
 
@@ -82,34 +80,41 @@
 /* ===================================================== */
 
 .notification-action {
-  margin-left: 3px;
-  border-radius: 50px;
+  border-radius: 25px;
   background-color: @surface_container;
   border: 1px solid @primary;
+  padding: 0px;
+  margin: 2px 4px 4px 4px;
 }
 
-.notification .notification-action label {
+.notification-action label {
   color: @primary;
 }
 
-
 .notification-action label {
-  margin: -4px;
-}
-
-.notification-content label {
-  margin-top: 4px;
-  margin-bottom: 4px;
-  padding-left: 10px;
+  margin: -2px;
 }
 
 .notification-action:hover {
+  font-weight: 700;
   background-color: @primary;
   border: 1px solid @primary;
+  margin: -2px 2px 2px 2px;
+  border-radius: 19px;
 }
 
 .notification-action:hover label {
   color: @on_primary;
+}
+
+.notification-content label {
+  margin-top: 4px;
+  margin-bottom: 6px;
+  padding-left: 10px;
+}
+
+.notification-content image {
+  border-radius: 25px;
 }
 
 .notification-default-action:hover,
@@ -133,21 +138,17 @@
 /* ---------------- BOTÃO FECHAR ---------------- */
 
 .close-button {
-  margin-top: 14px;
-  margin-right: 8px;
+  margin-top: 16px;
+  margin-right: 12px;
   padding: 0;
   min-width: 24px;
   min-height: 24px;
   border-radius: 50px;
   background: @surface_container;
-  color: white;
-  border: none;
-  box-shadow: none;
 }
 
 .close-button:hover {
   background: @error;
-  color: @surface_container;
 }
 
 .close-button:hover image {
@@ -166,7 +167,7 @@
 
 .widget-buttons-grid button {
   margin: 2px;
-  padding: 10px 20px;
+  padding: 10px 25px;
   font-size: 18px;
   border-radius: 50px;
   background: @secondary_container;
