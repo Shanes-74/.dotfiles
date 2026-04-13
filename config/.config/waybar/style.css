@@ -19,6 +19,7 @@
     background: transparent;
 }
 
+
 /* ---------------------------------------------
    WORKSPACES
 --------------------------------------------- */
@@ -39,6 +40,7 @@
     transition: all 180ms cubic-bezier(.4,0,.2,1);
 }
 
+
 /* Workspaces - States */
 #workspaces button.empty {
     color: transparent;
@@ -58,6 +60,7 @@
     color: @on_primary;
     background-color: @primary;
 }
+
 
 /* Workspaces - Edge alignment */
 .modules-left > widget:first-child > #workspaces {
@@ -101,9 +104,9 @@
     background: alpha(@surface_container, 0.7);
 
     border: 1px solid @outline_variant;
-    border-radius: 50px;
+    border-radius: 25px;
 
-    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.5);
 
     transition:
         transform 180ms cubic-bezier(.4,0,.2,1),
@@ -111,6 +114,7 @@
         color 200ms ease,
         border-color 200ms ease;
 }
+
 
 /* Modules - Hover state (shared) */
 #clock:hover,
@@ -158,10 +162,12 @@
     padding: 1px 15px;
 }
 
+
 /* Clipboard */
 #custom-clipboard {
     padding: 0 14px;
 }
+
 
 /* PulseAudio */
 #pulseaudio {
@@ -181,6 +187,7 @@
     font-weight: 700;
 }
 
+
 /* Backlight */
 #backlight {
     font-size: 22px;
@@ -194,10 +201,12 @@
     font-weight: 700;
 }
 
+
 /* Workspaces */
 #workspaces {
     padding: 0;
 }
+
 
 /* Tray */
 #tray-expander #custom-expand-icon {
@@ -228,6 +237,7 @@
     -gtk-icon-effect: highlight;
 }
 
+
 /* MPRIS */
 #mpris {
     font-size: 20px;
@@ -245,6 +255,7 @@
     color: alpha(@surface_container_high, 0.6);
 }
 
+
 /* Hypridle */
 #custom-hypridle.active {
     color: alpha(@on_surface, 0.5);
@@ -253,6 +264,7 @@
 #custom-hypridle.active:hover {
     color: alpha(@surface_container_high, 0.6);
 }
+
 
 /* Battery */
 #battery {
@@ -273,6 +285,7 @@
 #battery.critical:not(.charging) {
     color: @on_error;
     background-color: @error;
+    border: 2px solid @error;
 
     animation-name: blink;
     animation-duration: 0.5s;
