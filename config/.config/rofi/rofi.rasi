@@ -46,7 +46,7 @@ inputbar {
     margin:                     0px; 
     padding:                    15px;
     border:                     2px;
-    border-radius:              20px;
+    border-radius:              25px;
     border-color:               @outline-variant;
     background-color:           @surface-container;
     children:                   [ "entry" ];
@@ -92,7 +92,7 @@ listview {
     margin:                     0px;
     padding:                    20px;
     border:                     2px;
-    border-radius:              20px;
+    border-radius:              25px;
     border-color:               @outline-variant;
     background-color:           @surface-container;
     cursor:                     "default";
@@ -103,7 +103,7 @@ element {
     enabled:                    true;
     padding:                    6px; 
     spacing:                    12px;
-    border-radius:              999px; 
+    border-radius:              50px; 
     background-color:           transparent;
     cursor:                     pointer;
 }
@@ -138,5 +138,5 @@ element alternate normal {
 message {
     padding:                    10px;
     background-color:           @surface-container-low;
-    border-radius:              12px;
+    border-radius:              25px;
 }
