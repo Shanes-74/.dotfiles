@@ -44,7 +44,7 @@ window {
   border: 1px solid @outline_variant;
   box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.5);
   padding: 5px;
-  margin: 8px;
+  margin: 0px;
 }
 
 #pv-item.hover {
