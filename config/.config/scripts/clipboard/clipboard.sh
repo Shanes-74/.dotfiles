@@ -159,7 +159,6 @@ show_menu() {
 
     local rofi_args=(
         -dmenu -i
-        -p ""
         -kb-custom-1 "alt+d"
         -kb-custom-2 "super+alt+d"
         -kb-row-delete ""
