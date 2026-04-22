@@ -49,7 +49,7 @@ window {
 #app button:hover image {
   background-color: @primary;
   margin-top: -32px;
-  animation: bounce 0.5s ease-in-out 1s infinite alternate;
+  animation: bounce 0.4s ease-in-out 1s infinite alternate;
 }
 
 #pv-item {
