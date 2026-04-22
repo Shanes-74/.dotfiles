@@ -246,7 +246,7 @@
         },
         "exec-if": "which waybar-updates",
         "exec": "waybar-updates",
-        "on-click": "kitty paru -Syu",
+        "on-click": "kitty paru -Syu && sudo pacman -Rns $(pacman -Qtdq) && source ~/.zshrc",
         "hide-if-empty": true
     },
 
