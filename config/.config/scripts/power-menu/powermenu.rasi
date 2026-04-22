@@ -76,6 +76,7 @@ element normal {
 element selected normal {
     background-color:           @primary; 
     text-color:                 @on-primary;
+    border-radius:              50px;
 }
 
 message {
