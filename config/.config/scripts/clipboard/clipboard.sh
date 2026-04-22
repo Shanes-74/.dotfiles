@@ -13,7 +13,7 @@ APP_NAME="Clipboard"
 
 # ─── Utilitários ──────────────────────────────────────────────────────────────
 die() {
-    notify-send -a "$APP_NAME" -u critical "$APP_NAME" "$*" 2>/dev/null
+    notify-send -u critical "$APP_NAME" "$*" 2>/dev/null
     echo "ERRO: $*" >&2
     exit 1
 }
@@ -28,28 +28,24 @@ check_deps() {
     (( ${#missing[@]} )) && die "Dependências ausentes: ${missing[*]}"
 }
 
-# ─── Notificação única (substitui a anterior) ─────────────────────────────────
-# Usa --replace-id para reutilizar a mesma notificação sempre.
-# O ID retornado pelo notify-send é salvo em arquivo para persistir
-# entre execuções do script.
+# ─── Notificação única (substitui a anterior, não salva histórico) ───────────
 notify() {
     local msg="$1"
-    local urgency="${2:-normal}"
-    local timeout="${3:-2000}"
+    local urgency="low"
+    local timeout=2000
 
     local replace_id=0
     [[ -f "$NOTIF_ID_FILE" ]] && replace_id=$(cat "$NOTIF_ID_FILE")
 
     local new_id
     new_id=$(notify-send \
-        -a "$APP_NAME" \
         -u "$urgency" \
         -t "$timeout" \
         -r "$replace_id" \
         -p \
+        --hint=int:transient:1 \
         "$APP_NAME" "$msg" 2>/dev/null)
 
-    # Salva o novo ID se retornado (notify-send -p imprime o ID)
     [[ -n "$new_id" ]] && echo "$new_id" > "$NOTIF_ID_FILE"
 }
 
