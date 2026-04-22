@@ -1,17 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg xmlns="http://www.w3.org/2000/svg"
-     xmlns:svg="http://www.w3.org/2000/svg"
-     version="1.1"
-     width="0.16in" height="0.03in"
-     viewBox="0 0 48 9">
-  <title>1</title>
-  <defs>
-  </defs>
-  <image id="raster0"
-         x="0"
-         y="0"
-         width="48"
-         height="9"
-         opacity="1,000000"
-         href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAJCAYAAAB0d6/iAAAAAXNSR0IB2cksfwAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAMdJREFUOMvllLsOAVEYhL/f5RFcOmpqkaAVicaLiBdzSSgU4gHEA1DudmL3HYxGgZy12V0bhSnnzEzO/Dn/MTJC0gjoAFdgbWZBjL4KTIAacDSzHb+ApKKklV4RSup/8AwemmcsJBV/UWAmNzxJJYe+LMmP8EzT3qOQocM4gm8CLQffBhoJs3ItoIRnt5RZuRXYRvAecHbwJ8BPmJX7Ei/f3nIgqffB03cs8VxS6kHaF4oMgS5wATZmFsboK49vtA4czGzPP+MOvSzDYMqvnVIAAAAASUVORK5CYIIA" />
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12" height="2" version="1.1" viewBox="0 0 12.7 2.3812" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<g fill="#ffffff">
+<circle cx="4.6917" cy="1.0583" r=".9388"/>
+<circle cx="8.0083" cy="1.0583" r=".9388"/>
+</g>
 </svg>
