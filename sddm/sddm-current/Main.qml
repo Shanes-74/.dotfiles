@@ -6,10 +6,14 @@ import "components"
 
 Rectangle {
     id: container
-    width: 1920
-    height: 1080
+    width: Screen.width
+    height: Screen.height
     color: config.backgroundColor
     focus: !loginState.visible
+
+    // dp: fator de escala baseado na altura da tela, design base = 1080p
+    // Em 1080p → dp=1.0 | Em 1440p → dp=1.33 | Em 4K → dp=2.0 | Em 720p → dp=0.67
+    property real dp: Math.min(width, height) / 1080
 
     property int userIndex: 0
     property int sessionIndex: 0
@@ -83,6 +87,7 @@ Rectangle {
     FontLoader { id: fontMedium; source: "assets/fonts/FlexRounded-M.ttf" }
     FontLoader { id: fontBold; source: "assets/fonts/FlexRounded-B.ttf" }
 
+    // --- Wallpaper base ---
     Image {
         id: backgroundImage
         source: config.background
@@ -91,33 +96,75 @@ Rectangle {
         layer.enabled: true
     }
 
+    // --- Blur em 4 passes encadeados (simula size=3 passes=4 do Hyprland) ---
     FastBlur {
-        id: backgroundBlur
+        id: blur1
         anchors.fill: parent
         source: backgroundImage
-        radius: config.blurRadius
+        radius: 20
         opacity: loginState.visible ? 1 : 0
+        layer.enabled: true
+        Behavior on opacity { NumberAnimation { duration: 400; easing.type: Easing.InOutQuad } }
+    }
+    FastBlur {
+        id: blur2
+        anchors.fill: parent
+        source: blur1
+        radius: 20
+        opacity: loginState.visible ? 1 : 0
+        layer.enabled: true
+        Behavior on opacity { NumberAnimation { duration: 400; easing.type: Easing.InOutQuad } }
+    }
+    FastBlur {
+        id: blur3
+        anchors.fill: parent
+        source: blur2
+        radius: 20
+        opacity: loginState.visible ? 1 : 0
+        layer.enabled: true
+        Behavior on opacity { NumberAnimation { duration: 400; easing.type: Easing.InOutQuad } }
+    }
+    FastBlur {
+        id: blur4
+        anchors.fill: parent
+        source: blur3
+        radius: 20
+        opacity: loginState.visible ? 1 : 0
+        layer.enabled: true
         Behavior on opacity { NumberAnimation { duration: 400; easing.type: Easing.InOutQuad } }
     }
 
+    // --- Contraste (simula contrast=1.5) ---
+    Item {
+        anchors.fill: parent
+        opacity: loginState.visible ? 1 : 0
+        layer.enabled: true
+        layer.effect: BrightnessContrast {
+            brightness: 0.0
+            contrast: 0.35
+        }
+        Behavior on opacity { NumberAnimation { duration: 400 } }
+    }
+
+    // --- Overlay de escurecimento (brightness=0.8 / ignore_opacity) ---
     Rectangle {
         anchors.fill: parent
         color: "black"
-        opacity: loginState.visible ? 0.4 : 0.2
+        opacity: loginState.visible ? 0.18 : 0.15
         Behavior on opacity { NumberAnimation { duration: 400 } }
     }
 
     // --- Pílula de Status Centralizada ---
     Rectangle {
         id: topStatusPill
-        height: 48
-        width: statusLayout.width + 40
+        height: Math.round(48 * dp)
+        width: statusLayout.width + Math.round(40 * dp)
         anchors {
             top: parent.top
-            topMargin: 30
+            topMargin: Math.round(30 * dp)
             horizontalCenter: parent.horizontalCenter
         }
-        color: loginState.isError ? config.errorColor : (config.surfaceContainer ? config.surfaceContainer : "#1a1a1a")
+        color: config.surfaceContainer ? config.surfaceContainer : "#1a1a1a"
         opacity: 0.90
         radius: 999
         z: 100
@@ -125,15 +172,20 @@ Rectangle {
         RowLayout {
             id: statusLayout
             anchors.centerIn: parent
-            spacing: 20
+            spacing: Math.round(20 * dp)
             Text {
                 text: Qt.formatDateTime(new Date(), "dddd, MMMM d")
                 color: container.extractedAccent
-                font.pixelSize: 15
+                font.pixelSize: Math.round(15 * dp)
                 font.family: config.fontFamily
                 font.weight: Font.Medium
             }
-            Rectangle { width: 1; height: 16; color: container.extractedAccent; opacity: 0.3 }
+            Rectangle {
+                width: 1
+                height: Math.round(16 * dp)
+                color: container.extractedAccent
+                opacity: 0.3
+            }
             PowerBar {
                 textColor: container.extractedAccent
                 Layout.alignment: Qt.AlignVCenter
@@ -159,16 +211,16 @@ Rectangle {
         }
 
         Text {
-            text: "Press any key to unlock"
+            text: "Press Enter to unlock"
             color: "white"
-            font.pixelSize: 20
+            font.pixelSize: Math.round(20 * dp)
             font.family: config.fontFamily
             style: Text.Outline
             styleColor: "black"
             anchors {
                 bottom: parent.bottom
                 horizontalCenter: parent.horizontalCenter
-                bottomMargin: 100
+                bottomMargin: Math.round(100 * dp)
             }
             opacity: 0.8
         }
@@ -197,37 +249,58 @@ Rectangle {
         SequentialAnimation {
             id: shakeAnimation
             loops: 2
-            PropertyAnimation { target: loginCard; property: "x"; from: (container.width - loginCard.width)/2; to: (container.width - loginCard.width)/2 - 10; duration: 50; easing.type: Easing.InOutQuad }
-            PropertyAnimation { target: loginCard; property: "x"; from: (container.width - loginCard.width)/2 - 10; to: (container.width - loginCard.width)/2 + 10; duration: 50; easing.type: Easing.InOutQuad }
-            PropertyAnimation { target: loginCard; property: "x"; from: (container.width - loginCard.width)/2 + 10; to: (container.width - loginCard.width)/2; duration: 50; easing.type: Easing.InOutQuad }
+            PropertyAnimation {
+                target: loginCard; property: "x"
+                from: (container.width - loginCard.width) / 2
+                to:   (container.width - loginCard.width) / 2 - Math.round(10 * dp)
+                duration: 50; easing.type: Easing.InOutQuad
+            }
+            PropertyAnimation {
+                target: loginCard; property: "x"
+                from: (container.width - loginCard.width) / 2 - Math.round(10 * dp)
+                to:   (container.width - loginCard.width) / 2 + Math.round(10 * dp)
+                duration: 50; easing.type: Easing.InOutQuad
+            }
+            PropertyAnimation {
+                target: loginCard; property: "x"
+                from: (container.width - loginCard.width) / 2 + Math.round(10 * dp)
+                to:   (container.width - loginCard.width) / 2
+                duration: 50; easing.type: Easing.InOutQuad
+            }
             onStopped: isError = false
         }
 
         // --- Cartão de login ---
         Rectangle {
             id: loginCard
-            width: 400
-            height: 500
+            width: Math.round(400 * dp)
+            height: Math.round(500 * dp)
             x: (parent.width - width) / 2
             y: (parent.height - height) / 2
             color: config.surfaceContainer ? config.surfaceContainer : "#EEEBE3"
             opacity: 0.90
-            radius: 32
+            radius: Math.round(32 * dp)
 
-            ColumnLayout {
-                anchors.fill: parent
-                anchors.margins: 40
-                spacing: 10
+            // Coluna centralizada — usa Column simples para alinhamento previsível
+            Column {
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: parent.right
+                    margins: Math.round(40 * dp)
+                }
+                spacing: Math.round(10 * dp)
 
                 // Espaço superior
-                Item { Layout.preferredHeight: 5 }
+                Item { width: 1; height: Math.round(5 * dp) }
 
-                // Avatar (apenas ícone com a inicial)
+                // Avatar
                 Rectangle {
                     id: avatarIcon
-                    width: 160
-                    height: 160
-                    Layout.alignment: Qt.AlignHCenter
+                    width: Math.round(160 * dp)
+                    height: Math.round(160 * dp)
+                    anchors.horizontalCenter: parent.horizontalCenter
                     color: config.onSurfaceColor
                     opacity: 0.2
                     radius: width / 2
@@ -246,7 +319,7 @@ Rectangle {
                             return name.charAt(0).toUpperCase();
                         }
                         color: container.extractedAccent
-                        font.pixelSize: 48
+                        font.pixelSize: Math.round(48 * dp)
                         font.family: fontBold.name
                         font.weight: Font.Bold
                     }
@@ -254,14 +327,14 @@ Rectangle {
 
                 // Nome do usuário (clicável)
                 Item {
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.preferredWidth: userNameLabel.width + 40
-                    Layout.preferredHeight: userNameLabel.height + 20
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: userNameLabel.width + Math.round(40 * dp)
+                    height: userNameLabel.height + Math.round(20 * dp)
                     Rectangle {
                         anchors.fill: parent
                         color: config.onSurfaceColor
                         opacity: userClickArea.pressed ? 0.2 : 0
-                        radius: 12
+                        radius: Math.round(12 * dp)
                     }
                     Text {
                         id: userNameLabel
@@ -274,7 +347,7 @@ Rectangle {
                             return "Shane";
                         }
                         color: config.onSurfaceColor
-                        font.pixelSize: 24
+                        font.pixelSize: Math.round(24 * dp)
                         font.weight: Font.Bold
                         font.family: config.fontFamily
                     }
@@ -290,23 +363,24 @@ Rectangle {
                 // Seletor de sessão
                 Rectangle {
                     id: sessionPill
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.preferredWidth: 200
-                    Layout.preferredHeight: 42
-                    Layout.topMargin: -5
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: Math.round(208 * dp)
+                    height: Math.round(42 * dp)
                     color: Qt.rgba(config.onSurfaceColor.r, config.onSurfaceColor.g, config.onSurfaceColor.b, 0.15)
                     radius: 50
 
-                    RowLayout {
+                    Row {
                         anchors.centerIn: parent
-                        spacing: 15
+                        spacing: Math.round(15 * dp)
                         Text {
+                            anchors.verticalCenter: parent.verticalCenter
                             text: "󰟀"
                             color: container.extractedAccent
-                            font.pixelSize: 16
+                            font.pixelSize: Math.round(16 * dp)
                             opacity: 0.8
                         }
                         Text {
+                            anchors.verticalCenter: parent.verticalCenter
                             text: {
                                 if (typeof sessionModel !== "undefined" && sessionModel.count > 0) {
                                     var idx = container.sessionIndex;
@@ -320,7 +394,7 @@ Rectangle {
                                 return "Hyprland";
                             }
                             color: container.extractedAccent
-                            font.pixelSize: 14
+                            font.pixelSize: Math.round(14 * dp)
                             font.weight: Font.Medium
                         }
                     }
@@ -332,25 +406,22 @@ Rectangle {
                     }
                 }
 
-                // --- Distância entre sessão e senha ---
-                Item { Layout.preferredHeight: 5 }
+                Item { width: 1; height: Math.round(5 * dp) }
 
                 // Campo de senha
                 TextField {
                     id: passwordField
                     echoMode: TextInput.Password
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 48
+                    width: parent.width
+                    height: Math.round(48 * dp)
                     horizontalAlignment: Text.AlignHCenter
-                    font.pixelSize: 18
+                    font.pixelSize: Math.round(18 * dp)
                     color: config.onSurfaceColor
                     focus: loginState.visible
                     enabled: !container.isLoggingIn
 
                     background: Rectangle {
-                        color: loginState.isError
-                            ? Qt.rgba(config.errorColor.r, config.errorColor.g, config.errorColor.b, 0.3)
-                            : Qt.rgba(config.onSurfaceColor.r, config.onSurfaceColor.g, config.onSurfaceColor.b, 0.1)
+                        color: Qt.rgba(config.onSurfaceColor.r, config.onSurfaceColor.g, config.onSurfaceColor.b, 0.1)
                         radius: 50
                         border.width: parent.activeFocus ? 2 : (loginState.isError ? 2 : 0)
                         border.color: loginState.isError ? config.errorColor : container.extractedAccent
@@ -359,7 +430,7 @@ Rectangle {
                     Text {
                         text: "Enter Password"
                         color: container.extractedAccent
-                        font.pixelSize: 16
+                        font.pixelSize: Math.round(16 * dp)
                         visible: !parent.text && !parent.focus
                         anchors.centerIn: parent
                         opacity: 0.8
@@ -368,19 +439,33 @@ Rectangle {
                     onAccepted: container.doLogin()
                 }
 
-                // --- Espaço entre senha e botão ---
+                // Espaço flexível entre senha e botão
                 Item {
-                    Layout.fillHeight: true
-                    Layout.minimumHeight: 2
+                    width: 1
+                    height: Math.round(loginCard.height
+                        - Math.round(40 * dp) * 2   // margins top+bottom
+                        - Math.round(5 * dp)         // espaço topo
+                        - Math.round(160 * dp)       // avatar
+                        - Math.round(10 * dp)        // spacing
+                        - (userNameLabel.height + Math.round(20 * dp)) // nome
+                        - Math.round(10 * dp)
+                        - Math.round(42 * dp)        // session pill
+                        - Math.round(10 * dp)
+                        - Math.round(5 * dp)         // spacer
+                        - Math.round(10 * dp)
+                        - Math.round(48 * dp)        // password
+                        - Math.round(10 * dp)
+                        - Math.round(42 * dp)        // botão
+                        - Math.round(20 * dp)        // espaço inferior
+                    )
                 }
 
                 // Botão de login
                 RoundButton {
                     id: loginButton
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.preferredWidth: 64
-                    Layout.preferredHeight: 64
-                    Layout.bottomMargin: 0
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: Math.round(64 * dp)
+                    height: Math.round(64 * dp)
 
                     focusPolicy: Qt.NoFocus
                     enabled: !container.isLoggingIn
@@ -390,7 +475,7 @@ Rectangle {
                             anchors.centerIn: parent
                             text: container.isLoggingIn ? "⋯" : "→"
                             color: (container.extractedAccent.r * 0.299 + container.extractedAccent.g * 0.587 + container.extractedAccent.b * 0.114) > 0.6 ? "#000000" : "#FFFFFF"
-                            font.pixelSize: 32
+                            font.pixelSize: Math.round(32 * dp)
                         }
                     }
 
@@ -402,8 +487,7 @@ Rectangle {
                     onClicked: container.doLogin()
                 }
 
-                // Espaço inferior fixo
-                Item { Layout.preferredHeight: 20 }
+                Item { width: 1; height: Math.round(20 * dp) }
             }
         }
 
@@ -411,16 +495,16 @@ Rectangle {
         RowLayout {
             anchors {
                 top: loginCard.bottom
-                topMargin: 15
+                topMargin: Math.round(15 * dp)
                 horizontalCenter: parent.horizontalCenter
             }
-            spacing: 40
+            spacing: Math.round(40 * dp)
 
             Text {
                 id: capsLockIndicator
                 text: "Caps Lock"
                 color: container.extractedAccent
-                font.pixelSize: 14
+                font.pixelSize: Math.round(14 * dp)
                 font.family: config.fontFamily
                 font.weight: Font.Medium
                 visible: (typeof keyboard !== "undefined" && typeof keyboard.capsLock !== "undefined") ? keyboard.capsLock : false
@@ -430,7 +514,7 @@ Rectangle {
                 id: numLockIndicator
                 text: "Num Lock"
                 color: container.extractedAccent
-                font.pixelSize: 14
+                font.pixelSize: Math.round(14 * dp)
                 font.family: config.fontFamily
                 font.weight: Font.Medium
                 visible: (typeof keyboard !== "undefined" && typeof keyboard.numLock !== "undefined") ? keyboard.numLock : false
@@ -438,12 +522,16 @@ Rectangle {
         }
     }
 
-    Keys.onPressed: function(event) {
-        if (!loginState.visible) {
-            loginState.visible = true;
-            passwordField.forceActiveFocus();
-            event.accepted = true;
-        }
+    // Só abre o login com Enter, não com qualquer tecla
+    Shortcut {
+        sequence: "Return"
+        enabled: !loginState.visible
+        onActivated: { loginState.visible = true; passwordField.forceActiveFocus(); }
+    }
+    Shortcut {
+        sequence: "Enter"
+        enabled: !loginState.visible
+        onActivated: { loginState.visible = true; passwordField.forceActiveFocus(); }
     }
 
     Shortcut { sequence: "Escape"; enabled: loginState.visible; onActivated: { loginState.visible = false; passwordField.text = ""; container.focus = true; } }
@@ -452,31 +540,31 @@ Rectangle {
     // Popup de seleção de usuário
     Popup {
         id: userPopup
-        width: 220
+        width: Math.round(220 * dp)
         height: {
             var itemCount = (typeof userModel !== "undefined" && userModel.count > 0) ? userModel.count : 1;
             var visibleItems = Math.min(itemCount, 4);
-            return 30 + 4 + 20 + (visibleItems * 90);
+            return Math.round((54 + visibleItems * 90) * dp);
         }
         x: (parent.width - width) / 2
-        y: (parent.height - height) / 2 - 50
+        y: (parent.height - height) / 2 - Math.round(50 * dp)
         modal: true
 
         background: Rectangle {
             color: config.surfaceContainer
-            radius: 24
+            radius: Math.round(24 * dp)
             opacity: 0.95
             border.color: config.outlineColor
         }
 
         ColumnLayout {
             anchors.fill: parent
-            anchors.margins: 10
-            spacing: 10
+            anchors.margins: Math.round(10 * dp)
+            spacing: Math.round(10 * dp)
 
             Text {
                 text: "Usuários"
-                font.pixelSize: 18
+                font.pixelSize: Math.round(18 * dp)
                 font.weight: Font.Bold
                 color: config.onSurfaceColor
                 Layout.alignment: Qt.AlignHCenter
@@ -497,18 +585,20 @@ Rectangle {
                 model: (typeof userModel !== "undefined") ? userModel : null
                 delegate: ItemDelegate {
                     width: parent.width
-                    height: 56
+                    height: Math.round(56 * dp)
                     background: Rectangle {
                         color: (index === userList.currentIndex) ? config.onSurfaceColor : (hovered ? config.onSurfaceColor : "transparent")
                         opacity: (hovered || index === userList.currentIndex) ? 0.2 : 0
-                        radius: 12
+                        radius: Math.round(12 * dp)
                     }
 
                     contentItem: RowLayout {
-                        spacing: 15
-                        Item { Layout.preferredWidth: 8 }
+                        spacing: Math.round(15 * dp)
+                        Item { Layout.preferredWidth: Math.round(8 * dp) }
                         Rectangle {
-                            width: 32; height: 32; radius: 16
+                            width: Math.round(32 * dp)
+                            height: Math.round(32 * dp)
+                            radius: width / 2
                             color: (index === userList.currentIndex) ? container.extractedAccent : config.outlineColor
                             Text {
                                 anchors.centerIn: parent
@@ -520,7 +610,7 @@ Rectangle {
                                     return name.charAt(0).toUpperCase();
                                 }
                                 color: config.onPrimaryColor
-                                font.pixelSize: 14
+                                font.pixelSize: Math.round(14 * dp)
                             }
                         }
                         Text {
@@ -536,7 +626,7 @@ Rectangle {
                                 return "Usuário " + (index + 1);
                             }
                             color: config.onSurfaceColor
-                            font.pixelSize: 14
+                            font.pixelSize: Math.round(14 * dp)
                             Layout.fillWidth: true
                         }
                     }
@@ -553,31 +643,31 @@ Rectangle {
     // Popup de seleção de sessão
     Popup {
         id: sessionPopup
-        width: 220
+        width: Math.round(220 * dp)
         height: {
             var itemCount = (typeof sessionModel !== "undefined" && sessionModel.count > 0) ? sessionModel.count : 1;
             var visibleItems = Math.min(itemCount, 4);
-            return 30 + 4 + 20 + (visibleItems * 90);
+            return Math.round((54 + visibleItems * 90) * dp);
         }
         x: (parent.width - width) / 2
-        y: (parent.height - height) / 2 + 80
+        y: (parent.height - height) / 2 + Math.round(80 * dp)
         modal: true
 
         background: Rectangle {
             color: config.surfaceContainer
-            radius: 24
+            radius: Math.round(24 * dp)
             opacity: 0.95
             border.color: config.outlineColor
         }
 
         ColumnLayout {
             anchors.fill: parent
-            anchors.margins: 10
-            spacing: 10
+            anchors.margins: Math.round(10 * dp)
+            spacing: Math.round(10 * dp)
 
             Text {
                 text: "Sessões"
-                font.pixelSize: 18
+                font.pixelSize: Math.round(18 * dp)
                 font.weight: Font.Bold
                 color: config.onSurfaceColor
                 Layout.alignment: Qt.AlignHCenter
@@ -598,11 +688,11 @@ Rectangle {
                 model: (typeof sessionModel !== "undefined") ? sessionModel : null
                 delegate: ItemDelegate {
                     width: parent.width
-                    height: 56
+                    height: Math.round(56 * dp)
                     background: Rectangle {
                         color: (index === sessionList.currentIndex) ? config.onSurfaceColor : (hovered ? config.onSurfaceColor : "transparent")
                         opacity: (hovered || index === sessionList.currentIndex) ? 0.2 : 0
-                        radius: 12
+                        radius: Math.round(12 * dp)
                     }
 
                     contentItem: Text {
@@ -610,7 +700,7 @@ Rectangle {
                         color: config.onSurfaceColor
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
-                        font.pixelSize: 14
+                        font.pixelSize: Math.round(14 * dp)
                     }
 
                     onClicked: {
