@@ -21,30 +21,44 @@ window {
   background: alpha(@surface_container, 0.7);
   border: 1px solid @outline_variant;
   border-radius: 25px;
-  box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.5);
-  padding: 8px 5px 2px 5px;
-  margin: 18px 18px 6px 18px;
+  box-shadow: 0 0 8px 2px @shadow;
+  padding: 12px 8px 4px 8px;
+  margin: 24px 16px 0px 16px;
 }
 
 #app button {
   background-color: transparent;
   padding: 0px;
-  margin: 0px;
-  border-radius: 25px;
 }
 
 #app button:hover {
-  background-color: alpha(@primary, 0.4);
-  margin-top: -12px;
+  padding-bottom: 32px;
+  margin-bottom: -32px;
+}
+
+@keyframes bounce {
+  0%   {margin-top: -32px;}
+  50%  {margin-top: 0px;}
+  100% {margin-top: -32px;}
+}
+
+#app button image {
+  border-radius: 22px;
+}
+
+#app button:hover image {
+  background-color: @primary;
+  margin-top: -32px;
+  animation: bounce .6s steps(60) 1s infinite;
 }
 
 #pv-item {
   background: alpha(@surface_container, 0.7);
   border-radius: 25px;
   border: 1px solid @outline_variant;
-  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 4px 1px @shadow;
   padding: 5px;
-  margin: 0px;
+  margin: 6px;
 }
 
 #pv-item.hover {
