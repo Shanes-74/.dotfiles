@@ -27,6 +27,7 @@ headerbar.default-decoration {
    BOTÕES
 ══════════════════════════════════════════ */
 button {
+    border-radius: 12px;
     transition: background-color 150ms ease, opacity 150ms ease;
 }
 
@@ -34,6 +35,7 @@ button.suggested-action {
     background-color: @accent_bg_color;
     color: @accent_fg_color;
     border-color: @accent_bg_color;
+    border-radius: 12px;
 }
 
 button.suggested-action:hover {
@@ -44,6 +46,7 @@ button.destructive-action {
     background-color: @destructive_bg_color;
     color: @destructive_fg_color;
     border-color: @destructive_bg_color;
+    border-radius: 12px;
 }
 
 button.destructive-action:hover {
@@ -61,11 +64,15 @@ button:checked {
 spinbutton {
     background-color: @view_bg_color;
     color: @view_fg_color;
-    border-radius: 6px;
+    border-radius: 12px;
 }
 
-spinbutton text {
+/* GTK4: o campo interno é `entry`, não `text` */
+spinbutton entry {
     color: @view_fg_color;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
 }
 
 spinbutton button {
@@ -78,6 +85,7 @@ spinbutton button {
     min-height: 28px;
     padding: 4px 6px;
     opacity: 1;
+    border-radius: 10px;
     -gtk-icon-size: 16px;
 }
 
@@ -105,6 +113,7 @@ spinbutton button * {
    SWITCHES
 ══════════════════════════════════════════ */
 switch {
+    border-radius: 999px;
     transition: background-color 200ms ease;
 }
 
@@ -120,6 +129,10 @@ switch:checked slider {
 /* ══════════════════════════════════════════
    CHECKBOXES & RADIOS
 ══════════════════════════════════════════ */
+check {
+    border-radius: 5px;
+}
+
 check:checked,
 radio:checked {
     background-color: @accent_bg_color;
@@ -130,20 +143,32 @@ radio:checked {
 /* ══════════════════════════════════════════
    PROGRESSBAR, SCALE & LEVELBAR
 ══════════════════════════════════════════ */
+progressbar trough {
+    border-radius: 999px;
+}
+
 progressbar progress {
     background-color: @accent_bg_color;
     border-color: @accent_bg_color;
-    border-radius: 4px;
+    border-radius: 999px;
+}
+
+scale trough {
+    border-radius: 999px;
 }
 
 scale highlight {
     background-color: @accent_bg_color;
-    border-radius: 4px;
+    border-radius: 999px;
+}
+
+levelbar trough {
+    border-radius: 999px;
 }
 
 levelbar block.filled {
     background-color: @accent_bg_color;
-    border-radius: 3px;
+    border-radius: 999px;
 }
 
 /* ══════════════════════════════════════════
@@ -153,9 +178,11 @@ stackswitcher button:checked,
 stackswitcher button.active {
     color: @accent_color;
     box-shadow: inset 0 -3px 0 0 @accent_color;
+    border-radius: 0;
 }
 
-notebook > header > tabs > tab:checked {
+notebook > header > tabs > tab:checked,
+notebook tab:checked {
     box-shadow: inset 0 -3px 0 0 @accent_color;
     color: @accent_color;
 }
@@ -200,7 +227,7 @@ label.link {
 }
 
 entry {
-    border-radius: 6px;
+    border-radius: 12px;
     transition: border-color 150ms ease;
 }
 
@@ -214,19 +241,39 @@ entry:focus {
 }
 
 /* ══════════════════════════════════════════
-   SCROLLBARS
+   SCROLLBARS — DISCRETA (ESTILO COLLOID)
 ══════════════════════════════════════════ */
 scrollbar {
     background-color: transparent;
+    border: none;
+    min-width: 0;
+    min-height: 0;
+}
+
+scrollbar.vertical {
+    min-width: 8px;
+    margin: 2px 0;
+}
+
+scrollbar.horizontal {
+    min-height: 8px;
+    margin: 0 2px;
 }
 
 scrollbar slider {
-    background-color: alpha(@window_fg_color, 0.3);
-    border-radius: 8px;
-    min-width: 6px;
-    min-height: 6px;
-    margin: 2px;
-    transition: background-color 150ms ease;
+    background-color: alpha(@window_fg_color, 0.0);
+    border-radius: 999px;
+    min-width: 4px;
+    min-height: 4px;
+    margin: 3px;
+    border: none;
+    transition: background-color 200ms ease, min-width 200ms ease, min-height 200ms ease;
+}
+
+scrollbar:hover slider {
+    background-color: alpha(@window_fg_color, 0.35);
+    min-width: 5px;
+    min-height: 5px;
 }
 
 scrollbar slider:hover {
@@ -237,6 +284,14 @@ scrollbar slider:active {
     background-color: @accent_bg_color;
 }
 
+/* Remove botões de seta da scrollbar */
+scrollbar button {
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    opacity: 0;
+}
+
 /* ══════════════════════════════════════════
    MENUS & POPOVERS
 ══════════════════════════════════════════ */
@@ -245,13 +300,13 @@ popover menu {
     background-color: @popover_bg_color;
     color: @popover_fg_color;
     border: 1px solid alpha(@window_fg_color, 0.1);
-    border-radius: 8px;
-    padding: 4px;
+    border-radius: 16px;
+    padding: 6px;
 }
 
 menuitem {
     padding: 7px 12px;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 menuitem:hover {
@@ -262,6 +317,15 @@ menuitem:hover {
 menuitem:selected {
     background-color: @accent_bg_color;
     color: @accent_fg_color;
+    border-radius: 10px;
+}
+
+popover.menu {
+    border-radius: 16px;
+}
+
+popover contents {
+    border-radius: 16px;
 }
 
 /* ══════════════════════════════════════════
@@ -271,8 +335,8 @@ tooltip.background {
     background-color: @card_bg_color;
     color: @card_fg_color;
     border: 1px solid alpha(@window_fg_color, 0.1);
-    border-radius: 8px;
-    padding: 4px 8px;
+    border-radius: 12px;
+    padding: 5px 10px;
 }
 
 tooltip label {
@@ -282,6 +346,10 @@ tooltip label {
 /* ══════════════════════════════════════════
    COMBOBOX
 ══════════════════════════════════════════ */
+combobox button {
+    border-radius: 12px;
+}
+
 combobox button:checked {
     background-color: alpha(@accent_bg_color, 0.2);
     color: @accent_color;
@@ -295,12 +363,25 @@ window.dialog,
 dialog {
     background-color: @dialog_bg_color;
     color: @dialog_fg_color;
+    /* border-radius não definido aqui — o tema base (libadwaita) já cuida
+       do arredondamento da janela CSD; forçar aqui causa corte de conteúdo */
 }
 
-messagedialog button,
-window.dialog button,
-dialog button {
+/* Botão neutro/cancelar — fundo explícito para não herdar o escuro do tema */
+messagedialog button:not(.suggested-action):not(.destructive-action),
+window.dialog button:not(.suggested-action):not(.destructive-action),
+dialog button:not(.suggested-action):not(.destructive-action) {
+    background-color: alpha(@window_fg_color, 0.08);
     color: @dialog_fg_color;
+    border: none;
+    box-shadow: none;
+    border-radius: 12px;
+}
+
+messagedialog button:not(.suggested-action):not(.destructive-action):hover,
+window.dialog button:not(.suggested-action):not(.destructive-action):hover,
+dialog button:not(.suggested-action):not(.destructive-action):hover {
+    background-color: alpha(@window_fg_color, 0.14);
 }
 
 messagedialog button label,
@@ -314,7 +395,9 @@ window.dialog button.suggested-action,
 dialog button.suggested-action {
     background-color: @accent_bg_color;
     color: @accent_fg_color;
-    border-color: @accent_bg_color;
+    border: none;
+    box-shadow: none;
+    border-radius: 12px;
 }
 
 messagedialog button.suggested-action label,
@@ -323,12 +406,20 @@ dialog button.suggested-action label {
     color: @accent_fg_color;
 }
 
+messagedialog button.suggested-action:hover,
+window.dialog button.suggested-action:hover,
+dialog button.suggested-action:hover {
+    background-color: shade(@accent_bg_color, 1.1);
+}
+
 messagedialog button.destructive-action,
 window.dialog button.destructive-action,
 dialog button.destructive-action {
     background-color: @destructive_bg_color;
     color: @destructive_fg_color;
-    border-color: @destructive_bg_color;
+    border: none;
+    box-shadow: none;
+    border-radius: 12px;
 }
 
 messagedialog button.destructive-action label,
@@ -337,24 +428,10 @@ dialog button.destructive-action label {
     color: @destructive_fg_color;
 }
 
-messagedialog button:hover,
-window.dialog button:hover,
-dialog button:hover {
-    opacity: 0.88;
-}
-
-messagedialog button.suggested-action:hover,
-window.dialog button.suggested-action:hover,
-dialog button.suggested-action:hover {
-    background-color: shade(@accent_bg_color, 1.1);
-    opacity: 1;
-}
-
 messagedialog button.destructive-action:hover,
 window.dialog button.destructive-action:hover,
 dialog button.destructive-action:hover {
     background-color: shade(@destructive_bg_color, 1.1);
-    opacity: 1;
 }
 
 messagedialog .dialog-action-area,
@@ -384,8 +461,8 @@ list.navigation-sidebar label {
 .sidebar row,
 stacksidebar row,
 list.navigation-sidebar row {
-    border-radius: 8px;
-    margin: 1px 6px;
+    border-radius: 12px;
+    margin: 2px 6px;
     transition: background-color 150ms ease;
 }
 
@@ -400,6 +477,7 @@ stacksidebar row:selected,
 list.navigation-sidebar row:selected {
     background-color: @accent_bg_color;
     color: @accent_fg_color;
+    border-radius: 12px;
 }
 
 .sidebar row:selected label,
@@ -415,4 +493,5 @@ separator {
     background-color: alpha(@window_fg_color, 0.1);
     min-height: 1px;
     min-width: 1px;
+    border-radius: 999px;
 }
