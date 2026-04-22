@@ -4,72 +4,76 @@ set -euo pipefail
 # =====================================================
 # WALSET — Clean Theme Manager
 # =====================================================
+# Uso: walset [wallpaper] [esquema] [dark|light]
+#
+#   wallpaper  Caminho para imagem (opcional — sorteia se omitido)
+#   esquema    content | expressive | fidelity | fruit-salad |
+#              monochrome | neutral | rainbow | tonal-spot | vibrant
+#              (opcional — exibe menu rofi se omitido)
+#   dark|light Modo de cor (opcional — mantém último usado se omitido)
+# =====================================================
 
-HOME_DIR="$HOME"
-CACHE_DIR="$HOME_DIR/.cache/walset"
+CACHE_DIR="$HOME/.cache/walset"
 STATE_FILE="$CACHE_DIR/state.json"
+NOTIF_ID_FILE="$CACHE_DIR/notif_id"   # Persiste o ID da notificação
 
-WALLPAPER_DIR="$HOME_DIR/Imagens/Wallpapers"
-CONFIG_MATUGEN="$HOME_DIR/.config/matugen/config.toml"
-ROFI_THEME="$HOME_DIR/.config/rofi/rofi.rasi"
+WALLPAPER_DIR="$HOME/Imagens/Wallpapers"
+CONFIG_MATUGEN="$HOME/.config/matugen/config.toml"
+ROFI_THEME="$HOME/.config/rofi/rofi.rasi"
 
-SDDM_ASSETS_DIR="$HOME_DIR/.dotfiles/sddm/sddm-current/assets"
+SDDM_ASSETS_DIR="$HOME/.dotfiles/sddm/sddm-current/assets"
 SDDM_BG="$SDDM_ASSETS_DIR/background.jpg"
 
 mkdir -p "$CACHE_DIR"
 
-export PATH="$HOME_DIR/.local/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 export XDG_RUNTIME_DIR="/run/user/$(id -u)"
 
 
 # ---------- DEP CHECK ----------
+REQUIRED_DEPS=(awww matugen rofi jq notify-send)
 
-for cmd in awww matugen rofi jq; do
+for cmd in "${REQUIRED_DEPS[@]}"; do
     command -v "$cmd" >/dev/null 2>&1 || {
         echo "❌ Dependência faltando: $cmd"
         exit 1
     }
 done
 
+if ! command -v magick &>/dev/null; then
+    echo "⚠️  magick não encontrado — validação de imagem desativada"
+fi
+
 
 # ---------- NOTIFY ----------
+# - Substitui a notificação anterior (ID persistente)
+# - Timeout configurável (padrão 2000ms)
+# - NÃO salva no histórico (transient)
 
-NOTIFY_ID=""
+notify() {
+    local icon="$1"
+    local urgency="$2"
+    local msg="$3"
+    local timeout="${4:-2000}"
 
-notify_start() {
-    if command -v notify-send >/dev/null 2>&1; then
-        NOTIFY_ID=$(notify-send "Walset" "Aplicando tema…" \
-            --icon=preferences-desktop-wallpaper \
-            --urgency=normal \
-            --print-id 2>/dev/null) || {
-            # Fallback para versões sem --print-id
-            NOTIFY_ID=9901
-            notify-send "Walset" "Aplicando tema…" \
-                --icon=preferences-desktop-wallpaper \
-                --urgency=low \
-                --replace-id="$NOTIFY_ID" 2>/dev/null || true
-        }
-    fi
-}
+    local replace_id=0
+    [[ -f "$NOTIF_ID_FILE" ]] && replace_id=$(cat "$NOTIF_ID_FILE")
 
-notify_done() {
-    if command -v notify-send >/dev/null 2>&1 && [[ -n "$NOTIFY_ID" ]]; then
-        local wallpaper_name
-        wallpaper_name=$(basename "$WALLPAPER")
-        notify-send "Walset" "Tema aplicado" \
-            --icon=dialog-information \
-            --urgency=low \
-            --replace-id="$NOTIFY_ID" 2>/dev/null || true
-    fi
+    local new_id
+    new_id=$(notify-send \
+        --icon="$icon" \
+        --urgency="$urgency" \
+        -r "$replace_id" \
+        -t "$timeout" \
+        -p \
+        --hint=int:transient:1 \
+        "Walset" "$msg" 2>/dev/null)
+
+    [[ -n "$new_id" ]] && echo "$new_id" > "$NOTIF_ID_FILE"
 }
 
 notify_error() {
-    if command -v notify-send >/dev/null 2>&1 && [[ -n "$NOTIFY_ID" ]]; then
-        notify-send "Walset" "$1" \
-            --icon=dialog-error \
-            --urgency=critical \
-            --replace-id="$NOTIFY_ID" 2>/dev/null || true
-    fi
+    notify "dialog-error" "critical" "$1" 5000
 }
 
 
@@ -95,28 +99,32 @@ load_state() {
 }
 
 apply_hooks() {
-    #hyprctl reload >/dev/null 2>&1 || true
-    pkill -USR1 kitty >/dev/null 2>&1 || true
+    pkill -USR1 kitty                    >/dev/null 2>&1 || true
+    swaync-client -rs                    >/dev/null 2>&1 || true
 
-    swaync-client -rs >/dev/null 2>&1 || true
+    pkill waybar                         >/dev/null 2>&1 || true
+    sleep 0.2
+    waybar                               >/dev/null 2>&1 &
+    
+    bash ~/.config/hypr-dock/themes/lotos/point/color-change.sh \
+                                         >/dev/null 2>&1 &
+    sleep 0.2
+    hypr-dock-autohide --reload          >/dev/null 2>&1 || true
 
-    pkill waybar >/dev/null 2>&1 || true
-    waybar >/dev/null 2>&1 &
+    killall -q swayosd-server            >/dev/null 2>&1 || true
+    killall -q xdg-desktop-portal-gtk    >/dev/null 2>&1 || true
+    killall -q gnome-clocks              >/dev/null 2>&1 || true
 
-    killall -q swayosd-server >/dev/null 2>&1 || true
-    
-    killall -q xdg-desktop-portal-gtk >/dev/null 2>&1 || true
-    
-    killall -q gnome-clocks >/dev/null 2>&1 || true
-    
-    pkill -x polkit-gnome-authentication-agent-1 >/dev/null 2>&1 || true
+    pkill -x polkit-gnome-authentication-agent-1 \
+    									 >/dev/null 2>&1 || true
     sleep 0.5
-    /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 >/dev/null 2>&1 &
+    /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 \
+                                         >/dev/null 2>&1 &
 }
 
 update_sddm() {
     mkdir -p "$SDDM_ASSETS_DIR"
-    if cp "$WALLPAPER" "$SDDM_BG"; then
+    if cp "$WALLPAPER" "$SDDM_BG" 2>/dev/null; then
         echo "🖼  SDDM background atualizado"
     else
         echo "⚠️  Falha ao atualizar SDDM background"
@@ -128,7 +136,7 @@ update_sddm() {
 # ---------- MAIN ----------
 
 load_state
-notify_start
+notify "preferences-desktop-wallpaper" "critical" "Aplicando tema…" 5000
 
 # =====================================================
 # 1. Escolha do wallpaper
@@ -141,11 +149,11 @@ else
         \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.webp" \)
     )
 
-    [[ ${#FILES[@]} -eq 0 ]] && {
-        echo "❌ Nenhum wallpaper encontrado"
+    if [[ ${#FILES[@]} -eq 0 ]]; then
         notify_error "Nenhum wallpaper encontrado em $WALLPAPER_DIR"
+        echo "❌ Nenhum wallpaper encontrado"
         exit 1
-    }
+    fi
 
     WALLPAPER="${FILES[RANDOM % ${#FILES[@]}]}"
 fi
@@ -154,24 +162,26 @@ fi
 # 2. Validações do arquivo de imagem
 # =====================================================
 if [[ ! -f "$WALLPAPER" ]]; then
-    echo "❌ Arquivo não encontrado: $WALLPAPER"
     notify_error "Arquivo não encontrado: $(basename "$WALLPAPER")"
+    echo "❌ Arquivo não encontrado: $WALLPAPER"
     exit 1
 fi
 
 if [[ ! -r "$WALLPAPER" ]]; then
-    echo "❌ Sem permissão de leitura: $WALLPAPER"
     notify_error "Sem permissão de leitura: $(basename "$WALLPAPER")"
+    echo "❌ Sem permissão de leitura: $WALLPAPER"
     exit 1
 fi
 
 if command -v magick &>/dev/null; then
     if ! magick identify "$WALLPAPER" &>/dev/null; then
-        echo "❌ Arquivo de imagem inválido ou corrompido: $WALLPAPER"
         notify_error "Imagem inválida ou corrompida: $(basename "$WALLPAPER")"
+        echo "❌ Arquivo de imagem inválido ou corrompido: $WALLPAPER"
         exit 1
     fi
 fi
+
+WALLPAPER_NAME="$(basename "$WALLPAPER")"
 
 # =====================================================
 # 3. Escolha do esquema de cores
@@ -182,7 +192,14 @@ else
     CHOICE=$(printf "%s\n" \
         "Conteúdo" "Expressivo" "Fidelidade" "Salada de Frutas" \
         "Monocromático" "Neutro" "Arco-Íris" "Ponto Tonal" "Vibrante" \
-        | rofi -dmenu -i -p "Esquema de Cores" -theme "$ROFI_THEME")
+        | rofi -dmenu -i -p "Esquema de Cores" -theme "$ROFI_THEME") || true
+
+    # Se o usuário cancelar (ESC), interrompe completamente
+    if [[ -z "${CHOICE:-}" ]]; then
+        notify "dialog-cancel" "low" "Operação cancelada" 2000
+        echo "ℹ️  Operação cancelada pelo usuário"
+        exit 0
+    fi
 
     declare -A MAP=(
         ["Conteúdo"]="content"
@@ -195,7 +212,6 @@ else
         ["Ponto Tonal"]="tonal-spot"
         ["Vibrante"]="vibrant"
     )
-
     SELECTED="${MAP[$CHOICE]:-$SCHEME}"
 fi
 
@@ -207,21 +223,28 @@ MODE="${3:-$MODE}"
 # =====================================================
 # 5. Aplicar wallpaper com awww (transição aleatória)
 # =====================================================
-echo "🖼  Aplicando wallpaper: $(basename "$WALLPAPER")"
+echo "🖼  Aplicando wallpaper: $WALLPAPER_NAME"
 
 TRANS=(fade outer center wipe wave grow)
 T="${TRANS[RANDOM % ${#TRANS[@]}]}"
 
-RESOLUTION=$(awww query | grep -oP '\d+x\d+' | head -1)
-SCREEN_W=$(echo "$RESOLUTION" | cut -dx -f1)
-SCREEN_H=$(echo "$RESOLUTION" | cut -dx -f2)
+RESOLUTION=$(awww query | grep -oP '\d+x\d+' | head -1) || true
+SCREEN_W=$(echo "${RESOLUTION:-}" | cut -dx -f1) || true
+SCREEN_H=$(echo "${RESOLUTION:-}" | cut -dx -f2) || true
 
-POS_X=$((RANDOM % SCREEN_W))
-POS_Y=$((RANDOM % SCREEN_H))
+# Fallback caso awww query não retorne resolução
+if [[ -z "${SCREEN_W:-}" || -z "${SCREEN_H:-}" || "$SCREEN_W" == "0" || "$SCREEN_H" == "0" ]]; then
+    echo "⚠️  Não foi possível detectar resolução, usando posição central"
+    POS_X=960
+    POS_Y=540
+else
+    POS_X=$((RANDOM % SCREEN_W))
+    POS_Y=$((RANDOM % SCREEN_H))
+fi
 
 awww img "$WALLPAPER" \
     --transition-type "$T" \
-    --transition-duration 1.7 \
+    --transition-duration 2.5 \
     --transition-fps 144 \
     --transition-bezier 0.4,0.0,0.2,1.0 \
     --transition-step 90 \
@@ -231,8 +254,8 @@ awww img "$WALLPAPER" \
 # 6. Verificar configuração do matugen
 # =====================================================
 if [[ ! -f "$CONFIG_MATUGEN" ]]; then
-    echo "❌ Arquivo de configuração do matugen não encontrado: $CONFIG_MATUGEN"
     notify_error "Configuração do matugen não encontrada"
+    echo "❌ Arquivo de configuração do matugen não encontrado: $CONFIG_MATUGEN"
     exit 1
 fi
 
@@ -247,8 +270,8 @@ if ! matugen \
     -m "$MODE" \
     -t "scheme-$SELECTED" \
     --source-color-index 0; then
-    echo "❌ Falha na execução do matugen. Abortando."
     notify_error "Falha ao gerar paleta de cores"
+    echo "❌ Falha na execução do matugen. Abortando."
     exit 1
 fi
 
@@ -264,5 +287,5 @@ apply_hooks
 echo "🖥  Atualizando SDDM..."
 update_sddm
 
-notify_done
+notify "dialog-information" "low" "Tema aplicado: $WALLPAPER_NAME" 2000
 echo "✅ Tema aplicado com sucesso!"
