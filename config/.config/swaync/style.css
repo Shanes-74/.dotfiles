@@ -26,7 +26,7 @@
   border-radius: 25px;
   background-color: alpha(@surface_container, 0.7);
   border: 1px solid @outline_variant;
-  box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 8px 2px @shadow;
 }
 
 
@@ -57,7 +57,7 @@
   border-radius: 25px;
   background-color: alpha(@surface_container, 0.7);
   border: 1px solid @outline_variant;
-  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 4px 1px @shadow;
 }
 
 .control-center .notification {
