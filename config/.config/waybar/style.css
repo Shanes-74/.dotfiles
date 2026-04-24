@@ -32,7 +32,7 @@
     font-weight: bold;
 
     color: alpha(@primary, 0.5);
-    background: alpha(@surface_container, 0.5);
+    background: alpha(@surface_container_low, .3);
 
     border: 3px solid @primary;
     border-radius: 50px;
@@ -151,6 +151,18 @@
 /* ---------------------------------------------
    MODULES - SPECIFIC OVERRIDES
 --------------------------------------------- */
+
+@keyframes fadeIn {
+  from {
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+  }
+}
+
+.quick-controls.open * {
+  animation: fadeIn 0.25s ease;
+}
 
 /* Network */
 #network {
@@ -278,11 +290,7 @@
 
 @keyframes gradient {
     to {
-        background: linear-gradient(
-            -360deg,
-            alpha(@surface_container, 0.7),
-            @error
-        );
+        background: linear-gradient(-360deg, alpha(@surface_container, 0.7), @error);
     }
 }
 
