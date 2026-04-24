@@ -69,7 +69,12 @@ output_path = '~/.dotfiles/sddm/sddm-current/theme.conf'
 input_path = '~/.config/matugen/templates/slurp.json'
 output_path = '~/.config/scripts/slurp/colors.json'
 
-[templates.firefox]
-input_path  = '~/.config/matugen/templates/firefox.json'
+[templates.pywallfox]
+input_path  = '~/.config/matugen/templates/pywallfox-colors.json'
 output_path = '~/.cache/wal/colors.json'
 post_hook = 'pywalfox update'
+
+[templates.firefox-colors]
+input_path = '~/.config/matugen/templates/firefox-colors.css'
+output_path = '~/.config/mozilla/firefox/ew0gpwfs.default-release/chrome/colors.css'
+
