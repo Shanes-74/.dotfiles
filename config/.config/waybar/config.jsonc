@@ -30,10 +30,8 @@
         "custom/pacman",
         "custom/clipboard",
         "network",
-        "group/pulseaudio-expander",
-        "group/backlight-expander",
         "group/quick-controls",
-        "battery",
+        /*"battery",*/
         "custom/power",
         "custom/spacer"
     ],
@@ -82,6 +80,16 @@
         "tooltip": true,
         "tooltip-format": "RAM:     {used:0.1f}/{total:0.1f} GiB\nSWAP:   {swapUsed:0.1f}/{swapTotal:0.1f} GiB",
         "on-click": "kitty btop"
+    },
+
+    "group/quick-controls": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-left-to-right": false,
+            "transition-duration": 400,
+            "children-class": "quick-controls-item"
+        },
+        "modules": ["battery", "group/pulseaudio-expander", "group/backlight-expander"]
     },
 
     "network": {
@@ -188,11 +196,13 @@
     },
 
     "custom/clock": {
+        "scroll-step": 1, // %, can be a float
         "exec": "~/.config/waybar/custom-modules/clock/clock.sh",
         "interval": 1,
         "return-type": "json",
-        "on-click": "~/.config/waybar/custom-modules/clock/click_toggle.py open",
-        "on-click-right": "~/.config/waybar/custom-modules/clock/click_toggle.py toggle",
+        "on-click": "~/.config/waybar/custom-modules/clock/clock.sh open",
+        "on-scroll-up": "~/.config/waybar/custom-modules/clock/clock.sh clock",
+        "on-scroll-down": "~/.config/waybar/custom-modules/clock/clock.sh date",
         "tooltip": true
     },
 
