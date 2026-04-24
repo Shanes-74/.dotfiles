@@ -1,0 +1,13 @@
+@import url("global/general.css");
+@import url("icons/icons.css");
+@import url("global/rounded-corners.css") -moz-pref("fp.tweak.rounded-corners");
+@import url("animations/tab-animation.css") -moz-pref("fp.tweak.animation.tab-switch");
+
+menupopup:not(.in-menulist) > menuitem, 
+menupopup:not(.in-menulist) > menu {
+  padding-block: 4px !important; /* reduce to 3px, 2px, 1px or 0px as needed */ 
+  min-height: unset !important; /* v92.0 - for padding below 4px */
+}
+:root {
+  --arrowpanel-menuitem-padding: 4px 8px !important;
+}
