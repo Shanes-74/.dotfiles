@@ -64,8 +64,9 @@ type Client struct {
 	Workspace struct {
 		ID int `json:"id"`
 	} `json:"workspace"`
-	Hidden bool `json:"hidden"`
-	Mapped bool `json:"mapped"`
+	Hidden     bool `json:"hidden"`
+	Mapped     bool `json:"mapped"`
+	Fullscreen int  `json:"fullscreen"`
 }
 
 type Monitor struct {
@@ -226,6 +227,16 @@ func cursorOnMonitor(p Pos, mon Monitor) bool {
 		p.Y >= mon.Y && p.Y < mon.Y+mon.Height
 }
 
+// isFullscreenInWorkspace checks if any client in the given workspace is fullscreen.
+func isFullscreenInWorkspace(clients []Client, wsID int) bool {
+	for _, c := range clients {
+		if c.Workspace.ID == wsID && c.Fullscreen > 0 {
+			return true
+		}
+	}
+	return false
+}
+
 // ─── Layer cache ──────────────────────────────────────────────────────────────
 
 type LayerCache struct {
@@ -315,7 +326,6 @@ func windowTouchesDock(clients []Client, wsID int, mon Monitor, dock Rect, edge 
 var (
 	popupOpen         atomic.Bool
 	dockLayerOpen     atomic.Bool
-	fullscreenActive  atomic.Bool
 	activeWorkspaceID atomic.Int32
 )
 
@@ -335,8 +345,6 @@ func listenEvents(layers *LayerCache, reloadCh, monitorCh chan struct{}) {
 			}
 			event, data := parts[0], parts[1]
 			switch event {
-			case "fullscreen":
-				fullscreenActive.Store(data == "1")
 			case "openlayer":
 				layers.markDirty()
 				switch data {
@@ -572,9 +580,16 @@ func main() {
 				continue
 			}
 
+			// Get clients once per cycle for both fullscreen and dodge checks
+			clients, err := getClients()
+			if err != nil {
+				continue
+			}
+
 			dock, popup := layers.get()
 			isPopupOpen := popupOpen.Load()
-			isFullscreen := fullscreenActive.Load()
+			wsID := int(activeWorkspaceID.Load())
+			isFullscreen := isFullscreenInWorkspace(clients, wsID)
 
 			// Sync visible state with actual layer state
 			if dockVisible && !dockLayerOpen.Load() {
@@ -612,8 +627,6 @@ func main() {
 					}
 					hideTimer = 0
 				} else {
-					clients, _ := getClients()
-					wsID := int(activeWorkspaceID.Load())
 					if windowTouchesDock(clients, wsID, focusedMon, dock, cfg.Edge) {
 						hideTimer++
 						if hideTimer >= cfg.HideDelay && dockVisible {
