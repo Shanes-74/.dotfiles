@@ -159,7 +159,7 @@ Rectangle {
     Rectangle {
         id: topStatusPill
         height: Math.round(48 * dp)
-        width: statusLayout.implicitWidth + Math.round(32 * dp)
+        width: statusLayout.implicitWidth + Math.round(72 * dp)
         anchors {
             top: parent.top
             topMargin: Math.round(16 * dp)
@@ -173,7 +173,7 @@ Rectangle {
         Row {
             id: statusLayout
             anchors.centerIn: parent
-            spacing: Math.round(24 * dp)
+            spacing: Math.round(48 * dp)
 
             Text {
                 anchors.verticalCenter: parent.verticalCenter
