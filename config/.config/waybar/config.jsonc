@@ -30,6 +30,7 @@
         "custom/pacman",
         "custom/clipboard",
         "network",
+        "group/pulseaudio-expander",
         "group/quick-controls",
         /*"battery",*/
         "custom/power",
@@ -89,7 +90,7 @@
             "transition-duration": 400,
             "children-class": "quick-controls-item"
         },
-        "modules": ["battery", "group/pulseaudio-expander", "group/backlight-expander"]
+        "modules": ["battery"/*, "group/pulseaudio-expander"*/, "group/backlight-expander"]
     },
 
     "network": {
