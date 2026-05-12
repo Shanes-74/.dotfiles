@@ -42,7 +42,7 @@ else
 fi
 
 # Tooltip por extenso (pt-BR)
-tooltip=$(LC_TIME=pt_BR.UTF-8 date '+%d de %B, %A')
+tooltip=$(LC_TIME=pt_BR.UTF-8 date '+%A, %d de %B')
 
 # Escapar aspas para JSON
 text=${text//\"/\\\"}
