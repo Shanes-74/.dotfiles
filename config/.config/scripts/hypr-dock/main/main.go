@@ -17,9 +17,12 @@ import (
 	"time"
 )
 
-const pollInterval = 50 * time.Millisecond
+const (
+	pollInterval = 50 * time.Millisecond
+	pidFile      = "/tmp/hypr-dock-autohide.pid"
+)
 
-// ─── Config ───────────────────────────────────────────────────────────────────
+// ──────────────── Config ────────────────
 
 type Config struct {
 	Edge            string `json:"edge"`
@@ -30,32 +33,41 @@ type Config struct {
 }
 
 func defaultConfig() Config {
-	return Config{Edge: "bottom", ActivateZone: 5, HideDelay: 10, ActivationWidth: 400}
+	return Config{
+		Edge:            "bottom",
+		ActivateZone:    5,
+		HideDelay:       10,
+		ActivationWidth: 400,
+		Dodge:           0,
+	}
 }
 
 func loadConfig(path string) Config {
 	cfg := defaultConfig()
-	if f, err := os.Open(path); err == nil {
-		json.NewDecoder(f).Decode(&cfg)
-		f.Close()
+	f, err := os.Open(path)
+	if err != nil {
+		return cfg
 	}
+	defer f.Close()
+	json.NewDecoder(f).Decode(&cfg)
 	return cfg
 }
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ──────────────── Geometria ────────────────
 
-type Pos struct {
-	X int `json:"x"`
-	Y int `json:"y"`
-}
-
+type Pos struct{ X, Y int }
 type Rect struct {
 	X, Y, W, H int
 	Found      bool
 }
 
 func (r Rect) Contains(p Pos) bool {
-	return r.Found && p.X >= r.X && p.X <= r.X+r.W && p.Y >= r.Y && p.Y <= r.Y+r.H
+	return r.Found && p.X >= r.X && p.X < r.X+r.W && p.Y >= r.Y && p.Y < r.Y+r.H
+}
+
+type Monitor struct {
+	X, Y, Width, Height int
+	Focused             bool
 }
 
 type Client struct {
@@ -69,18 +81,6 @@ type Client struct {
 	Fullscreen int  `json:"fullscreen"`
 }
 
-type Monitor struct {
-	X       int  `json:"x"`
-	Y       int  `json:"y"`
-	Width   int  `json:"width"`
-	Height  int  `json:"height"`
-	Focused bool `json:"focused"`
-}
-
-// ─── Edge helpers ─────────────────────────────────────────────────────────────
-
-// inEdgeZone reports whether pos is within `zone` pixels of the monitor's edge.
-// Uses monitor-relative coordinates to support multi-monitor setups.
 func inEdgeZone(p Pos, edge string, zone int, mon Monitor) bool {
 	switch edge {
 	case "bottom":
@@ -95,8 +95,6 @@ func inEdgeZone(p Pos, edge string, zone int, mon Monitor) bool {
 	return false
 }
 
-// inEdgeCenter reports whether pos is within the central activation band.
-// lo and hi are absolute screen coordinates.
 func inEdgeCenter(p Pos, edge string, lo, hi int) bool {
 	switch edge {
 	case "bottom", "top":
@@ -107,9 +105,7 @@ func inEdgeCenter(p Pos, edge string, lo, hi int) bool {
 	return false
 }
 
-// popupZoneDepth returns how deep from the edge the popup extends,
-// using monitor-relative coordinates.
-func popupZoneDepth(edge string, popup Rect, mon Monitor) int {
+func popupDepth(edge string, popup Rect, mon Monitor) int {
 	switch edge {
 	case "bottom":
 		return mon.Y + mon.Height - popup.Y
@@ -123,15 +119,27 @@ func popupZoneDepth(edge string, popup Rect, mon Monitor) int {
 	return 0
 }
 
-// calcCenter returns the absolute lo/hi coordinates of the central activation
-// band, accounting for the monitor's X offset.
-func calcCenter(mon Monitor, activationWidth int) (lo, hi int) {
+func centerBand(mon Monitor, activationWidth int) (lo, hi int) {
 	lo = mon.X + (mon.Width-activationWidth)/2
 	hi = lo + activationWidth
 	return
 }
 
-// ─── IPC ──────────────────────────────────────────────────────────────────────
+func cursorOnMonitor(p Pos, mon Monitor) bool {
+	return p.X >= mon.X && p.X < mon.X+mon.Width &&
+		p.Y >= mon.Y && p.Y < mon.Y+mon.Height
+}
+
+func anyFullscreen(clients []Client, wsID int) bool {
+	for _, c := range clients {
+		if c.Workspace.ID == wsID && c.Fullscreen > 0 {
+			return true
+		}
+	}
+	return false
+}
+
+// ──────────────── IPC ────────────────
 
 func socketPath(name string) string {
 	sig := os.Getenv("HYPRLAND_INSTANCE_SIGNATURE")
@@ -175,7 +183,8 @@ func getCursorPos() (Pos, error) {
 		return Pos{}, err
 	}
 	var p Pos
-	return p, json.Unmarshal(data, &p)
+	err = json.Unmarshal(data, &p)
+	return p, err
 }
 
 func getMonitors() ([]Monitor, error) {
@@ -183,16 +192,17 @@ func getMonitors() ([]Monitor, error) {
 	if err != nil {
 		return nil, err
 	}
-	var monitors []Monitor
-	return monitors, json.Unmarshal(data, &monitors)
+	var mons []Monitor
+	err = json.Unmarshal(data, &mons)
+	return mons, err
 }
 
 func getFocusedMonitor() (Monitor, error) {
-	monitors, err := getMonitors()
+	mons, err := getMonitors()
 	if err != nil {
 		return Monitor{}, err
 	}
-	for _, m := range monitors {
+	for _, m := range mons {
 		if m.Focused {
 			return m, nil
 		}
@@ -218,26 +228,11 @@ func getClients() ([]Client, error) {
 		return nil, err
 	}
 	var clients []Client
-	return clients, json.Unmarshal(data, &clients)
+	err = json.Unmarshal(data, &clients)
+	return clients, err
 }
 
-// cursorOnMonitor returns true if pos is within the monitor's bounds.
-func cursorOnMonitor(p Pos, mon Monitor) bool {
-	return p.X >= mon.X && p.X < mon.X+mon.Width &&
-		p.Y >= mon.Y && p.Y < mon.Y+mon.Height
-}
-
-// isFullscreenInWorkspace checks if any client in the given workspace is fullscreen.
-func isFullscreenInWorkspace(clients []Client, wsID int) bool {
-	for _, c := range clients {
-		if c.Workspace.ID == wsID && c.Fullscreen > 0 {
-			return true
-		}
-	}
-	return false
-}
-
-// ─── Layer cache ──────────────────────────────────────────────────────────────
+// ──────────────── Camadas (cache) ────────────────
 
 type LayerCache struct {
 	mu          sync.Mutex
@@ -263,25 +258,22 @@ func (c *LayerCache) get() (dock, popup Rect) {
 	}
 	var raw map[string]struct {
 		Levels map[string][]struct {
-			X         int    `json:"x"`
-			Y         int    `json:"y"`
-			W         int    `json:"w"`
-			H         int    `json:"h"`
-			Namespace string `json:"namespace"`
+			X, Y, W, H int
+			Namespace  string `json:"namespace"`
 		} `json:"levels"`
 	}
 	if json.Unmarshal(data, &raw) != nil {
 		return c.dock, c.popup
 	}
 	c.dock, c.popup = Rect{}, Rect{}
-	for _, mon := range raw {
-		for _, entries := range mon.Levels {
-			for _, e := range entries {
-				switch e.Namespace {
+	for _, monitor := range raw {
+		for _, level := range monitor.Levels {
+			for _, l := range level {
+				switch l.Namespace {
 				case "hypr-dock":
-					c.dock = Rect{e.X, e.Y, e.W, e.H, true}
+					c.dock = Rect{l.X, l.Y, l.W, l.H, true}
 				case "dock-popup":
-					c.popup = Rect{e.X, e.Y, e.W, e.H, true}
+					c.popup = Rect{l.X, l.Y, l.W, l.H, true}
 				}
 			}
 		}
@@ -290,38 +282,23 @@ func (c *LayerCache) get() (dock, popup Rect) {
 	return c.dock, c.popup
 }
 
-// ─── Dock helpers ─────────────────────────────────────────────────────────────
+// ──────────────── Controle do hypr-dock ────────────────
 
-func startDock() { exec.Command("hypr-dock").Start() }
-func stopDock()  { exec.Command("pkill", "-x", "hypr-dock").Run() }
-
-func windowTouchesDock(clients []Client, wsID int, mon Monitor, dock Rect, edge string) bool {
-	// Fallback bounds when dock layer isn't mapped yet
-	if !dock.Found {
-		switch edge {
-		case "bottom":
-			dock = Rect{mon.X, mon.Y + mon.Height - 120, mon.Width, 120, true}
-		case "top":
-			dock = Rect{mon.X, mon.Y, mon.Width, 120, true}
-		case "left":
-			dock = Rect{mon.X, mon.Y, 120, mon.Height, true}
-		case "right":
-			dock = Rect{mon.X + mon.Width - 120, mon.Y, 120, mon.Height, true}
-		}
+func startDock() {
+	// Mata qualquer instância anterior (idempotência) e inicia uma nova.
+	exec.Command("pkill", "-x", "hypr-dock").Run()
+	cmd := exec.Command("hypr-dock")
+	if err := cmd.Start(); err != nil {
+		log.Println("erro ao iniciar hypr-dock:", err)
 	}
-	for _, c := range clients {
-		if !c.Mapped || c.Hidden || c.Workspace.ID != wsID {
-			continue
-		}
-		if c.At[0] < dock.X+dock.W && c.At[0]+c.Size[0] > dock.X &&
-			c.At[1] < dock.Y+dock.H && c.At[1]+c.Size[1] > dock.Y {
-			return true
-		}
-	}
-	return false
+	// NÃO fazemos Wait; o handler de SIGCHLD recolhe o zumbi.
 }
 
-// ─── Global state (updated by Hyprland events) ────────────────────────────────
+func stopDock() {
+	exec.Command("pkill", "-x", "hypr-dock").Run()
+}
+
+// ──────────────── Eventos do Hyprland ────────────────
 
 var (
 	popupOpen         atomic.Bool
@@ -347,18 +324,16 @@ func listenEvents(layers *LayerCache, reloadCh, monitorCh chan struct{}) {
 			switch event {
 			case "openlayer":
 				layers.markDirty()
-				switch data {
-				case "dock-popup":
+				if data == "dock-popup" {
 					popupOpen.Store(true)
-				case "hypr-dock":
+				} else if data == "hypr-dock" {
 					dockLayerOpen.Store(true)
 				}
 			case "closelayer":
 				layers.markDirty()
-				switch data {
-				case "dock-popup":
+				if data == "dock-popup" {
 					popupOpen.Store(false)
-				case "hypr-dock":
+				} else if data == "hypr-dock" {
 					dockLayerOpen.Store(false)
 				}
 			case "workspace":
@@ -382,20 +357,35 @@ func listenEvents(layers *LayerCache, reloadCh, monitorCh chan struct{}) {
 	}
 }
 
-// ─── PID / stop ───────────────────────────────────────────────────────────────
+// ──────────────── Helpers de janela ────────────────
 
-const pidFile = "/tmp/hypr-dock-autohide.pid"
-
-func waitForExit(proc *os.Process, timeout time.Duration) bool {
-	deadline := time.Now().Add(timeout)
-	for time.Now().Before(deadline) {
-		if proc.Signal(syscall.Signal(0)) != nil {
+func windowTouchesDock(clients []Client, wsID int, mon Monitor, dock Rect, edge string) bool {
+	if !dock.Found {
+		// fallback antes da camada estar mapeada
+		switch edge {
+		case "bottom":
+			dock = Rect{mon.X, mon.Y + mon.Height - 120, mon.Width, 120, true}
+		case "top":
+			dock = Rect{mon.X, mon.Y, mon.Width, 120, true}
+		case "left":
+			dock = Rect{mon.X, mon.Y, 120, mon.Height, true}
+		case "right":
+			dock = Rect{mon.X + mon.Width - 120, mon.Y, 120, mon.Height, true}
+		}
+	}
+	for _, c := range clients {
+		if !c.Mapped || c.Hidden || c.Workspace.ID != wsID {
+			continue
+		}
+		if c.At[0] < dock.X+dock.W && c.At[0]+c.Size[0] > dock.X &&
+			c.At[1] < dock.Y+dock.H && c.At[1]+c.Size[1] > dock.Y {
 			return true
 		}
-		time.Sleep(50 * time.Millisecond)
 	}
 	return false
 }
+
+// ──────────────── CLI / PID ────────────────
 
 func stopRunning() {
 	data, err := os.ReadFile(pidFile)
@@ -406,33 +396,25 @@ func stopRunning() {
 	var pid int
 	fmt.Sscanf(strings.TrimSpace(string(data)), "%d", &pid)
 	proc, err := os.FindProcess(pid)
-	if err != nil || proc.Signal(syscall.Signal(0)) != nil {
+	if err != nil {
+		fmt.Println("! Daemon não está rodando")
+		os.Remove(pidFile)
+		return
+	}
+	if proc.Signal(syscall.Signal(0)) != nil {
 		fmt.Println("! Daemon não está rodando")
 		os.Remove(pidFile)
 		return
 	}
 	proc.Signal(syscall.SIGTERM)
-	if !waitForExit(proc, 2*time.Second) {
-		fmt.Println("⚠ Daemon não respondeu, forçando...")
+	time.Sleep(500 * time.Millisecond)
+	// força se ainda estiver vivo
+	if proc.Signal(syscall.Signal(0)) == nil {
 		proc.Signal(syscall.SIGKILL)
-		waitForExit(proc, time.Second)
+		time.Sleep(200 * time.Millisecond)
 	}
 	stopDock()
 	fmt.Println("✓ Daemon parado")
-}
-
-// ─── CLI ──────────────────────────────────────────────────────────────────────
-
-func printHelp() {
-	fmt.Println(`hypr-dock-autohide — daemon de autohide/dodge para o hypr-dock
-
-Uso:
-  hypr-dock-autohide [flag]
-
-Flags:
-  -s, --stop     Para o daemon e fecha o dock
-  -r, --reload   Reinicia o daemon (relê o config)
-  -h, --help     Exibe esta mensagem`)
 }
 
 func reloadRunning() {
@@ -453,7 +435,19 @@ func reloadRunning() {
 	fmt.Println("→ Sinal de reload enviado")
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
+func printHelp() {
+	fmt.Println(`hypr-dock-autohide — daemon de autohide/dodge para o hypr-dock
+
+Uso:
+  hypr-dock-autohide [flag]
+
+Flags:
+  -s, --stop     Para o daemon e fecha o dock
+  -r, --reload   Reinicia o daemon (relê o config)
+  -h, --help     Exibe esta mensagem`)
+}
+
+// ──────────────── Main ────────────────
 
 func main() {
 	if len(os.Args) > 1 {
@@ -474,18 +468,43 @@ func main() {
 		}
 	}
 
+	// ═══ Início do daemon ═══
+
+	// Handler de SIGCHLD: recolhe imediatamente qualquer processo filho morto,
+	// evitando zumbis.
+	sigchld := make(chan os.Signal, 1)
+	signal.Notify(sigchld, syscall.SIGCHLD)
+	go func() {
+		for range sigchld {
+			for {
+				var ws syscall.WaitStatus
+				pid, err := syscall.Wait4(-1, &ws, syscall.WNOHANG, nil)
+				if err != nil || pid <= 0 {
+					break
+				}
+			}
+		}
+	}()
+
 	home, _ := os.UserHomeDir()
 	configPath := filepath.Join(home, ".config/scripts/hypr-dock/autohide.json")
 	cfg := loadConfig(configPath)
 
+	// grava PID
 	os.WriteFile(pidFile, []byte(fmt.Sprintf("%d\n", os.Getpid())), 0644)
 	defer os.Remove(pidFile)
 
+	// tratamento de SIGTERM/SIGINT (parada limpa)
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGTERM, syscall.SIGINT)
-	go func() { <-sigs; stopDock(); os.Remove(pidFile); os.Exit(0) }()
+	go func() {
+		<-sigs
+		stopDock()
+		os.Remove(pidFile)
+		os.Exit(0)
+	}()
 
-	// SIGUSR1 triggers a clean restart (used by --reload)
+	// SIGUSR1 -> reload completo (reinicia o próprio binário)
 	usr1 := make(chan os.Signal, 1)
 	signal.Notify(usr1, syscall.SIGUSR1)
 	go func() {
@@ -502,63 +521,65 @@ func main() {
 	monitorCh := make(chan struct{}, 1)
 	go listenEvents(layers, reloadCh, monitorCh)
 
-	var configMtime int64
-	if info, _ := os.Stat(configPath); info != nil {
-		configMtime = info.ModTime().UnixNano()
-	}
-
+	// monitor inicial
 	focusedMon, err := getFocusedMonitor()
 	if err != nil {
 		log.Fatalf("erro ao obter monitor: %v", err)
 	}
-
 	activeWorkspaceID.Store(getActiveWorkspaceID())
 
 	dockVisible := false
 	hideTimer := 0
 	dockRestartCooldown := 0
-	centerLo, centerHi := calcCenter(focusedMon, cfg.ActivationWidth)
+	centerLo, centerHi := centerBand(focusedMon, cfg.ActivationWidth)
 
+	// inicia dock no modo dodge
 	if cfg.Dodge == 1 {
 		startDock()
 		dockVisible = true
 	}
 
+	var configMtime int64
+	if info, err := os.Stat(configPath); err == nil {
+		configMtime = info.ModTime().UnixNano()
+	}
+
 	ticker := time.NewTicker(pollInterval)
 	defer ticker.Stop()
+
 	fmt.Printf("→ hypr-dock-autohide iniciado (PID %d) [modo: %s]\n",
 		os.Getpid(), map[int]string{0: "autohide", 1: "dodge"}[cfg.Dodge])
 
 	for {
 		select {
 		case <-reloadCh:
-			if mon, err := getFocusedMonitor(); err == nil {
-				focusedMon = mon
-				centerLo, centerHi = calcCenter(focusedMon, cfg.ActivationWidth)
+			if m, err := getFocusedMonitor(); err == nil {
+				focusedMon = m
+				centerLo, centerHi = centerBand(focusedMon, cfg.ActivationWidth)
 			}
 
 		case <-monitorCh:
-			// Cursor moved to a different monitor — close dock and update bounds
 			if dockVisible {
 				stopDock()
 				dockVisible = false
 				hideTimer = 0
 			}
-			if mon, err := getFocusedMonitor(); err == nil {
-				focusedMon = mon
-				centerLo, centerHi = calcCenter(focusedMon, cfg.ActivationWidth)
+			if m, err := getFocusedMonitor(); err == nil {
+				focusedMon = m
+				centerLo, centerHi = centerBand(focusedMon, cfg.ActivationWidth)
 				activeWorkspaceID.Store(getActiveWorkspaceID())
 			}
 
 		case <-ticker.C:
-			// Reload config if file changed
+			// recarga de config
 			if info, err := os.Stat(configPath); err == nil && info.ModTime().UnixNano() != configMtime {
 				configMtime = info.ModTime().UnixNano()
 				newCfg := loadConfig(configPath)
-				prevDodge := cfg.Dodge
+				oldDodge := cfg.Dodge
 				cfg = newCfg
-				centerLo, centerHi = calcCenter(focusedMon, cfg.ActivationWidth)
-				if prevDodge != cfg.Dodge {
+				centerLo, centerHi = centerBand(focusedMon, cfg.ActivationWidth)
+
+				if oldDodge != cfg.Dodge {
 					if cfg.Dodge == 1 && !dockVisible {
 						startDock()
 						dockVisible = true
@@ -580,7 +601,6 @@ func main() {
 				continue
 			}
 
-			// Get clients once per cycle for both fullscreen and dodge checks
 			clients, err := getClients()
 			if err != nil {
 				continue
@@ -589,25 +609,19 @@ func main() {
 			dock, popup := layers.get()
 			isPopupOpen := popupOpen.Load()
 			wsID := int(activeWorkspaceID.Load())
-			isFullscreen := isFullscreenInWorkspace(clients, wsID)
+			isFullscreen := anyFullscreen(clients, wsID)
 
-			// Sync visible state with actual layer state
+			// sincroniza estado visível com a camada real
 			if dockVisible && !dockLayerOpen.Load() {
 				dockVisible = false
 				hideTimer = 0
 			}
 
-			// Cursor must be on the focused monitor to interact with the dock
-			cursorOnDockMonitor := cursorOnMonitor(pos, focusedMon)
+			cursorOnDockMon := cursorOnMonitor(pos, focusedMon)
 
-			mouseInActivation := cursorOnDockMonitor &&
-				inEdgeZone(pos, cfg.Edge, cfg.ActivateZone, focusedMon) &&
-				inEdgeCenter(pos, cfg.Edge, centerLo, centerHi)
-
-			// ── DODGE MODE ────────────────────────────────────────────────
+			// ── DODGE MODE ────────────────────────────────────────────
 			if cfg.Dodge == 1 {
-				// Hide dock on fullscreen or cursor on another monitor
-				if isFullscreen || !cursorOnDockMonitor {
+				if isFullscreen || !cursorOnDockMon {
 					if dockVisible {
 						stopDock()
 						dockVisible = false
@@ -618,6 +632,9 @@ func main() {
 
 				mouseOnDock := dockVisible && dock.Contains(pos)
 				mouseOnPopup := isPopupOpen && popup.Contains(pos)
+				mouseInActivation := cursorOnDockMon &&
+					inEdgeZone(pos, cfg.Edge, cfg.ActivateZone, focusedMon) &&
+					inEdgeCenter(pos, cfg.Edge, centerLo, centerHi)
 
 				if mouseInActivation || mouseOnDock || mouseOnPopup {
 					if !dockVisible {
@@ -645,12 +662,7 @@ func main() {
 				continue
 			}
 
-			// ── AUTOHIDE MODE ─────────────────────────────────────────────
-
-			// If cursor is on another monitor, let the hide timer run normally
-			// (dock will close after HideDelay cycles without resetting the timer)
-
-			// Keep dock visible while mouse is over the preview popup
+			// ── AUTOHIDE MODE ─────────────────────────────────────────
 			if isPopupOpen && popup.Contains(pos) {
 				if !dockVisible {
 					startDock()
@@ -660,35 +672,35 @@ func main() {
 				continue
 			}
 
-			// Vertical safe zone: expands to cover the popup when open
+			// zona vertical segura
 			var zoneDepth int
 			switch {
 			case !dockVisible:
 				zoneDepth = cfg.ActivateZone
 			case isPopupOpen && popup.Found && dock.Found:
-				zoneDepth = popupZoneDepth(cfg.Edge, popup, focusedMon)
+				zoneDepth = popupDepth(cfg.Edge, popup, focusedMon)
 			case dock.Found:
 				zoneDepth = dock.H
 			default:
 				zoneDepth = 120
 			}
 
-			// Horizontal safe zone: follows dock or popup bounds when visible
-			var centerZoneLo, centerZoneHi int
+			// zona horizontal segura
+			var zoneXLo, zoneXHi int
 			switch {
 			case !dockVisible:
-				centerZoneLo, centerZoneHi = centerLo, centerHi
+				zoneXLo, zoneXHi = centerLo, centerHi
 			case isPopupOpen && popup.Found:
-				centerZoneLo, centerZoneHi = popup.X, popup.X+popup.W
+				zoneXLo, zoneXHi = popup.X, popup.X+popup.W
 			case dock.Found:
-				centerZoneLo, centerZoneHi = dock.X, dock.X+dock.W
+				zoneXLo, zoneXHi = dock.X, dock.X+dock.W
 			default:
-				centerZoneLo, centerZoneHi = focusedMon.X, focusedMon.X+focusedMon.Width
+				zoneXLo, zoneXHi = focusedMon.X, focusedMon.X+focusedMon.Width
 			}
 
-			inSafeZone := cursorOnDockMonitor &&
+			inSafeZone := cursorOnDockMon &&
 				inEdgeZone(pos, cfg.Edge, zoneDepth, focusedMon) &&
-				inEdgeCenter(pos, cfg.Edge, centerZoneLo, centerZoneHi)
+				inEdgeCenter(pos, cfg.Edge, zoneXLo, zoneXHi)
 
 			if inSafeZone {
 				hideTimer = 0
