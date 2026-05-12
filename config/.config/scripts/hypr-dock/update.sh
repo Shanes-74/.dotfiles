@@ -5,7 +5,7 @@ INSTALL_DIR="$HOME/.local/bin"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 echo "→ Parando daemon..."
-"$INSTALL_DIR/$BINARY" -stop 2>/dev/null || true
+"$INSTALL_DIR/$BINARY" --stop 2>/dev/null || true
 
 echo "→ Compilando..."
 cd "$SCRIPT_DIR/main" || { echo "✗ Diretório 'main' não encontrado"; exit 1; }
