@@ -24,7 +24,7 @@ chosen="$(run_rofi)"
 
 case ${chosen} in
     $lock)      sleep 0.5 && hyprlock ;;
-    $logout)    sleep 0.5 && hyprctl dispatch exit ;;
+    $logout)    sleep 0.5 && hyprshutdown ;;
     $reboot)    sleep 0.5 && systemctl reboot ;;
     $shutdown)  sleep 0.5 && systemctl poweroff ;;
     $suspend)   sleep 0.5 && systemctl suspend ;;
