@@ -5,8 +5,8 @@
 @import "colors.css";
 
 * {
+    all:         unset;
     font-family: "Google Sans Display", "JetBrainsMono Nerd Font Propo";
-    font-size: 16px;
     font-weight: 500;
 }
 
@@ -25,16 +25,16 @@
 --------------------------------------------- */
 
 #workspaces button {
-    margin: 8px;
-    padding: 0 4px;
+    margin:  8px;
+    padding: 1px 5px 1px 4px;
 
-    font-size: 24px;
+    font-size:   1rem;
     font-weight: bold;
 
-    color: alpha(@primary, 0.5);
+    color:      alpha(@primary, 0.5);
     background: alpha(@surface_container_low, .3);
 
-    border: 3px solid @primary;
+    border:        3px solid @primary;
     border-radius: 50px;
 
     transition: all 180ms cubic-bezier(.4,0,.2,1);
@@ -47,17 +47,17 @@
 }
 
 #workspaces button.active {
-    color: @primary;
+    color:        @primary;
     border-color: @primary;
 }
 
 #workspaces button.urgent {
-    color: @on_error;
+    color:      @on_error;
     background: @error;
 }
 
 #workspaces button:hover {
-    color: @on_primary;
+    color:      @on_primary;
     background: @primary;
 }
 
@@ -95,16 +95,16 @@
 #custom-clock,
 #custom-expand-icon,
 #custom-hypridle {
-    margin: 18px 6px;
+    margin:  18px 6px;
     padding: 0 14px;
 
-    font-size: 22px;
+    font-size: 1.35rem;
 
-    color: @primary;
-    background: alpha(@surface_container, 0.7);
+    color:      @primary;
+    background: alpha(@surface_container, .7);
 
-    border: 1px solid @outline_variant;
-    border-radius: 50px;
+    border:        1px solid @outline_variant;
+    border-radius: 99px;
 
     box-shadow: 0 0 4px 1px @shadow;
 
@@ -133,15 +133,15 @@
 #custom-weather:hover,
 #custom-clock:hover,
 #custom-hypridle:hover {
-    margin: 14px 2px;
-    padding: 1px 17px;
+    margin:  14px 2px;
+    padding: 4px 18px;
 
     font-weight: 700;
 
-    color: @on_primary;
+    color:      @on_primary;
     background: @primary;
 
-    border: 2px solid @primary;
+    border:        2px solid @primary;
     border-radius: 25px;
 
     box-shadow: 0 0 0 0 @shadow;
@@ -152,45 +152,10 @@
    MODULES - SPECIFIC OVERRIDES
 --------------------------------------------- */
 
-@keyframes fadeIn {
-  from {
-    padding: 0;
-    margin: 0;
-    opacity: 0;
-  }
-}
-
-.quick-controls.open * {
-  animation: fadeIn 0.25s ease;
-}
-
-/* Network */
-#network {
-    padding: 0 12px;
-}
-
-#network:hover {
-    padding: 1px 15px;
-}
-
-
-/* Clipboard */
-#custom-clipboard {
-    padding: 0 14px;
-}
-
 
 /* PulseAudio */
 #pulseaudio {
     font-size: 22px;
-}
-
-.bluetooth {
-    padding: 0 3px;
-}
-
-#pulseaudio-expander{
-    padding: 0 11px;
 }
 
 #pulseaudio-expander:hover * {
@@ -199,14 +164,6 @@
 
 
 /* Backlight */
-#backlight {
-    font-size: 22px;
-}
-
-#backlight-expander {
-    padding: 0 12px;
-}
-
 #backlight-expander:hover * {
     font-weight: 700;
 }
@@ -220,25 +177,21 @@
 
 /* Tray */
 #tray-expander #custom-expand-icon {
-    margin: 26px 4px;
-    padding: 0 12px;
-    font-size: 20px;
+    margin:    26px 4px;
+    padding:   0 12px;
+    font-size: 1.2rem;
 }
 
 #tray-expander:hover #custom-expand-icon {
-    color: transparent;
-    background: transparent;
-    border: 0px solid transparent;
-    border-radius: 50px;
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    color:         transparent;
+    background:    transparent;
+    border:        2px solid transparent;
+    border-radius: 99px;
+    box-shadow:    0 0 0 0 rgba(0, 0, 0, 0);
 }
 
 #tray > * {
-    border-radius: 50px;
-}
-
-#tray {
-    padding: 0 10px;
+    border-radius: 99px;
 }
 
 #tray > .passive {
@@ -246,71 +199,53 @@
 }
 
 #tray > .needs-attention {
-    background: @error;
+    background:       @error;
     -gtk-icon-effect: highlight;
 }
 
 
 /* MPRIS */
 #mpris {
-    font-size: 20px;
-}
-
-#mpris:hover {
-    font-size: 21px;
+    font-size: 1.2rem;
 }
 
 #mpris.paused {
-    color: alpha(@on_surface, 0.5);
+    color: alpha(@on_surface, .5);
 }
 
 #mpris.paused:hover {
-    color: alpha(@surface_container_high, 0.6);
+    color: alpha(@surface_container_high, .6);
 }
 
 
 /* Hypridle */
 #custom-hypridle.active {
-    color: alpha(@on_surface, 0.5);
+    color: alpha(@on_surface, .5);
 }
 
 #custom-hypridle.active:hover {
-    color: alpha(@surface_container_high, 0.6);
+    color: alpha(@surface_container_high, .6);
 }
 
 
 /* Battery */
-#battery {
-    padding: 0 12px;
-}
-
-#battery:hover {
-    padding: 1px 15px;
-}
-
 @keyframes gradient {
     to {
-        background: linear-gradient(-360deg, alpha(@surface_container, 0.7), @error);
+        background: linear-gradient(-360deg, alpha(@surface_container, .7), @error);
     }
 }
 
 #battery.critical:not(.charging) {
-    color: @error;
+    color:  @error;
     border: 2px solid @outline_variant;
 
-    background: linear-gradient(
-        360deg,
-        alpha(@surface_container, 0.7),
-        @error
-    );
-
-    animation: gradient 0.5s linear infinite;
+    background: linear-gradient(360deg, alpha(@surface_container, .7), @error);
+    animation:  gradient .5s linear infinite;
 }
 
 #battery.critical:not(.charging):hover {
-    color: @on_error;
+    color:      @on_error;
     background: @error;
-    border: 2px solid @error;
-
-    animation: none;
+    border:     2px solid @error;
+    animation:  none;
 }
