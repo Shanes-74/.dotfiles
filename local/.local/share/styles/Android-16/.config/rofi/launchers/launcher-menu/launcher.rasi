@@ -1,0 +1,142 @@
+@import "launchers/shared/defaults.rasi"
+@import "colors.rasi"
+
+/*****----- Configuration -----*****/
+configuration {
+    disable-history:            true;
+    show-icons:                 true;
+}
+
+configuration {
+    show-icons:                 true;
+	drun-display-format:        "{name} \n<span size='x-small' color='grey'><i>{exec}</i></span>";
+}
+
+/*****----- Main Window -----*****/
+window {
+    transparency: "real";
+    location:     south;
+    anchor:       south;
+    fullscreen:   false;
+    width:        28%;
+    x-offset:     0px;
+    y-offset:     0px;
+
+    /* properties for all widgets */
+    enabled: true;
+    margin:  0px;
+    padding: 0px;
+    cursor:  "default";
+    background-color: transparent;
+}
+
+/*****----- Main Box -----*****/
+mainbox {
+    enabled:                    true;
+    spacing:                    12px;
+    margin:                     0px;
+    background-color:           transparent;
+    children:                   [ "inputbar", "listview" ];
+}
+
+/*****----- Inputbar -----*****/
+inputbar {
+    enabled:                    true;
+    spacing:                    15px;
+    margin:                     0px; 
+    padding:                    15px;
+    border:                     1px;
+    border-radius:              99px;
+    border-color:               @outline-variant;
+    background-color:           @surface;
+    children:                   [ "entry" ];
+}
+
+prompt {
+    enabled:                    true;
+    background-color:           transparent;
+    text-color:                 @primary;
+}
+
+textbox-prompt-colon {
+    enabled:                    true;
+    expand:                     false;
+    str:                        ": ";
+    background-color:           transparent;
+    text-color:                 @on-surface-variant;
+}
+
+entry {
+    enabled:                    true;
+    background-color:           transparent;
+    text-color:                 @on-surface;
+    cursor:                     text;
+    placeholder:                "Procurar..";
+    placeholder-color:          @outline;
+}
+
+/*****----- Listview -----*****/
+listview {
+    columns:       4; 
+    lines:         6;
+    enabled:       true;
+    cycle:         true;
+    dynamic:       false;
+    scrollbar:     false;
+    layout:        vertical;
+    reverse:       false;
+    fixed-height:  false;
+    fixed-columns: true;
+
+    spacing:          15px;
+    margin:           0px;
+    padding:          20px;
+    border:           1px 1px 0 1px;
+    border-radius:    25px 25px 0 0;
+    border-color:     @outline-variant;
+    background-color: @surface;
+    cursor:           "default";
+}
+
+/*****----- Elements -----*****/
+element {
+    enabled:                    true;
+    padding:                    6px; 
+    spacing:                    12px;
+    border-radius:              50px; 
+    background-color:           transparent;
+    cursor:                     pointer;
+}
+
+element-icon {
+    size:                       64px;
+    background-color:           transparent;
+}
+
+element-text {
+    background-color:           transparent; 
+    text-color:                 inherit;
+    vertical-align:             0.5;
+}
+
+/****----- Estados de Selção -----****/
+
+element normal normal {
+    text-color:                 @on-surface; 
+}
+
+element selected normal {
+    background-color:           @primary; 
+    text-color:                 @on-primary;
+}
+
+element alternate normal {
+    background-color:           transparent;
+    text-color:                 @on-surface; 
+}
+
+message {
+    padding:                    10px;
+    background-color:           @surface-container-low;
+    border-radius:              25px;
+}

@@ -1,0 +1,61 @@
+## -----------------------------------------------------------------------------
+## Geral
+## -----------------------------------------------------------------------------
+
+units = "metric"
+locale = "pt-BR"
+loglevel = 0
+
+
+## -----------------------------------------------------------------------------
+## Weather
+## -----------------------------------------------------------------------------
+[weather]
+forecast_hours = 3
+
+
+## -----------------------------------------------------------------------------
+## Intervals
+## -----------------------------------------------------------------------------
+[intervals]
+weather_update = "30m"
+output = "15s"
+
+
+## -----------------------------------------------------------------------------
+## Templates
+## -----------------------------------------------------------------------------
+[templates]
+
+# Texto principal na Waybar
+text = "{{ floatFormat .Current.Temperature 0 }}°C"
+
+# Tooltip principal
+tooltip = """
+Local: <b>{{ .Address.City }}, {{ .Address.Country }}</b>
+
+Temp:  {{ floatFormat .Current.Temperature 1 }}°C - {{ floatFormat .Forecast.Temperature 1 }}°C
+Prev:  {{ .Forecast.Condition }}  
+Sen:  {{ floatFormat .Current.ApparentTemperature 0 }}°C
+Press:  {{ floatFormat .Current.PressureMSL 1 }} hPa
+Lua:  {{ .MoonPhase }} {{ .MoonPhaseIcon }}
+
+╭─────────────────╮
+    🌅 {{ timeFormat .SunriseTime "15:04" }}   |   🌇 {{ timeFormat .SunsetTime "15:04" }}
+╰─────────────────╯"""
+
+## -----------------------------------------------------------------------------
+## Geolocation
+## -----------------------------------------------------------------------------
+[geolocation]
+disable_geoip = false
+disable_geoapi = false
+disable_geolocation_file = true
+disable_ichnaea = false
+disable_gpsd = true
+
+## -----------------------------------------------------------------------------
+## Geocoder
+## -----------------------------------------------------------------------------
+[geocoder]
+provider = "nominatim"

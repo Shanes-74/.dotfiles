@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=m3-gtk
+Comment=Material 3 theme based on m3-gtk with Matugen colors
+
+[X-GNOME-Metatheme]
+GtkTheme=m3-gtk
+MetacityTheme=m3-gtk
+Encoding=UTF-8
+IconTheme=
+CursorTheme=

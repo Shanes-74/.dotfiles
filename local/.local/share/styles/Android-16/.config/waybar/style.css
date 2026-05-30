@@ -1,0 +1,357 @@
+/* -----------------------------------------------------------------------------
+   ISLAND THEME - WAYBAR CSS
+
+   ORDEM HIERÁRQUICA DOS VALORES (exemplo):
+   1. Layout:      margin, padding, width, height, min/max, position, display, etc.
+   2. Background:  background, background-color, background-image, etc.
+   3. Border:      border (abreviação), border-radius, border-top, border-color, etc.
+   4. Tipografia:  font-family, font-size, font-weight, letter-spacing, etc.
+   5. Cor:         color (texto), etc.
+   6. Animação:    transition, animation, transform, etc.
+   7. Outros:      -gtk-icon-effect, etc.
+
+   Última atualização: 2026-05-27
+----------------------------------------------------------------------------- */
+
+/* =============================================================================
+   1. IMPORTS E CONFIGURAÇÕES GLOBAIS
+   ============================================================================= */
+
+@import "colors.css";
+
+* {
+    all: unset;
+    margin-right: 0.001;
+    font-family: "Google Sans Display", "JetBrains Mono Nerd Font Propo", monospace;
+    font-weight: 500;
+    border-radius: 99px;
+    transition:
+        transform 200ms cubic-bezier(.4, 0, .2, 1),
+        background-color 200ms ease-in-out,
+        color 200ms ease-in-out,
+        border-color 200ms ease-in-out;
+}
+
+/* =============================================================================
+   2. JANELA PRINCIPAL (WAYBAR ROOT)
+   ============================================================================= */
+
+window#waybar {
+    border: 1px solid @outline_variant;
+    border-top: 0;
+    border-radius: 0 0 12px 12px;
+    background: @background;
+    color: @primary;
+}
+
+/* =============================================================================
+   3. CONTÊINERES DE MÓDULOS (ESQUERDA / DIREITA)
+   ============================================================================= */
+
+.modules-left {
+    margin-left: 16px;
+    font-size: 1.2rem;
+}
+
+.modules-right {
+    margin-right: 16px;
+    font-size: 1.2rem;
+}
+
+/* =============================================================================
+   4. WORKSPACES (i3/Sway)
+   ============================================================================= */
+
+#workspaces {
+    min-width: 100px;
+    margin: 10px -8px;
+    padding: 4px;
+    font-size: 0;
+}
+
+#workspaces button {
+    min-width: 4px;
+    min-height: 4px;
+    margin: 2px 4px;
+    padding: 0 12px;
+    border-radius: 99px;
+    background-color: @primary_container;
+    color: transparent;
+}
+
+#workspaces button.empty:not(.active) {
+    border: 1px solid @outline_variant;
+    border-radius: 6px;
+    background-color: alpha(@outline, 0.2);
+}
+
+#workspaces button.active {
+    min-width: 1.4rem;
+    background: linear-gradient(135deg, @tertiary, @primary_fixed_dim);
+}
+
+#workspaces button.urgent {
+    border-color: @outline;
+    border-radius: 99px;
+    background: @error;
+    color: @on_error;
+}
+
+#workspaces button label:first-child {
+    margin-right: 5px;
+}
+
+#workspaces button label:last-child {
+    margin-left: 5px;
+}
+
+/* =============================================================================
+   5. MÓDULOS INDIVIDUAIS (ORDEM ALFABÉTICA)
+   ============================================================================= */
+
+/* ----- Battery ----- */
+@keyframes blink {
+    to { color: white; }
+}
+
+#battery.warning:not(.charging) {
+    color: @error;
+}
+
+#battery.critical:not(.charging) {
+    color: @error;
+    animation: blink 0.5s steps(12) infinite alternate;
+}
+
+/* ----- Cava ----- */
+#cava {
+    margin-right: 12px;
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    color: @tertiary;
+}
+
+/* ----- Control Center -----*/
+#custom-center:hover {
+    color: @tertiary;
+}
+
+/* ----- Clipboard ----- */
+#custom-clipboard:hover {
+    color: @tertiary;
+}
+
+/* ----- Clock e Data ----- */
+#custom-clock,
+#custom-date {
+    font-family: "Google Sans Flex Freeze", monospace;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+#custom-date {
+    color: @secondary;
+}
+
+#custom-clock:hover {
+    color: @secondary;
+}
+
+#custom-date:hover {
+    color: @primary;
+}
+
+/* ----- Image (capa do player) ----- */
+#image.cover {
+    margin-right: 8px;
+}
+
+/* ----- Memory ----- */
+#memory.value {
+    font-size: 1.05rem;
+    color: @on_surface;
+}
+
+#memory.value:hover {
+    color: @secondary;
+}
+
+#memory:hover {
+    color: @tertiary;
+}
+
+/* ----- MPRIS (player nativo) ----- */
+#control-player {
+    margin-right: 12px;
+    font-size: 1rem;
+    color: @on_surface;
+    transition: all 0.5s ease-in-out;
+}
+
+#mpris {
+    margin: 15px 1px;
+    padding: 0 10px;
+    border-radius: 4px;
+    background-color: alpha(@outline, 0.25);
+}
+
+#mpris:hover,
+#mpris.paused:hover {
+    border-radius: 50px;
+    color: @primary;
+}
+
+#mpris.paused {
+    color: alpha(@on_surface, 0.5);
+}
+
+/* ----- Music (grupo específico) ----- */
+#music #custom-spacer {
+    margin-right: 12px;
+}
+
+/* ----- Network ----- */
+#network:hover {
+    color: @tertiary;
+}
+
+/* ----- No Idle ----- */
+#custom-noidle.active {
+    color: alpha(@on_surface, 0.5);
+}
+
+/* ----- Pacman (atualizações) ----- */
+#custom-pacman.value {
+    font-size: 1.05rem;
+    color: @on_surface;
+}
+
+#custom-pacman.value:hover {
+    color: @secondary;
+}
+
+#custom-pacman:hover {
+    color: @tertiary;
+}
+
+/* ----- Player (container genérico) ----- */
+#player {
+    margin-left: 0px;
+}
+
+/* ----- Power ----- */
+#custom-power:hover {
+    color: red;
+}
+
+/* ----- Pulseaudio ----- */
+#pulseaudio:hover {
+    color: @tertiary;
+}
+
+/* ----- Pulseaudio e Backlight Sliders ----- */
+#pulseaudio-slider,
+#backlight-slider {
+    margin: 0 12px;
+    padding: 0 2px;
+    border-radius: 99px;
+    background-color: transparent;
+}
+
+#pulseaudio-slider trough,
+#backlight-slider trough {
+    min-height: 10px;
+    min-width: 80px;
+    border-radius: 6px;
+    background-color: @outline_variant;
+}
+
+#pulseaudio-slider highlight,
+#backlight-slider highlight {
+    min-height: 10px;
+    border-radius: 6px;
+    background-color: alpha(@primary, 0.6);
+}
+
+#pulseaudio-slider slider,
+#backlight-slider slider {
+    min-height: 26px;
+    min-width: 5px;
+    margin: -2px 0;
+    border-radius: 99px;
+    background-color: @primary;
+}
+
+#pulseaudio-slider:hover slider,
+#backlight-slider:hover slider {
+    background-color: @tertiary;
+}
+
+/* ----- Spacer customizado ----- */
+#custom-spacer {
+    font-size: 0.5rem;
+    color: @outline_variant;
+}
+
+/* ----- Tray (bandeja do sistema) ----- */
+#tray {
+    margin: 0 12px;
+}
+
+#tray > * {
+    border-radius: 99px;
+}
+
+#tray menu,
+tooltip {
+    background: @background;  /* ou cor sólida, ex: #1e1e2e */
+    border: 1px solid @outline_variant;      /* borda opcional */
+    border-radius: 12px;
+    font-family: "Google Sans", monospace;
+    font-size: 1rem;
+    font-weight: normal;
+    color: @on_surface;
+    padding: 6px 10px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    background: @error;
+    -gtk-icon-effect: highlight;
+}
+
+#tray-expander:hover {
+    color: @tertiary;
+}
+
+#tray-expander:hover #custom-expand-icon {
+    color: transparent;
+}
+
+/* ----- Wallpaper ----- */
+#custom-wallpaper:hover {
+    color: @tertiary;
+}
+
+/* ----- Weather ----- */
+#custom-weather {
+    font-size: 1.05rem;
+    color: @on_surface;
+}
+
+#custom-weather:hover {
+    color: @secondary;
+}
+
+/* ----- Zscroll (letreiro custom) ----- */
+#custom-zscroll {
+    font-size: 1rem;
+    color: @on_surface;
+}
+
+#custom-zscroll.paused {
+    color: alpha(@on_surface, 0.5);
+}
