@@ -1,0 +1,240 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ============================================================================
+#  WALSET — Clean Theme Manager
+# ============================================================================
+
+readonly RED='\033[0;31m'
+readonly GREEN='\033[0;32m'
+readonly YELLOW='\033[1;33m'
+readonly BLUE='\033[0;34m'
+readonly MAGENTA='\033[0;35m'
+readonly CYAN='\033[0;36m'
+readonly RESET='\033[0m'
+
+readonly ICON_SUCCESS=""
+readonly ICON_ERROR=""
+readonly ICON_WARN=""
+readonly ICON_INFO=""
+readonly ICON_WALLPAPER=""
+readonly ICON_PALETTE=""
+readonly ICON_SDDM=""
+readonly ICON_RELOAD=""
+readonly ICON_HOOK=""
+readonly ICON_SAVE=""
+
+# ----------------------------------------------------------------------------
+#  Caminhos
+# ----------------------------------------------------------------------------
+CACHE_DIR="$HOME/.cache/walset"
+STATE_FILE="$CACHE_DIR/state.json"
+NOTIF_ID_FILE="$CACHE_DIR/notif_id"
+
+WALLPAPER_DIR="$HOME/Imagens/Wallpapers"
+CONFIG_MATUGEN="$HOME/.config/matugen/config.toml"
+ROFI_THEME="$HOME/.config/rofi/rofi.rasi"
+
+SDDM_ASSETS_DIR="$HOME/.local/share/sddm/sddm-current/assets"
+SDDM_BG="$SDDM_ASSETS_DIR/background.jpg"
+
+mkdir -p "$CACHE_DIR"
+export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+
+# ----------------------------------------------------------------------------
+#  Dependências
+# ----------------------------------------------------------------------------
+REQUIRED_DEPS=(awww matugen rofi jq notify-send)
+for cmd in "${REQUIRED_DEPS[@]}"; do
+    if ! command -v "$cmd" &>/dev/null; then
+        echo -e "${RED}${ICON_ERROR} Dependência faltando: $cmd${RESET}"
+        exit 1
+    fi
+done
+if ! command -v magick &>/dev/null; then
+    echo -e "${YELLOW}${ICON_WARN} magick não encontrado — validação de imagem desativada${RESET}"
+fi
+
+# ----------------------------------------------------------------------------
+#  Notificações
+# ----------------------------------------------------------------------------
+notify() {
+    local icon="$1" urgency="$2" msg="$3" timeout="${4:-2000}"
+    local replace_id=0
+    [[ -f "$NOTIF_ID_FILE" ]] && replace_id=$(cat "$NOTIF_ID_FILE")
+    local new_id
+    new_id=$(notify-send --icon="$icon" --urgency="$urgency" -r "$replace_id" -t "$timeout" -p --hint=int:transient:1 "Walset" "$msg" 2>/dev/null)
+    [[ -n "$new_id" ]] && echo "$new_id" > "$NOTIF_ID_FILE"
+}
+notify_error() { notify "dialog-error" "critical" "$1" 5000; }
+
+# ----------------------------------------------------------------------------
+#  Estado
+# ----------------------------------------------------------------------------
+save_state() {
+    jq -n --arg wallpaper "$1" --arg scheme "$2" --arg mode "$3" \
+        '{wallpaper: $wallpaper, scheme: $scheme, mode: $mode}' > "$STATE_FILE"
+}
+load_state() {
+    if [[ -f "$STATE_FILE" ]]; then
+        SCHEME=$(jq -r '.scheme // "content"' "$STATE_FILE")
+        MODE=$(jq -r '.mode // "dark"' "$STATE_FILE")
+        WALLPAPER=$(jq -r '.wallpaper' "$STATE_FILE")
+    else
+        SCHEME="content"
+        MODE="dark"
+        WALLPAPER=""
+    fi
+}
+
+# ----------------------------------------------------------------------------
+#  Hooks e SDDM
+# ----------------------------------------------------------------------------
+apply_hooks() {
+    echo -e "${BLUE}${ICON_HOOK} Aplicando hooks...${RESET}"
+    pkill -USR1 kitty                    >/dev/null 2>&1 || true
+    swaync-client -rs                    >/dev/null 2>&1 || true
+    pkill waybar                         >/dev/null 2>&1 || true
+    sleep 0.2
+    waybar                               >/dev/null 2>&1 &
+    bash ~/.config/hypr-dock/themes/lotos/point/color-change.sh >/dev/null 2>&1 &
+    sleep 0.2
+    hypr-dock-autohide --reload          >/dev/null 2>&1 || true
+    killall -q swayosd-server            >/dev/null 2>&1 || true
+    killall -q xdg-desktop-portal-gtk    >/dev/null 2>&1 || true
+    killall -q gnome-clocks              >/dev/null 2>&1 || true
+    pkill -x polkit-gnome-authentication-agent-1 >/dev/null 2>&1 || true
+    sleep 0.5
+    /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 >/dev/null 2>&1 &
+}
+update_sddm() {
+    echo -e "${MAGENTA}${ICON_SDDM} Atualizando SDDM...${RESET}"
+    mkdir -p "$SDDM_ASSETS_DIR"
+    if cp "$WALLPAPER" "$SDDM_BG" 2>/dev/null; then
+        echo -e "${GREEN}${ICON_SUCCESS} SDDM background atualizado${RESET}"
+    else
+        echo -e "${RED}${ICON_ERROR} Falha ao atualizar SDDM background${RESET}"
+    fi
+    command -v sddm-sync >/dev/null 2>&1 && sddm-sync || true
+}
+
+# ----------------------------------------------------------------------------
+#  Aplicação principal
+# ----------------------------------------------------------------------------
+apply_walset() {
+    local wallpaper="$1"
+    local scheme="$2"
+    local mode="$3"
+
+    if [[ ! -f "$wallpaper" ]]; then
+        notify_error "Arquivo não encontrado: $(basename "$wallpaper")"
+        echo -e "${RED}${ICON_ERROR} Arquivo não encontrado: $wallpaper${RESET}"
+        return 1
+    fi
+    if [[ ! -r "$wallpaper" ]]; then
+        notify_error "Sem permissão de leitura: $(basename "$wallpaper")"
+        echo -e "${RED}${ICON_ERROR} Sem permissão de leitura: $wallpaper${RESET}"
+        return 1
+    fi
+    if command -v magick &>/dev/null && ! magick identify "$wallpaper" &>/dev/null; then
+        notify_error "Imagem inválida ou corrompida: $(basename "$wallpaper")"
+        echo -e "${RED}${ICON_ERROR} Imagem inválida: $wallpaper${RESET}"
+        return 1
+    fi
+
+    echo -e "${CYAN}${ICON_WALLPAPER} Aplicando wallpaper: $(basename "$wallpaper")${RESET}"
+    local TRANS=(fade outer center wipe wave grow)
+    local T="${TRANS[RANDOM % ${#TRANS[@]}]}"
+    local RESOLUTION=$(awww query 2>/dev/null | grep -oP '\d+x\d+' | head -1) || true
+    local POS_X POS_Y
+    if [[ -z "$RESOLUTION" ]]; then
+        POS_X=960; POS_Y=540
+    else
+        SCREEN_W=$(echo "$RESOLUTION" | cut -dx -f1)
+        SCREEN_H=$(echo "$RESOLUTION" | cut -dx -f2)
+        POS_X=$((RANDOM % SCREEN_W))
+        POS_Y=$((RANDOM % SCREEN_H))
+    fi
+    awww img "$wallpaper" \
+        --transition-type "$T" \
+        --transition-duration 2.5 \
+        --transition-fps 144 \
+        --transition-bezier 0.4,0.0,0.2,1.0 \
+        --transition-step 90 \
+        --transition-pos "${POS_X},${POS_Y}"
+
+    echo -e "${MAGENTA}${ICON_PALETTE} Gerando cores (esquema: $scheme, modo: $mode)...${RESET}"
+    if ! matugen -c "$CONFIG_MATUGEN" image "$wallpaper" -m "$mode" -t "scheme-$scheme" --source-color-index 0; then
+        notify_error "Falha ao gerar paleta de cores"
+        echo -e "${RED}${ICON_ERROR} Falha na execução do matugen.${RESET}"
+        return 1
+    fi
+
+    echo -e "${BLUE}${ICON_SAVE} Salvando estado...${RESET}"
+    save_state "$wallpaper" "$scheme" "$mode"
+
+    apply_hooks
+    update_sddm
+    notify "dialog-information" "low" "Tema aplicado: $(basename "$wallpaper")" 2000
+    echo -e "${GREEN}${ICON_SUCCESS} Tema aplicado com sucesso!${RESET}"
+    return 0
+}
+
+# ----------------------------------------------------------------------------
+#  MAIN
+# ----------------------------------------------------------------------------
+if [[ "${1:-}" == "--reload" || "${1:-}" == "-r" ]]; then
+    load_state
+    if [[ ! -f "$STATE_FILE" || -z "$WALLPAPER" || "$WALLPAPER" == "null" ]]; then
+        echo -e "${RED}${ICON_ERROR} Nenhum estado anterior. Execute walset normalmente primeiro.${RESET}"
+        exit 1
+    fi
+    echo -e "${BLUE}${ICON_RELOAD} Recarregando último tema: $WALLPAPER ($SCHEME, $MODE)${RESET}"
+    apply_walset "$WALLPAPER" "$SCHEME" "$MODE"
+    exit $?
+fi
+
+load_state
+notify "preferences-desktop-wallpaper" "critical" "Aplicando tema…" 5000
+
+# 1. Wallpaper
+if [[ -n "${1:-}" ]]; then
+    WALLPAPER="$1"
+else
+    mapfile -t FILES < <(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.webp" \))
+    if [[ ${#FILES[@]} -eq 0 ]]; then
+        notify_error "Nenhum wallpaper encontrado em $WALLPAPER_DIR"
+        echo -e "${RED}${ICON_ERROR} Nenhum wallpaper encontrado${RESET}"
+        exit 1
+    fi
+    WALLPAPER="${FILES[RANDOM % ${#FILES[@]}]}"
+fi
+
+# 2. Esquema
+if [[ -n "${2:-}" ]]; then
+    SELECTED="$2"
+else
+    CHOICE=$(printf "%s\n" "Conteúdo" "Expressivo" "Fidelidade" "Salada de Frutas" "Monocromático" "Neutro" "Arco-Íris" "Ponto Tonal" "Vibrante" | rofi -dmenu -i -p "Esquema de Cores" -theme "$ROFI_THEME") || true
+    if [[ -z "${CHOICE:-}" ]]; then
+        notify "dialog-cancel" "low" "Operação cancelada" 2000
+        echo -e "${BLUE}${ICON_INFO} Operação cancelada.${RESET}"
+        exit 0
+    fi
+    declare -A MAP=(
+        ["Conteúdo"]="content"       ["Expressivo"]="expressive"
+        ["Fidelidade"]="fidelity"    ["Salada de Frutas"]="fruit-salad"
+        ["Monocromático"]="monochrome" ["Neutro"]="neutral"
+        ["Arco-Íris"]="rainbow"      ["Ponto Tonal"]="tonal-spot"
+        ["Vibrante"]="vibrant"
+    )
+    SELECTED="${MAP[$CHOICE]}"
+fi
+
+# 3. Modo
+if [[ -n "${3:-}" ]]; then
+    MODE="$3"
+fi
+MODE="${MODE:-dark}"
+
+apply_walset "$WALLPAPER" "$SELECTED" "$MODE"

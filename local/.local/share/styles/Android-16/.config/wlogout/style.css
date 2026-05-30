@@ -1,0 +1,65 @@
+@import "colors.css";
+
+* {
+    font-family: "Google Sans Display", "JetBrainsMono Nerd Font Propo";
+    font-size: 24px;
+    font-weight: 500;
+    background-image: none;
+    box-shadow: none;
+}
+
+window {
+    background-color: rgba(0, 0, 0, 0.3); 
+}
+
+button {
+    padding: 20px 0px;
+    color: white;
+    border-radius: 24px;
+    background-color: transparent;
+    border-style: solid;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 40%;
+    margin: 0px;
+    transition: all 0.2s ease-in-out;
+}
+
+button:focus, button:active, button:hover {
+    background-color: @primary;
+    color: black;
+    border-color: @outline_variant;
+    outline-style: none;
+}
+
+#lock {
+    background-image: image(url("icons/lock.png"));
+}
+#lock:focus,
+#lock:hover {
+    background-image: image(url("icons/lock_hover.png"));
+}
+
+#logout {
+    background-image: image(url("icons/logout.png"));
+}
+#logout:focus,
+#logout:hover {
+    background-image: image(url("icons/logout_hover.png"));
+}
+
+#reboot {
+    background-image: image(url("icons/reboot.png"));
+}
+#reboot:focus,
+#reboot:hover {
+    background-image: image(url("icons/reboot_hover.png"));
+}
+
+#shutdown {
+    background-image: image(url("icons/shutdown.png"));
+}
+#shutdown:focus,
+#shutdown:hover {
+    background-image: image(url("icons/shutdown_hover.png"));
+}

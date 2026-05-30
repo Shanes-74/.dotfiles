@@ -1,0 +1,461 @@
+// -*- mode: jsonc -*-
+
+////////////////////////////////////////////////
+// ISLAND CONFIG                              //
+// Organizado por:                            //
+//   1. Configurações Gerais                  //
+//   2. Ordem dos Módulos                     //
+//   3. Módulos Não‑Custom (ordem alfabética) //
+//   4. Módulos Custom (ordem alfabética)     //
+//   5. Grupos e Drawers                      //
+////////////////////////////////////////////////
+
+{
+  // ============================================================================
+  // 1. CONFIGURAÇÕES GERAIS
+  // ============================================================================
+
+  "layer": "top",
+  "width": 1480,
+  "height": 54,
+  "spacing": 12,
+  "fixed-center": true,
+
+  // ============================================================================
+  // 2. ORDEM DOS MÓDULOS
+  // ============================================================================
+
+  "modules-left": [
+    "custom/menu",
+    "custom/spacer",
+    "custom/weather",
+    "custom/noidle",
+    "custom/spacer",
+    "group/player",
+    "cava"
+  ],
+
+  "modules-center": [
+    "custom/clock",
+    "custom/spacer",
+    "hyprland/workspaces",
+    "custom/spacer",
+    "custom/date"
+  ],
+
+  "modules-right": [
+    "group/pacman-expander",
+    "group/tray-expander",
+    "group/memory-expander",
+    "custom/clipboard",
+    "custom/wallpaper",
+    "custom/spacer",
+    "network",
+    "group/pulseaudio-expander",
+    "group/backlight-expander",
+    "custom/center",
+    "custom/spacer",
+    "battery",
+    "custom/power"
+  ],
+
+  // ============================================================================
+  // 3. MÓDULOS NÃO‑CUSTOM (ORDEM ALFABÉTICA)
+  // ============================================================================
+
+  // ----- backlight -----
+  "backlight": {
+    "format": "󰃟",
+    "on-scroll-up": "brightnessctl set 5%+",
+    "on-scroll-down": "brightnessctl set 5%-",
+    "tooltip": true,
+    "tooltip-format": "Brilho: {percent}%"
+  },
+
+  // ----- battery -----
+  "battery": {
+    "bat": "BAT1",
+    "format": "{icon} {capacity}%",
+    "format-charging": " {capacity}%",
+    "format-full": "",
+    "interval": 5,
+    "tooltip-format": "{capacity}% - Descarregado em: {time}",
+    "tooltip-format-charging": "{capacity}% - Carregado em: {time}",
+    "states": {
+      "warning": 25,
+      "critical": 15
+    },
+    "format-icons": {
+      "default": [
+        "󰂎",
+        "󰁺",
+        "󰁻",
+        "󰁼",
+        "󰁽",
+        "󰁾",
+        "󰁿",
+        "󰂀",
+        "󰂁",
+        "󰂂",
+        "󰁹"
+      ]
+    }
+  },
+
+  // ----- cava -----
+  "cava": {
+    "framerate": 30,
+    "autosens": 0,
+    "sensitivity": 0.5,
+    "bars": 12,
+    "lower_cutoff_freq": 50,
+    "higher_cutoff_freq": 10000,
+    "hide_on_silence": true,
+    "hide-empty-text": true,
+    "sleep_timer": 3,
+    "format_silent": "quiet",
+    "method": "pipewire",
+    "source": "auto",
+    "stereo": true,
+    "reverse": false,
+    "bar_delimiter": 0,
+    "monstercat": false,
+    "waves": false,
+    "noise_reduction": 0.50,
+    "input_delay": 0,
+    "format-icons": ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"],
+    "actions": {
+      "on-click-right": "mode"
+    }
+  },
+
+  // ----- hyprland/workspaces -----
+  "hyprland/workspaces": {
+    "format": "",
+    "on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({workspace = \"e-1\"})'",
+    "on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({workspace = \"e+1\"})'"
+  },
+
+  // ----- memory (ícone) -----
+  "memory": {
+    "format": "󰍛",
+    "interval": 5,
+    "return-type": "json",
+    "tooltip-format": "RAM:     {used:0.1f}/{total:0.1f} GiB\nSWAP:   {swapUsed:0.1f}/{swapTotal:0.1f} GiB"
+  },
+
+  // ----- network -----
+  "network": {
+    "format-wifi": "{icon}",
+    "format-ethernet": "",
+    "format-linked": "",
+    "format-disconnected": "",
+    "format-icons": ["󰤫", "󰤟", "󰤢", "󰤥", "󰤨"],
+    "on-click": "nmgui",
+    "tooltip-format": "{essid}\nSinal: {signalStrength}%\nIP: {ipaddr}"
+  },
+
+  // ----- pulseaudio -----
+  "pulseaudio": {
+    "scroll-step": 5,
+    "on-click": "pavucontrol",
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "format": "{format_source}{icon}",
+    "format-muted": "",
+    "format-bluetooth": "{format_source}󰂱",
+    "format-bluetooth-muted": "󰂲",
+    "format-source": "",
+    "format-source-muted": " ",
+    "tooltip-format": "Volume: {volume}%\nSaida: {desc}\nEntrada: {source_desc}",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "muted": "",
+      "default": [
+        "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", ""
+      ]
+    }
+  },
+
+  // ----- tray -----
+  "tray": {
+    "icon-size": 20,
+    "spacing": 12
+  },
+
+  // ============================================================================
+  // 4. MÓDULOS CUSTOM (ORDEM ALFABÉTICA)
+  // ============================================================================
+
+    // ----- custom/center -----
+  "custom/center": {
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "󰆈",
+      "none": "󰆉",
+      "dnd-notification": "󱗟",
+      "dnd-none": "󱗠",
+      "inhibited-notification": "󱗡",
+      "inhibited-none": "󱗢",
+      "dnd-inhibited-notification": "󰗞",
+      "dnd-inhibited-none": "󰆇"
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -R -rs -t",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  },
+
+  // ----- custom/clipboard -----
+  "custom/clipboard": {
+    "format": "󰨸",
+    "on-click": "~/.config/rofi/launchers/clipboard-menu/clipboard.sh",
+    "tooltip": false
+  },
+
+  // ----- custom/clock -----
+  "custom/clock": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 1,
+    "exec": "bash -c 'hour=$(date +\"%H\"); min=$(date +\"%M\"); sec=$(date +\"%S\"); text=\"${hour}<sup><big> ${min}</big></sup>\"; tooltip=\" $(date +\"%H:%M:%S\")\"; echo \"{\\\"text\\\":\\\"$text\\\",\\\"tooltip\\\":\\\"$tooltip\\\"}\"'",
+    "escape": false,
+    "on-click": "gnome-clocks"
+  },
+
+  // ----- custom/date -----
+  "custom/date": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 3600,
+    "exec": "bash -c 'day=$(date +\"%d\"); month=$(date +\"%m\"); text=\"${day}<sup><big> ${month}</big></sup>\"; tooltip=\"󰸗 $(date +\"%A, %d de %B de %Y\")\"; echo \"{\\\"text\\\":\\\"$text\\\",\\\"tooltip\\\":\\\"$tooltip\\\"}\"'",
+    "escape": false,
+    "on-click": "gnome-calendar"
+  },
+
+  // ----- custom/expand-icon -----
+  "custom/expand-icon": {
+    "format": "󰅁",
+    "tooltip": false
+  },
+
+  // ----- custom/menu -----
+  "custom/menu": {
+    "format": "󰣇",
+    "on-click": "rofi -show drun -theme ~/.config/rofi/rofi.rasi",
+    "tooltip": false
+  },
+
+  // ----- custom/noidle -----
+  "custom/noidle": {
+    "exec": "~/.config/waybar/custom-modules/hypridle/hypridle.sh status",
+    "on-click": "~/.config/waybar/custom-modules/hypridle/hypridle.sh toggle",
+    "interval": 2,
+    "return-type": "json"
+  },
+
+  // ----- custom/pacman (ícone) -----
+  "custom/pacman": {
+    "format": "<b>{icon}</b>",
+    "return-type": "json",
+    "exec-if": "which waybar-updates",
+    "exec": "waybar-updates",
+    "hide-if-empty": true,
+    "format-icons": {
+      "pending-updates": "󱧕",
+      "updated": ""
+    }
+  },
+
+  // ----- custom/pacman#value (atualizações) -----
+  "custom/pacman#value": {
+    "format": " {0}",
+    "return-type": "json",
+    "exec-if": "which waybar-updates",
+    "exec": "waybar-updates",
+    "on-click": "kitty paru -Syu && sudo pacman -Rns $(pacman -Qtdq)",
+    "hide-if-empty": true,
+    "format-icons": {
+      "pending-updates": "",
+      "updated": ""
+    }
+  },
+
+  // ----- custom/power -----
+  "custom/power": {
+    "format": "",
+    "on-click": "~/.config/rofi/launchers/power-menu/powermenu.sh",
+    "tooltip": false
+  },
+
+  // ----- custom/spacer -----
+  "custom/spacer": {
+    "format": "",
+    "tooltip": false
+  },
+
+  // ----- custom/weather -----
+  "custom/weather": {
+    "exec": "waybar-weather -config ~/.config/waybar/custom-modules/waybar-weather/config.toml",
+    "restart-interval": 300,
+    "return-type": "json",
+    "hide-empty-text": true,
+    "on-click": "gnome-weather"
+  },
+
+  // ----- image#cover (capa do player) -----
+  "image#cover": {
+    "path": "/tmp/waybar_cover.png",
+    "size": 24,
+    "interval": 0.01
+  },
+
+  // ----- custom/wallpaper -----
+  "custom/wallpaper": {
+    "on-click": "~/.config/rofi/launchers/wallpaper-menu/wallmenu.py",
+    "format": "󰸉",
+    "tooltip": false
+  },
+
+  // ----- custom/zscroll (letreiro) -----
+  "custom/zscroll": {
+    "exec": "exec ~/.config/waybar/custom-modules/zscroll/zscroll.sh",
+    "format": "{}",
+    "return-type": "json",
+    "escape": true,
+    "tooltip": true,
+    "max-length": 12
+  },
+
+  // ============================================================================
+  // 5. GRUPOS E DRAWERS
+  // ============================================================================
+
+  // ----- backlight expander -----
+  "group/backlight-expander": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 400,
+      "transition-left-to-right": false
+    },
+    "modules": ["backlight", "custom/spacer", "backlight/slider"]
+  },
+  "backlight/slider": {
+    "min": 0,
+    "max": 100,
+    "orientation": "horizontal",
+    "tooltip": false,
+    "on-click": ""
+  },
+
+  // ----- control player (mpris) -----
+  "group/control-player": {
+    "orientation": "inherit",
+    "modules": ["mpris#previous", "mpris#play-pause", "mpris#next"]
+  },
+  "mpris#previous": {
+    "format": "",
+    "on-click": "playerctl previous",
+    "on-click-right": "",
+    "on-scroll-down": "",
+    "on-scroll-up": "",
+    "tooltip": false
+  },
+  "mpris#play-pause": {
+    "format": "{status_icon}",
+    "status-icons": {
+      "playing": "",
+      "paused": "",
+      "stopped": ""
+    },
+    "on-click": "playerctl play-pause",
+    "on-click-right": "",
+    "on-scroll-down": "",
+    "on-scroll-up": "",
+    "tooltip": false
+  },
+  "mpris#next": {
+    "format": "",
+    "on-click": "playerctl next",
+    "on-click-right": "",
+    "on-scroll-down": "",
+    "on-scroll-up": "",
+    "tooltip": false
+  },
+
+  // ----- memory expander -----
+  "group/memory-expander": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 400,
+      "transition-left-to-right": true,
+      "click-to-reveal": true
+    },
+    "modules": ["memory", "memory#value"]
+  },
+  "memory#value": {
+    "format": " {percentage}%",
+    "interval": 5,
+    "return-type": "json",
+    "tooltip-format": "RAM:     {used:0.1f}/{total:0.1f} GiB\nSWAP:   {swapUsed:0.1f}/{swapTotal:0.1f} GiB",
+    "on-click": "kitty btop"
+  },
+
+  // ----- pacman expander -----
+  "group/pacman-expander": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 400,
+      "transition-left-to-right": true
+    },
+    "modules": ["custom/pacman", "custom/pacman#value"]
+  },
+
+  // ----- player (agrupa zscroll + controles) -----
+  "group/player": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 300,
+      "transition-left-to-right": false
+    },
+    "modules": ["group/zscroll", "group/control-player"]
+  },
+
+  // ----- pulseaudio expander -----
+  "group/pulseaudio-expander": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 400,
+      "transition-left-to-right": false
+    },
+    "modules": ["pulseaudio", "custom/spacer", "pulseaudio/slider"]
+  },
+  "pulseaudio/slider": {
+    "min": 0,
+    "max": 100,
+    "orientation": "horizontal",
+    "on-click": ""
+  },
+
+  // ----- tray expander -----
+  "group/tray-expander": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 400
+    },
+    "modules": ["custom/expand-icon", "custom/spacer", "tray", "custom/spacer"]
+  },
+
+  // ----- zscroll (agrupa capa + letreiro) -----
+  "group/zscroll": {
+    "orientation": "inherit",
+    "modules": ["image#cover", "custom/zscroll"]
+  }
+}

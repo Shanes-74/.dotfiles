@@ -1,0 +1,8 @@
+@theme ".config/rofi/rofi.rasi"
+
+/*****----- Global Properties -----*****/
+
+* {
+    font:                       "Google Sans Display Medium 14";
+    background-color:           transparent;
+}
