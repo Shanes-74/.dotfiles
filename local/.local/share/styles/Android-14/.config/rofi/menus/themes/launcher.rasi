@@ -1,9 +1,15 @@
-@import "menus/themes/shared/colors.rasi"
-
 /*****----- Configuration -----*****/
 configuration {
-    disable-history:            true;
-    show-icons:                 false;
+    disable-history:            false;
+    show-icons:                 true;
+}
+
+/*****----- Global Properties -----*****/
+@import                         "shared/colors.rasi"
+
+* {
+    font:                       "Google Sans Display Medium 14";
+    background-color:           transparent;
 }
 
 /*****----- Main Window -----*****/
@@ -39,10 +45,10 @@ inputbar {
     spacing:                    12px;
     margin:                     0px; 
     padding:                    15px;
-    border:                     1px;
+    border:                     2px;
     border-radius:              25px;
     border-color:               @outline-variant;
-    background-color:           @surface;
+    background-color:           @surface-container;
     children:                   [ "entry" ];
 }
 
@@ -72,6 +78,8 @@ entry {
 /*****----- Listview -----*****/
 listview {
     enabled:                    true;
+    coloumns:                   1;
+    lines:                      9;
     cycle:                      true;
     dynamic:                    true;
     scrollbar:                  false;
@@ -83,10 +91,10 @@ listview {
     spacing:                    15px;
     margin:                     0px;
     padding:                    20px;
-    border:                     1px;
+    border:                     2px;
     border-radius:              25px;
     border-color:               @outline-variant;
-    background-color:           @surface;
+    background-color:           @surface-container;
     cursor:                     "default";
 }
 

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+rofi -theme $HOME/.config/rofi/menus/themes/launcher.rasi \
+     -show drun

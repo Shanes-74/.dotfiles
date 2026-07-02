@@ -24,7 +24,6 @@
     margin-right: 0.001;
     font-family: "Google Sans Display", "JetBrains Mono Nerd Font Propo", monospace;
     font-weight: 500;
-    border-radius: 99px;
     transition:
         transform 200ms cubic-bezier(.4, 0, .2, 1),
         background-color 200ms ease-in-out,
@@ -37,34 +36,71 @@
    ============================================================================= */
 
 window#waybar {
-    border: 1px solid @outline_variant;
-    border-top: 0;
-    border-radius: 0 0 12px 12px;
-    background: @background;
-    color: @primary;
+    background: linear-gradient(rgba(0,0,0,.5), transparent);
 }
 
 /* =============================================================================
    3. CONTÊINERES DE MÓDULOS (ESQUERDA / DIREITA)
    ============================================================================= */
 
-.modules-left {
-    margin-left: 16px;
-    font-size: 1.2rem;
+#left,
+.modules-center,
+#right {
+    padding-bottom: 8px;
+    background: alpha(@surface, 0.7);
+    border: 1px solid @outline_variant;
+    border-top: 0;
+    color: @primary;
 }
 
 .modules-right {
-    margin-right: 16px;
-    font-size: 1.2rem;
+    margin-right: -4px;
 }
 
+.modules-left,
+.modules-right {
+    font-size: 1.25rem;
+}
+
+.modules-center {
+    border-radius: 0 0 120px 120px;
+}
+
+#left, #right {
+    opacity: 1;
+    transition: opacity 1.5s ease-out;
+}
+
+#left {
+    border-radius: 0 0 120px 0;
+    border-left: 0;
+}
+
+#left #custom-menu {
+    margin-left: 12px;
+}
+
+#right {
+    border-radius: 0 0 0 120px;
+    border-right: 0;
+}
+
+#right #quick-controls.4 {
+    margin-right: 12px;
+}
+
+#left:hover, #right:hover {
+    opacity: 1;
+    transition: opacity 0.3s ease-in;
+} 
+
 /* =============================================================================
-   4. WORKSPACES (i3/Sway)
+   4. WORKSPACES
    ============================================================================= */
 
 #workspaces {
     min-width: 100px;
-    margin: 10px -8px;
+    margin: 8px -8px;
     padding: 4px;
     font-size: 0;
 }
@@ -81,7 +117,6 @@ window#waybar {
 
 #workspaces button.empty:not(.active) {
     border: 1px solid @outline_variant;
-    border-radius: 6px;
     background-color: alpha(@outline, 0.2);
 }
 
@@ -92,7 +127,6 @@ window#waybar {
 
 #workspaces button.urgent {
     border-color: @outline;
-    border-radius: 99px;
     background: @error;
     color: @on_error;
 }
@@ -109,9 +143,21 @@ window#waybar {
    5. MÓDULOS INDIVIDUAIS (ORDEM ALFABÉTICA)
    ============================================================================= */
 
+/* ------ Backlight ----- */
+#backlight.button {
+    margin-left: 15px;
+}
+
 /* ----- Battery ----- */
+#battery {
+    margin-right: 15px;
+}
+
 @keyframes blink {
-    to { color: white; }
+    to {
+    color: white;
+    opacity: 1;
+    }
 }
 
 #battery.warning:not(.charging) {
@@ -119,24 +165,32 @@ window#waybar {
 }
 
 #battery.critical:not(.charging) {
-    color: @error;
+    color: red;
     animation: blink 0.5s steps(12) infinite alternate;
 }
 
 /* ----- Cava ----- */
 #cava {
-    margin-right: 12px;
-    font-size: 0.7rem;
+    margin-right: 15px;
+    font-size: 0.8rem;
     letter-spacing: 1.5px;
     color: @tertiary;
 }
 
 /* ----- Control Center -----*/
+#custom-center {
+    margin-left: 15px;
+}
+
 #custom-center:hover {
     color: @tertiary;
 }
 
 /* ----- Clipboard ----- */
+#custom-clipboard {
+    margin-left: 15px;
+}
+
 #custom-clipboard:hover {
     color: @tertiary;
 }
@@ -145,7 +199,7 @@ window#waybar {
 #custom-clock,
 #custom-date {
     font-family: "Google Sans Flex Freeze", monospace;
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     font-weight: bold;
 }
 
@@ -153,22 +207,27 @@ window#waybar {
     color: @secondary;
 }
 
-#custom-clock:hover {
-    color: @secondary;
-}
-
+#custom-clock:hover,
 #custom-date:hover {
-    color: @primary;
+    color: @tertiary;
 }
 
 /* ----- Image (capa do player) ----- */
-#image.cover {
+#image.cover * {
     margin-right: 8px;
 }
 
+/* ----- Menu ----- */
+#custom-menu:hover {
+    color: @tertiary;
+}
+
 /* ----- Memory ----- */
+#memory-expander {
+    margin-left: 15px;
+}
+
 #memory.value {
-    font-size: 1.05rem;
     color: @on_surface;
 }
 
@@ -182,14 +241,14 @@ window#waybar {
 
 /* ----- MPRIS (player nativo) ----- */
 #control-player {
-    margin-right: 12px;
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: @on_surface;
     transition: all 0.5s ease-in-out;
+    margin-right: 15px;
 }
 
 #mpris {
-    margin: 15px 1px;
+    margin: 12px 1px;
     padding: 0 10px;
     border-radius: 4px;
     background-color: alpha(@outline, 0.25);
@@ -197,7 +256,7 @@ window#waybar {
 
 #mpris:hover,
 #mpris.paused:hover {
-    border-radius: 50px;
+    border-radius: 99px;
     color: @primary;
 }
 
@@ -206,8 +265,8 @@ window#waybar {
 }
 
 /* ----- Music (grupo específico) ----- */
-#music #custom-spacer {
-    margin-right: 12px;
+#music #custom-point {
+    margin-right: 15px;
 }
 
 /* ----- Network ----- */
@@ -222,7 +281,6 @@ window#waybar {
 
 /* ----- Pacman (atualizações) ----- */
 #custom-pacman.value {
-    font-size: 1.05rem;
     color: @on_surface;
 }
 
@@ -234,9 +292,8 @@ window#waybar {
     color: @tertiary;
 }
 
-/* ----- Player (container genérico) ----- */
-#player {
-    margin-left: 0px;
+#player #custom-point {
+    margin-left: 0;
 }
 
 /* ----- Power ----- */
@@ -245,6 +302,10 @@ window#waybar {
 }
 
 /* ----- Pulseaudio ----- */
+#pulseaudio.button {
+    margin-left: 15px;
+}
+
 #pulseaudio:hover {
     color: @tertiary;
 }
@@ -252,8 +313,6 @@ window#waybar {
 /* ----- Pulseaudio e Backlight Sliders ----- */
 #pulseaudio-slider,
 #backlight-slider {
-    margin: 0 12px;
-    padding: 0 2px;
     border-radius: 99px;
     background-color: transparent;
 }
@@ -287,15 +346,37 @@ window#waybar {
     background-color: @tertiary;
 }
 
+/* ----- Quick Controls ----- */
+#quick-controls.0,
+#quick-controls.2,
+#quick-controls.3,
+#quick-controls.4,
+#tray {
+    margin: 6px 0;
+    padding: 0 15px;
+    border-radius: 99px;
+    background-color: alpha(@surface_container_high, 0.7);
+    border: 1px solid @outline_variant;
+}
+
+#quick-controls.1 {
+    margin: 0 15px;
+}
+
 /* ----- Spacer customizado ----- */
-#custom-spacer {
-    font-size: 0.5rem;
-    color: @outline_variant;
+#custom-point {
+    margin: 0 15px;
+    font-size: 0.75rem;
+    color: @outline;
 }
 
 /* ----- Tray (bandeja do sistema) ----- */
-#tray {
-    margin: 0 12px;
+#custom-tray-expand-icon {
+    margin: 0 15px;
+}
+
+#tray-expander:hover #custom-tray-expand-icon {
+    color: @tertiary;
 }
 
 #tray > * {
@@ -304,14 +385,14 @@ window#waybar {
 
 #tray menu,
 tooltip {
-    background: @background;  /* ou cor sólida, ex: #1e1e2e */
-    border: 1px solid @outline_variant;      /* borda opcional */
+    background: @surface;
+    border: 1px solid @outline_variant;
     border-radius: 12px;
     font-family: "Google Sans", monospace;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: normal;
     color: @on_surface;
-    padding: 6px 10px;
+    padding: 15px;
 }
 
 #tray > .passive {
@@ -323,22 +404,19 @@ tooltip {
     -gtk-icon-effect: highlight;
 }
 
-#tray-expander:hover {
-    color: @tertiary;
-}
-
-#tray-expander:hover #custom-expand-icon {
-    color: transparent;
-}
-
 /* ----- Wallpaper ----- */
+#custom-wallpaper {
+    margin-left: 15px;
+}
+
 #custom-wallpaper:hover {
     color: @tertiary;
 }
 
 /* ----- Weather ----- */
 #custom-weather {
-    font-size: 1.05rem;
+    margin-right: 15px;
+    font-size: 1.1rem;
     color: @on_surface;
 }
 
@@ -348,9 +426,22 @@ tooltip {
 
 /* ----- Zscroll (letreiro custom) ----- */
 #custom-zscroll {
-    font-size: 1rem;
+    margin-right: 15px;
+    font-size: 1.05rem;
     color: @on_surface;
 }
+
+@keyframes gradient {
+    to {
+        background: linear-gradient(-360deg, @primary, @tertiary);
+    }
+}
+
+/*#custom-zscroll.playing {
+    background: linear-gradient(360deg, @primary, @tertiary);
+    color: @surface;
+    animation:  gradient 1s linear infinite;
+}*/
 
 #custom-zscroll.paused {
     color: alpha(@on_surface, 0.5);

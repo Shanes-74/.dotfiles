@@ -5,8 +5,12 @@
 ################
 
 [templates.hyprland]
-input_path = './templates/hyprland-colors.conf'
-output_path = '~/.config/hypr/modules/colors.conf'
+input_path = './templates/hyprland-colors.lua'
+output_path = '~/.config/hypr/modules/colors.lua'
+
+[templates.hyprlock]
+input_path = './templates/hyprlock-colors.conf'
+output_path = '~/.config/hypr/colors.conf'
 
 [templates.css]
 input_path = './templates/css-colors.css'
@@ -19,7 +23,7 @@ output_path = '~/.config/kitty/colors.conf'
 
 [templates.rofi]
 input_path = './templates/rofi-colors.rasi'
-output_path = '~/.config/rofi/colors.rasi'
+output_path = '~/.config/rofi/menus/themes/shared/colors.rasi'
 
 [templates.gtk3]
 input_path = './templates/gtk-colors.css'
@@ -65,4 +69,4 @@ output_path = '~/.config/scripts/slurp/colors.json'
 [templates.pywallfox]
 input_path  = './templates/pywallfox-colors.json'
 output_path = '~/.cache/wal/colors.json'
-post_hook = 'pywalfox update'
+post_hook = '~/.config/scripts/pywallfox-update/pywallfox-update.sh'

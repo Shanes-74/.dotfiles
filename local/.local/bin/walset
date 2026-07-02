@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # ============================================================================
-#  WALSET — Clean Theme Manager
+#  WALSET — Clean Theme Manager (multi-monitor com --outputs)
 # ============================================================================
 
 readonly RED='\033[0;31m'
@@ -95,18 +95,21 @@ apply_hooks() {
     echo -e "${BLUE}${ICON_HOOK} Aplicando hooks...${RESET}"
     pkill -USR1 kitty                    >/dev/null 2>&1 || true
     swaync-client -rs                    >/dev/null 2>&1 || true
-    pkill waybar                         >/dev/null 2>&1 || true
+    
+    killall -q waybar                    >/dev/null 2>&1 || true
     sleep 0.2
     waybar                               >/dev/null 2>&1 &
-    bash ~/.config/hypr-dock/themes/lotos/point/color-change.sh >/dev/null 2>&1 &
+
+    bash $HOME/.config/hypr-dock/themes/lotos/point/color-change.sh >/dev/null 2>&1 &
     sleep 0.2
-    hypr-dock-autohide --reload          >/dev/null 2>&1 || true
-    killall -q swayosd-server            >/dev/null 2>&1 || true
-    killall -q xdg-desktop-portal-gtk    >/dev/null 2>&1 || true
-    killall -q gnome-clocks              >/dev/null 2>&1 || true
-    pkill -x polkit-gnome-authentication-agent-1 >/dev/null 2>&1 || true
-    sleep 0.5
-    /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 >/dev/null 2>&1 &
+
+    hypr-dock-autohide --reload                                  >/dev/null 2>&1 || true
+    systemctl --user restart polkit-gnome.service                >/dev/null 2>&1 || true
+    systemctl --user restart xdg-desktop-portal-hyprland.service >/dev/null 2>&1 || true
+    systemctl --user restart xdg-desktop-portal-gtk.service      >/dev/null 2>&1 || true
+    systemctl --user restart xdg-desktop-portal.service          >/dev/null 2>&1 || true
+    systemctl --user restart swayosd                             >/dev/null 2>&1 || true
+    killall -q gnome-clocks                                      >/dev/null 2>&1 || true
 }
 update_sddm() {
     echo -e "${MAGENTA}${ICON_SDDM} Atualizando SDDM...${RESET}"
@@ -120,7 +123,106 @@ update_sddm() {
 }
 
 # ----------------------------------------------------------------------------
-#  Aplicação principal
+#  Detecção e aplicação em múltiplos monitores
+# ----------------------------------------------------------------------------
+# Retorna lista de outputs separada por vírgulas (ex: "eDP-1,HDMI-A-1")
+get_outputs_list() {
+    local outputs=()
+    # O formato do 'awww query' esperado:
+    # eDP-1: 1920x1080 @ 60.000Hz
+    # HDMI-A-1: 1920x1080 @ 60.000Hz
+    while IFS= read -r line; do
+        # Remove espaços iniciais e finais
+        line="${line#"${line%%[![:space:]]*}"}"
+        line="${line%"${line##*[![:space:]]}"}"
+        # Extrai o nome antes do primeiro ':'
+        if [[ "$line" =~ ^([a-zA-Z0-9\-]+): ]]; then
+            outputs+=("${BASH_REMATCH[1]}")
+        fi
+    done < <(awww query 2>/dev/null | grep -E '^[a-zA-Z0-9\-]+:')
+    
+    # Junta com vírgulas
+    local IFS=,
+    echo "${outputs[*]}"
+}
+
+# Aplica o wallpaper em todos os monitores (usa --outputs se disponível)
+apply_wallpaper_all_outputs() {
+    local wallpaper="$1"
+    
+    local outputs_list
+    outputs_list=$(get_outputs_list)
+    
+    if [[ -z "$outputs_list" ]]; then
+        echo -e "${YELLOW}${ICON_WARN} Nenhum output detectado. Aplicando sem especificar outputs...${RESET}"
+        # Fallback: comando sem --outputs
+        local TRANS=(fade outer center wipe wave grow)
+        local T="${TRANS[RANDOM % ${#TRANS[@]}]}"
+        local RESOLUTION=$(awww query 2>/dev/null | grep -oP '\d+x\d+' | head -1) || true
+        local POS_X POS_Y
+        if [[ -z "$RESOLUTION" ]]; then
+            POS_X=960; POS_Y=540
+        else
+            SCREEN_W=$(echo "$RESOLUTION" | cut -dx -f1)
+            SCREEN_H=$(echo "$RESOLUTION" | cut -dx -f2)
+            POS_X=$((RANDOM % SCREEN_W))
+            POS_Y=$((RANDOM % SCREEN_H))
+        fi
+        awww img "$wallpaper" \
+            --transition-type "$T" \
+            --transition-duration 2.5 \
+            --transition-fps 90 \
+            --transition-bezier 0.4,0.0,0.2,1.0 \
+            --transition-step 90 \
+            --transition-pos "${POS_X},${POS_Y}"
+        return
+    fi
+    
+    echo -e "${CYAN}${ICON_WALLPAPER} Aplicando wallpaper em todos os monitores: ${outputs_list//,/, }${RESET}"
+    
+    # Parâmetros de transição (iguais para todos os monitores)
+    local TRANS=(fade outer center wipe wave grow)
+    local T="${TRANS[RANDOM % ${#TRANS[@]}]}"
+    local RESOLUTION=$(awww query 2>/dev/null | grep -oP '\d+x\d+' | head -1) || true
+    local POS_X POS_Y
+    if [[ -z "$RESOLUTION" ]]; then
+        POS_X=960; POS_Y=540
+    else
+        SCREEN_W=$(echo "$RESOLUTION" | cut -dx -f1)
+        SCREEN_H=$(echo "$RESOLUTION" | cut -dx -f2)
+        POS_X=$((RANDOM % SCREEN_W))
+        POS_Y=$((RANDOM % SCREEN_H))
+    fi
+    
+    # Verifica se o awww suporta --outputs
+    if awww img --help 2>&1 | grep -q -- '--outputs'; then
+        awww img "$wallpaper" \
+            --outputs "$outputs_list" \
+            --transition-type "$T" \
+            --transition-duration 2.5 \
+            --transition-fps 144 \
+            --transition-bezier 0.4,0.0,0.2,1.0 \
+            --transition-step 90 \
+            --transition-pos "${POS_X},${POS_Y}"
+    else
+        # Fallback para versões antigas: aplica separadamente (sem --outputs)
+        echo -e "${YELLOW}${ICON_WARN} 'awww img' não suporta --outputs. Aplicando separadamente...${RESET}"
+        IFS=',' read -ra outputs <<< "$outputs_list"
+        for out in "${outputs[@]}"; do
+            awww img "$wallpaper" \
+                --output "$out" \
+                --transition-type "$T" \
+                --transition-duration 2.5 \
+                --transition-fps 144 \
+                --transition-bezier 0.4,0.0,0.2,1.0 \
+                --transition-step 90 \
+                --transition-pos "${POS_X},${POS_Y}"
+        done
+    fi
+}
+
+# ----------------------------------------------------------------------------
+#  Aplicação principal (wallpaper + matugen + hooks)
 # ----------------------------------------------------------------------------
 apply_walset() {
     local wallpaper="$1"
@@ -144,25 +246,9 @@ apply_walset() {
     fi
 
     echo -e "${CYAN}${ICON_WALLPAPER} Aplicando wallpaper: $(basename "$wallpaper")${RESET}"
-    local TRANS=(fade outer center wipe wave grow)
-    local T="${TRANS[RANDOM % ${#TRANS[@]}]}"
-    local RESOLUTION=$(awww query 2>/dev/null | grep -oP '\d+x\d+' | head -1) || true
-    local POS_X POS_Y
-    if [[ -z "$RESOLUTION" ]]; then
-        POS_X=960; POS_Y=540
-    else
-        SCREEN_W=$(echo "$RESOLUTION" | cut -dx -f1)
-        SCREEN_H=$(echo "$RESOLUTION" | cut -dx -f2)
-        POS_X=$((RANDOM % SCREEN_W))
-        POS_Y=$((RANDOM % SCREEN_H))
-    fi
-    awww img "$wallpaper" \
-        --transition-type "$T" \
-        --transition-duration 2.5 \
-        --transition-fps 144 \
-        --transition-bezier 0.4,0.0,0.2,1.0 \
-        --transition-step 90 \
-        --transition-pos "${POS_X},${POS_Y}"
+    
+    # --- Aplica o wallpaper em todos os monitores ---
+    apply_wallpaper_all_outputs "$wallpaper"
 
     echo -e "${MAGENTA}${ICON_PALETTE} Gerando cores (esquema: $scheme, modo: $mode)...${RESET}"
     if ! matugen -c "$CONFIG_MATUGEN" image "$wallpaper" -m "$mode" -t "scheme-$scheme" --source-color-index 0; then

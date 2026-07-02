@@ -1,0 +1,205 @@
+/**
+ * Authors: Shane. (github: @shanes-74)
+ * 
+ * HIERARQUIA DE PROPRIEDADES (ordem de declaração)
+ * =================================================
+ * 1. Visibilidade / Estado: enabled, visible
+ * 2. Dimensões e posicionamento: width, height, margin, padding, expand, location, anchor, x-offset, y-offset
+ * 3. Layout interno: orientation, spacing, children, columns, lines, dynamic, scrollbar, scrollbar-width, layout
+ * 4. Borda e arredondamento: border, border-color, border-radius
+ * 5. Fundo e cores: background-color, color, text-color, placeholder-color, handle-color, handle-width
+ * 6. Tipografia e conteúdo: font, placeholder, str, markup, blink
+ * 7. Alinhamento: vertical-align, horizontal-align
+ * 8. Cursor e interação: cursor
+ * 9. Específicos do widget: size, round, etc.
+ */
+
+@import "shared/colors.rasi"
+
+/*****----- CONFIGURATION -----*****/
+configuration {
+    disable-history:             true;
+    show-icons:                  true;
+    modi:                        "drun,run,filebrowser";
+    display-drun:                "";
+    display-run:                 "󰘳";
+    display-filebrowser:         "";
+}
+
+/*****----- WINDOW -----*****/
+window {
+    location:                    south;
+    anchor:                      south;
+    width:                       32%;
+    height:                      68%;
+    y-offset:                    20px;
+    background-color:            transparent;
+    transparency:                "real";
+}
+
+/*****----- MAINBOX -----*****/
+mainbox {
+    spacing:                     15px;
+    padding:                     15px 15px 30px 15px;
+    border:                      1px;
+    border-color:                @outline-variant;
+    border-radius:               20px 20px 0 0;
+    background-color:            @surface;
+    color:                       @on-surface;
+    children:                    [ "inputbar", "message", "listview" ];
+}
+
+/*****----- INPUTBAR -----*****/
+inputbar {
+    spacing:                     10px;
+    children:                    [ "textbox-prompt-colon", "entry", "mode-switcher" ];
+    background-color:            inherit;
+}
+
+/*****----- PROMPT (textbox-prompt-colon) -----*****/
+textbox-prompt-colon {
+    enabled:                     true;
+    expand:                      false;
+    width:                       3%;
+    height:                      50%;
+    border-radius:               99px;
+    color:                       @surface;
+    background-color:            @tertiary;
+    font:                        "GeistMono Nerd Font Propo, bold 18";
+    str:                         "";
+    vertical-align:              0.5;
+    horizontal-align:            0.5;
+}
+
+/*****----- ENTRY -----*****/
+entry {
+    padding:                     15px 15px;
+    border:                      1px;
+    border-color:                @outline-variant;
+    border-radius:               99px;
+    background-color:            @surface-container-high;
+    color:                       @on-surface;
+    placeholder-color:           @outline;
+    placeholder:                 "Procurar...";
+    vertical-align:              0.5;
+}
+
+/*****----- MODE SWITCHER -----*****/
+mode-switcher {
+    enabled:                     true;
+    spacing:                     10px;
+    background-color:            inherit;
+}
+
+/*****----- BUTTON -----*****/
+button {
+    width:                       3%;
+    height:                      50%;
+    border:                      1px;
+    border-color:                @outline-variant;
+    border-radius:               20px;
+    background-color:            @surface-container-high;
+    color:                       @primary;
+    font:                        "GeistMono Nerd Font Propo, bold 18";
+    vertical-align:              0.5;
+    horizontal-align:            0.5;
+    cursor:                      pointer;
+}
+
+/*****----- BUTTON SELECTED -----*****/
+button selected {
+    border:                      0px;
+    border-radius:               99px;
+    background-color:            @tertiary;
+    color:                       @surface;
+}
+
+/*****----- LISTVIEW -----*****/
+listview {
+    columns:                     1;
+    dynamic:                     true;
+    scrollbar:                   true;
+    layout:                      vertical;
+    spacing:                     0px;
+    padding:                     10px;
+    border:                      1px;
+    border-color:                @outline-variant;
+    border-radius:               20px;
+    background-color:            @surface-container-high;
+    color:                       @on-surface;
+}
+
+/*****----- SCROLLBAR -----*****/
+#scrollbar {
+    border-radius:               20px;
+    background-color:            inherit;
+    handle-color:                @tertiary;
+    handle-width:                10px;
+}
+
+/*****----- ELEMENT -----*****/
+element {
+    enabled:                     true;
+    margin:                      6px 6px -4px 6px;
+    padding:                     5px 10px;
+    border-radius:               20px;
+    background-color:            transparent;
+    color:                       @on-surface;
+    cursor:                      pointer;
+}
+
+/*****----- ELEMENT SELECTED -----*****/
+element selected.normal {
+    background-color:            @primary;
+    color:                       @surface;
+}
+
+/*****----- ELEMENT ICON -----*****/
+element-icon {
+    size:                        56px;
+    margin:                      0 5px 0 -5px;
+    border-radius:               20px;
+    background-color:            transparent;
+    color:                       inherit;
+    cursor:                      inherit;
+}
+
+/*****----- ELEMENT TEXT -----*****/
+element-text {
+    background-color:            transparent;
+    color:                       inherit;
+    vertical-align:              0.5;
+    cursor:                      inherit;
+}
+
+/*****----- MESSAGE -----*****/
+message {
+    enabled:                     true;
+    margin:                      0px;
+    padding:                     0px;
+    border:                      1px;
+    border-color:                @outline-variant;
+    border-radius:               20px;
+    background-color:            @surface-container-high;
+    color:                       @surface;
+}
+
+/*****----- TEXTBOX -----*****/
+textbox {
+    padding:                     10px;
+    border-radius:               20px;
+    background-color:            inherit;
+    color:                       @on-surface;
+    placeholder-color:           @on-surface-variant;
+    blink:                       true;
+    markup:                      true;
+    vertical-align:              0.5;
+    horizontal-align:            0.5;
+}
+
+/*****----- ERROR MESSAGE -----*****/
+error-message {
+    padding:                     10px;
+    border-radius:               20px 20px 0 0;
+    background-color:            @error-container;
+}

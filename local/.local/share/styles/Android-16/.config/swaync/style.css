@@ -1,0 +1,340 @@
+/* ===================================================== */
+/* ================ CONFIGURAÇÕES GLOBAIS ============== */
+/* ===================================================== */
+
+@import "colors.css";
+
+* {
+  font-family: "Google Sans Display", "JetBrainsMono Nerd Font Propo";
+  font-weight: 500;
+  color:       @on_surface;
+  border-radius: 20px;
+  transition:
+        transform 180ms cubic-bezier(.4,0,.2,1),
+        background-color 200ms ease,
+        color 200ms ease,
+        border-color 200ms ease;
+}
+
+/* ===================================================== */
+/* =================== CONTROL CENTER ================== */
+/* ===================================================== */
+
+.control-center {
+  margin: -10px;
+  padding: 6px;
+  border-radius: 20px;
+  background-color: @surface;
+  border: 1px solid @outline_variant;
+  border-top: 0;
+}
+
+/* ===================================================== */
+/* ================= CONTAINER NOTIF =================== */
+/* ===================================================== */
+
+#notifications,
+#notification-list {
+  border-radius: 20px;
+  background-color: @surface_container_high;
+}
+
+/* ===================================================== */
+/* ===================== NOTIFICAÇÃO =================== */
+/* ===================================================== */
+
+.notification {
+  margin: 6px 0;
+  padding: 10px;
+  border-radius: 20px;
+  background-color: @surface;
+  border: 1px solid @outline_variant;
+}
+
+.control-center .notification {
+  background-color: @surface;
+}
+
+.notification:hover {
+  background-color: @surface_container_highest;
+  border: 1px solid @primary;
+}
+
+.notification-group {
+  background: transparent;
+  border: none;
+}
+
+/* ===================================================== */
+/* ============== ELEMENTOS DA NOTIF =================== */
+/* ===================================================== */
+
+.notification-action {
+  border-radius: 25px;
+  background-color: @surface_container;
+  border: 1px solid @primary;
+  padding: 0px;
+  margin: 2px 4px 4px 4px;
+}
+
+.notification-action label {
+  color: @primary;
+}
+
+.notification-action label {
+  margin: -2px;
+}
+
+.notification-action:hover {
+  font-weight: 700;
+  background-color: @primary;
+  border: 1px solid @primary;
+  margin: -2px 2px 2px 2px;
+  border-radius: 19px;
+}
+
+.notification-action:hover label {
+  color: @on_primary;
+}
+
+.notification-content label {
+  margin-top: 4px;
+  margin-bottom: 6px;
+  padding-left: 10px;
+}
+
+.notification-content image {
+  border-radius: 25px;
+}
+
+.notification-default-action:hover,
+.notification-content:hover {
+  background-color: transparent;
+}
+
+/* ===================================================== */
+/* ===================== WIDGETS ======================= */
+/* ===================================================== */
+
+.widget-title {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: @primary;
+}
+
+/* ---------------- BOTÃO FECHAR ---------------- */
+
+.close-button {
+  margin-top: 16px;
+  margin-right: 12px;
+  padding: 0;
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 50px;
+  background: @surface_container;
+}
+
+.close-button:hover {
+  background: @error;
+}
+
+.close-button:hover image {
+  color: @surface_container;
+}
+
+/* ---------------- GRID BOTÕES ---------------- */
+
+.widget-buttons-grid {
+  margin: 12px;
+  padding: 10px;
+  border-radius: 20px;
+  background-color: @surface_container_high;
+  border: 1px solid @outline_variant;
+}
+
+.widget-buttons-grid button {
+  margin: 4px;
+  padding: 14px 22px;
+  font-size: 20px;
+  border-radius: 99px;
+  background: @secondary_container;
+  color: @on_secondary_container;
+}
+
+.widget-buttons-grid button:hover {
+  background: @tertiary;
+  border-radius: 20px;
+}
+
+.widget-buttons-grid button:hover label,
+.widget-buttons-grid button:hover image {
+  color: @on_tertiary;
+}
+
+.widget-buttons-grid button:checked {
+  background: @primary;
+  color: @on_primary;
+}
+
+.widget-buttons-grid button:checked:hover {
+  background: @primary;
+  color: @primary;
+}
+
+/* ---------------- SWITCH ---------------- */
+
+switch {
+  border-radius: 20px;
+  background-color: @surface_container_highest;
+  border: 1px solid @outline;
+  transition: all 200ms ease;
+}
+
+switch:checked {
+  background-color: @primary;
+  border: 1px solid @primary;
+}
+
+switch slider {
+  margin: 4px;
+  border-radius: 50px;
+  background-color: @outline;
+  transition: all 200ms ease;
+}
+
+switch:checked slider {
+  background-color: @on_primary;
+  transform: translateX(2px);
+}
+
+/* ---------------- SLIDERS ---------------- */
+
+.widget-volume,
+.widget-backlight {
+  margin: 4px 10px;
+}
+
+.widget-volume image,
+.widget-backlight image {
+  font-size: 24px;
+}
+
+scale.horizontal trough {
+  min-height: 18px;
+  border-radius: 50px;
+  background-color: @surface_container_highest;
+  border: none;
+}
+
+.widget-volume scale trough highlight,
+.widget-backlight scale trough highlight {
+  background: @primary;
+  border-radius: 50px;
+}
+
+scale slider {
+  margin: -6px;
+  padding: 6px 14px;
+  border-radius: 50px;
+  background-color: @surface_container_high;
+  border: 1px solid @surface_container_low;
+}
+
+/* ---------------- BOTÃO AO LADO DO SLIDER ---------------- */
+
+.widget-volume > box > button {
+  margin: 4px;
+  margin-left: 5px;
+  padding: 0px 4px;
+  border-radius: 50px;
+  background: @secondary_container;
+  color: @on_secondary_container;
+  border: 1px solid @surface_container_high;
+}
+
+.widget-volume > box > button:hover {
+  background: @tertiary;
+  color: @on_primary;
+}
+
+.widget-volume > box > button:hover image,
+.widget-volume > box > button:hover label {
+  color: @on_primary;
+}
+
+/* ===================================================== */
+/* ===================== OUTROS ======================== */
+/* ===================================================== */
+
+/* ---------------- MPRIS ---------------- */
+
+.widget-mpris-album-art {
+	border-radius: 20px;
+	margin: 6px 4px;
+}
+
+.widget-mpris-title {
+	font-weight: 700;
+	font-size: 1.2rem;
+	margin: 0 3px;
+}
+ 
+.widget-mpris-subtitle {
+	font-weight: 700;
+	font-size: 0.9rem;
+	margin: 0 3px;
+  color: @outline;
+}
+
+.mpris-overlay {
+	padding: 10px;
+	background: @surface_container;
+  border: 1px solid @outline_variant;
+}
+
+.mpris-overlay:hover {
+  background: @secondary_container;
+}
+
+
+/* Control buttons container  */
+.mpris-overlay > box:last-child {
+	padding: 10px;
+  margin: 10px 0 2.5px 0;
+}
+
+/* Control buttons */
+.widget-mpris-player button {
+  border-radius: 12px;
+	padding: 2px 8px; 
+  background: @surface_container_high;
+  border: 1px solid @outline_variant;
+}
+
+.widget-mpris-player button image {
+  color: @primary;
+}
+
+/* Hover for control buttons */
+.widget-mpris-player button:hover {
+	border-radius: 99px;
+	background: @tertiary;
+  border: 1px solid @tertiary;
+}
+
+.widget-mpris-player button:hover image {
+  color: @on_tertiary;
+}
+
+/* ---------------- SCROLLBAR ---------------- */
+
+scrollbar,
+scrollbar slider,
+scrollbar trough {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: transparent;
+  border: none;
+}
