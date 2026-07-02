@@ -3,10 +3,9 @@
   "positionX": "center",
   "positionY": "top",
 
-  "control-center-width": 550,
-  "control-center-height": 960,
-  "control-center-margin-top": 28,
-  "control-center-margin-right": 28,
+  "control-center-width": 500,
+  "control-center-height": 700,
+  "control-center-margin-top": 10,
 
   "notification-window-width": 500,
   "notification-icon-size": 64,
@@ -43,8 +42,6 @@
   "widgets": [
     "title",
     "dnd",
-    "buttons-grid",
-    "mpris",
     "notifications"
   ],
 
@@ -69,7 +66,7 @@
     },
     "buttons-grid": {
       "actions": [
-        { "label": "",   "command": "swaync-client -cp && nohup nmgui" },
+        { "label": "󰖩",   "command": "swaync-client -cp && nohup nmgui" },
         { "label": "󰂯", "command": "swaync-client -cp && nohup blueman-manager" },
         { "label": "",   "command": "swaync-client -cp && nohup pavucontrol" },
         { "label": "󰔎", "command": "~/.config/scripts/theme/themetoggle.py" },

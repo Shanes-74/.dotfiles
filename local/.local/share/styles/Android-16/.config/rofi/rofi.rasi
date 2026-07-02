@@ -1,27 +1,27 @@
-@import "colors.rasi"
+@import "menus/themes/shared/colors.rasi"
 
 /*****----- Configuration -----*****/
 configuration {
     disable-history:            true;
-    show-icons:                 true;
+    show-icons:                 false;
 }
 
 /*****----- Main Window -----*****/
 window {
-    transparency: "real";
-    location:     center;
-    anchor:       center;
-    fullscreen:   false;
-    width:        28%;
-    x-offset:     0px;
-    y-offset:     0px;
+    transparency:               "real";
+    location:                   center;
+    anchor:                     center;
+    fullscreen:                 false;
+    width:                      28%;
+    x-offset:                   0px;
+    y-offset:                   0px;
 
     /* properties for all widgets */
-    enabled: true;
-    margin:  0px;
-    padding: 0px;
-    cursor:  "default";
-    background-color: transparent;
+    enabled:                    true;
+    margin:                     0px;
+    padding:                    0px;
+    cursor:                     "default";
+    background-color:           transparent;
 }
 
 /*****----- Main Box -----*****/

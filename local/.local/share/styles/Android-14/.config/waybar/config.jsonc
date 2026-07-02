@@ -254,10 +254,10 @@
     },
 
     "custom/pacman": {
-        "format": "{icon} {0}",
+        "format": "{icon}{0}",
         "return-type": "json",
         "format-icons": {
-            "pending-updates": "",
+            "pending-updates": " ",
             "updated": ""
         },
         "exec-if": "which waybar-updates",

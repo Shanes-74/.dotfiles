@@ -7,7 +7,7 @@
 //   2. Ordem dos Módulos                     //
 //   3. Módulos Não‑Custom (ordem alfabética) //
 //   4. Módulos Custom (ordem alfabética)     //
-//   5. Grupos e Drawers                      //
+//   5. Grupos (apenas os containers)         //
 ////////////////////////////////////////////////
 
 {
@@ -16,9 +16,7 @@
   // ============================================================================
 
   "layer": "top",
-  "width": 1480,
-  "height": 54,
-  "spacing": 12,
+  "height": 60,
   "fixed-center": true,
 
   // ============================================================================
@@ -26,50 +24,69 @@
   // ============================================================================
 
   "modules-left": [
-    "custom/menu",
-    "custom/spacer",
-    "custom/weather",
-    "custom/noidle",
-    "custom/spacer",
-    "group/player",
-    "cava"
+    "group/left"
   ],
 
   "modules-center": [
-    "custom/clock",
     "custom/spacer",
-    "hyprland/workspaces",
-    "custom/spacer",
-    "custom/date"
+    "group/quick-controls#1",
+    "custom/spacer"
   ],
 
   "modules-right": [
-    "group/pacman-expander",
-    "group/tray-expander",
-    "group/memory-expander",
-    "custom/clipboard",
-    "custom/wallpaper",
-    "custom/spacer",
-    "network",
-    "group/pulseaudio-expander",
-    "group/backlight-expander",
-    "custom/center",
-    "custom/spacer",
-    "battery",
-    "custom/power"
+    "group/right"
   ],
+
+  // ============================================================================
+  // 2/5. GRUPO DOS MODULOS ESQUERDO E DIREITO
+  // ============================================================================
+
+  "group/left": {
+    "orientation": "inherit",
+    "modules": [
+      "custom/menu",
+      "custom/point",
+      "group/quick-controls#0",
+      "custom/point",
+      "group/player",
+      "cava",
+      "custom/spacer"
+    ]
+  },
+
+  "group/right": {
+    "orientation": "inherit",
+    "modules": [
+      "custom/spacer",
+      "group/tray-expander",
+      "group/quick-controls#2",
+      "custom/point",
+      "group/quick-controls#3",
+      "custom/point",
+      "group/quick-controls#4"
+    ]
+  },
 
   // ============================================================================
   // 3. MÓDULOS NÃO‑CUSTOM (ORDEM ALFABÉTICA)
   // ============================================================================
 
   // ----- backlight -----
-  "backlight": {
+  "backlight#button": {
     "format": "󰃟",
     "on-scroll-up": "brightnessctl set 5%+",
     "on-scroll-down": "brightnessctl set 5%-",
     "tooltip": true,
     "tooltip-format": "Brilho: {percent}%"
+  },
+
+  // ----- backlight/slider -----
+  "backlight/slider": {
+    "min": 0,
+    "max": 100,
+    "orientation": "horizontal",
+    "tooltip": false,
+    "on-click": ""
   },
 
   // ----- battery -----
@@ -136,12 +153,21 @@
     "on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({workspace = \"e+1\"})'"
   },
 
-  // ----- memory (ícone) -----
+  // ----- memory -----
   "memory": {
     "format": "󰍛",
     "interval": 5,
     "return-type": "json",
     "tooltip-format": "RAM:     {used:0.1f}/{total:0.1f} GiB\nSWAP:   {swapUsed:0.1f}/{swapTotal:0.1f} GiB"
+  },
+
+  // ----- memory#value -----
+  "memory#value": {
+    "format": " {percentage}%",
+    "interval": 5,
+    "return-type": "json",
+    "tooltip-format": "RAM:     {used:0.1f}/{total:0.1f} GiB\nSWAP:   {swapUsed:0.1f}/{swapTotal:0.1f} GiB",
+    "on-click": "kitty btop"
   },
 
   // ----- network -----
@@ -156,7 +182,7 @@
   },
 
   // ----- pulseaudio -----
-  "pulseaudio": {
+  "pulseaudio#button": {
     "scroll-step": 5,
     "on-click": "pavucontrol",
     "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
@@ -182,9 +208,17 @@
     }
   },
 
+  // ----- pulseaudio/slider -----
+  "pulseaudio/slider": {
+    "min": 0,
+    "max": 100,
+    "orientation": "horizontal",
+    "on-click": ""
+  },
+
   // ----- tray -----
   "tray": {
-    "icon-size": 20,
+    "icon-size": 21,
     "spacing": 12
   },
 
@@ -192,7 +226,7 @@
   // 4. MÓDULOS CUSTOM (ORDEM ALFABÉTICA)
   // ============================================================================
 
-    // ----- custom/center -----
+  // ----- custom/center -----
   "custom/center": {
     "format": "{icon}",
     "format-icons": {
@@ -216,7 +250,7 @@
   // ----- custom/clipboard -----
   "custom/clipboard": {
     "format": "󰨸",
-    "on-click": "~/.config/rofi/launchers/clipboard-menu/clipboard.sh",
+    "on-click": "~/.config/rofi/menus/bin/clipboard",
     "tooltip": false
   },
 
@@ -234,14 +268,19 @@
   "custom/date": {
     "format": "{}",
     "return-type": "json",
-    "interval": 3600,
+    "interval": 1000,
     "exec": "bash -c 'day=$(date +\"%d\"); month=$(date +\"%m\"); text=\"${day}<sup><big> ${month}</big></sup>\"; tooltip=\"󰸗 $(date +\"%A, %d de %B de %Y\")\"; echo \"{\\\"text\\\":\\\"$text\\\",\\\"tooltip\\\":\\\"$tooltip\\\"}\"'",
     "escape": false,
     "on-click": "gnome-calendar"
   },
 
-  // ----- custom/expand-icon -----
-  "custom/expand-icon": {
+  // ----- custom/spacer -----
+  "custom/spacer": {
+    "format": "    "
+  },
+
+  // ----- custom/tray-expand-icon -----
+  "custom/tray-expand-icon": {
     "format": "󰅁",
     "tooltip": false
   },
@@ -249,41 +288,40 @@
   // ----- custom/menu -----
   "custom/menu": {
     "format": "󰣇",
-    "on-click": "rofi -show drun -theme ~/.config/rofi/rofi.rasi",
+    "on-click": "~/.config/rofi/menus/bin/launcher",
     "tooltip": false
   },
 
   // ----- custom/noidle -----
   "custom/noidle": {
-    "exec": "~/.config/waybar/custom-modules/hypridle/hypridle.sh status",
+    "exec": "exec ~/.config/waybar/custom-modules/hypridle/hypridle.sh status",
     "on-click": "~/.config/waybar/custom-modules/hypridle/hypridle.sh toggle",
     "interval": 2,
     "return-type": "json"
   },
 
-  // ----- custom/pacman (ícone) -----
-  "custom/pacman": {
+  // ----- custom/pacman -----
+  "custom/pacman#icon": {
     "format": "<b>{icon}</b>",
     "return-type": "json",
     "exec-if": "which waybar-updates",
     "exec": "waybar-updates",
-    "hide-if-empty": true,
     "format-icons": {
       "pending-updates": "󱧕",
-      "updated": ""
+      "updated": "󰏗"
     }
   },
 
-  // ----- custom/pacman#value (atualizações) -----
+  // ----- custom/pacman#value -----
   "custom/pacman#value": {
-    "format": " {0}",
+    "format": "{icon}{0}",
     "return-type": "json",
     "exec-if": "which waybar-updates",
     "exec": "waybar-updates",
     "on-click": "kitty paru -Syu && sudo pacman -Rns $(pacman -Qtdq)",
     "hide-if-empty": true,
     "format-icons": {
-      "pending-updates": "",
+      "pending-updates": " ",
       "updated": ""
     }
   },
@@ -291,12 +329,12 @@
   // ----- custom/power -----
   "custom/power": {
     "format": "",
-    "on-click": "~/.config/rofi/launchers/power-menu/powermenu.sh",
+    "on-click": "~/.config/rofi/menus/bin/power",
     "tooltip": false
   },
 
-  // ----- custom/spacer -----
-  "custom/spacer": {
+  // ----- custom/point -----
+  "custom/point": {
     "format": "",
     "tooltip": false
   },
@@ -310,21 +348,22 @@
     "on-click": "gnome-weather"
   },
 
-  // ----- image#cover (capa do player) -----
-  "image#cover": {
-    "path": "/tmp/waybar_cover.png",
-    "size": 24,
-    "interval": 0.01
-  },
-
   // ----- custom/wallpaper -----
   "custom/wallpaper": {
-    "on-click": "~/.config/rofi/launchers/wallpaper-menu/wallmenu.py",
     "format": "󰸉",
+    "on-click": "~/.config/rofi/menus/bin/wallpaper",
     "tooltip": false
   },
 
-  // ----- custom/zscroll (letreiro) -----
+  // ----- image#cover -----
+  "image#cover": {
+    "path": "/tmp/waybar_cover.png",
+    "size": 28,
+    "interval": 0.0167,
+    "signal": 10
+  },
+
+  // ----- custom/zscroll -----
   "custom/zscroll": {
     "exec": "exec ~/.config/waybar/custom-modules/zscroll/zscroll.sh",
     "format": "{}",
@@ -334,32 +373,7 @@
     "max-length": 12
   },
 
-  // ============================================================================
-  // 5. GRUPOS E DRAWERS
-  // ============================================================================
-
-  // ----- backlight expander -----
-  "group/backlight-expander": {
-    "orientation": "inherit",
-    "drawer": {
-      "transition-duration": 400,
-      "transition-left-to-right": false
-    },
-    "modules": ["backlight", "custom/spacer", "backlight/slider"]
-  },
-  "backlight/slider": {
-    "min": 0,
-    "max": 100,
-    "orientation": "horizontal",
-    "tooltip": false,
-    "on-click": ""
-  },
-
-  // ----- control player (mpris) -----
-  "group/control-player": {
-    "orientation": "inherit",
-    "modules": ["mpris#previous", "mpris#play-pause", "mpris#next"]
-  },
+  // ----- mpris#previous, play-pause, next -----
   "mpris#previous": {
     "format": "",
     "on-click": "playerctl previous",
@@ -390,7 +404,27 @@
     "tooltip": false
   },
 
-  // ----- memory expander -----
+  // ============================================================================
+  // 5. GRUPOS (APENAS OS CONTAINERS)
+  // ============================================================================
+
+  // ----- backlight-expander -----
+  "group/backlight-expander": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 400,
+      "transition-left-to-right": false
+    },
+    "modules": ["backlight#button", "custom/point", "backlight/slider"]
+  },
+
+  // ----- control-player -----
+  "group/control-player": {
+    "orientation": "inherit",
+    "modules": ["mpris#previous", "mpris#play-pause", "mpris#next"]
+  },
+
+  // ----- memory-expander -----
   "group/memory-expander": {
     "orientation": "inherit",
     "drawer": {
@@ -400,25 +434,18 @@
     },
     "modules": ["memory", "memory#value"]
   },
-  "memory#value": {
-    "format": " {percentage}%",
-    "interval": 5,
-    "return-type": "json",
-    "tooltip-format": "RAM:     {used:0.1f}/{total:0.1f} GiB\nSWAP:   {swapUsed:0.1f}/{swapTotal:0.1f} GiB",
-    "on-click": "kitty btop"
-  },
 
-  // ----- pacman expander -----
+  // ----- pacman-expander -----
   "group/pacman-expander": {
     "orientation": "inherit",
     "drawer": {
       "transition-duration": 400,
       "transition-left-to-right": true
     },
-    "modules": ["custom/pacman", "custom/pacman#value"]
+    "modules": ["custom/pacman#icon", "custom/pacman#value"]
   },
 
-  // ----- player (agrupa zscroll + controles) -----
+  // ----- player -----
   "group/player": {
     "orientation": "inherit",
     "drawer": {
@@ -428,32 +455,57 @@
     "modules": ["group/zscroll", "group/control-player"]
   },
 
-  // ----- pulseaudio expander -----
+  // ----- pulseaudio-expander -----
   "group/pulseaudio-expander": {
     "orientation": "inherit",
     "drawer": {
       "transition-duration": 400,
       "transition-left-to-right": false
     },
-    "modules": ["pulseaudio", "custom/spacer", "pulseaudio/slider"]
-  },
-  "pulseaudio/slider": {
-    "min": 0,
-    "max": 100,
-    "orientation": "horizontal",
-    "on-click": ""
+    "modules": ["pulseaudio#button", "custom/point", "pulseaudio/slider"]
   },
 
-  // ----- tray expander -----
+  // ----- quick-controls -----
+  "group/quick-controls#0": {
+    "orientation": "inherit",
+    "modules": ["custom/weather", "custom/noidle"]
+  },
+
+  "group/quick-controls#1": {
+    "orientation": "inherit",
+    "modules": ["custom/clock", "custom/point", "hyprland/workspaces", "custom/point", "custom/date"]
+  },
+
+  "group/quick-controls#2": {
+    "orientation": "inherit",
+    "modules": ["group/pacman-expander", "group/memory-expander", "custom/clipboard", "custom/wallpaper"]
+  },
+
+  "group/quick-controls#3": {
+    "orientation": "inherit",
+    "modules": ["network", "group/pulseaudio-expander", "group/backlight-expander", "custom/center"]
+  },
+  
+  "group/quick-controls#4": {
+    "orientation": "inherit",
+    "modules": ["battery", "custom/power"]
+  },
+
+  // ----- tray-expander -----
   "group/tray-expander": {
     "orientation": "inherit",
     "drawer": {
       "transition-duration": 400
     },
-    "modules": ["custom/expand-icon", "custom/spacer", "tray", "custom/spacer"]
+    "modules": ["custom/tray-expand-icon", "group/tray-group"]
   },
 
-  // ----- zscroll (agrupa capa + letreiro) -----
+  "group/tray-group": {
+    "orientation": "inherit",
+    "modules": ["tray", "custom/point"]
+  },
+
+  // ----- zscroll -----
   "group/zscroll": {
     "orientation": "inherit",
     "modules": ["image#cover", "custom/zscroll"]

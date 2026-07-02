@@ -5,17 +5,16 @@
 -- Set programs that you use
 local bar =          "killall waybar || waybar &"
 local dock =         "killall hypr-dock-autohide || hypr-dock-autohide &"
-local browser =      "librewolf"
+local browser =      "firefox"
 local terminal =     "kitty"
-local launcher =     "killall rofi || ~/.config/rofi/launchers/launcher-menu/launcher.sh"
-local powermenu =    "killall rofi ||~/.config/rofi/launchers/power-menu/powermenu.sh"
+local launcher =     "killall rofi || ~/.config/rofi/menus/bin/launcher"
+local powermenu =    "killall rofi ||~/.config/rofi/menus/bin/power"
 local lockscreen =   "hyprlock"
 local filemanager =  "killall Thunar || thunar"
 local editor =       "code"
-local clipboard =    "killall rofi || ~/.config/rofi/launchers/clipboard-menu/clipboard.sh"
+local clipboard =    "killall rofi || ~/.config/rofi/menus/bin/clipboard"
 local notifycenter = "swaync-client -R -rs -t"
 local playermusic =  "spotify"
-
 
 ---------------------
 ---- KEYBINDINGS ----
@@ -27,6 +26,8 @@ local shortcuts = {
     mainMod .. " + CTRL + L",
     "XF86PowerOff",
 }
+
+hl.config({ binds = { movefocus_cycles_fullscreen = true } })
 
 -- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
 
@@ -48,7 +49,7 @@ hl.bind(mainMod .. " + P",              hl.dsp.exec_cmd(notifycenter))
 hl.bind(mainMod .. " + SHIFT + M",      hl.dsp.exec_cmd(playermusic))
 
 -- Exec
-hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("~/.config/rofi/launchers/wallpaper-menu/wallmenu.py"))
+hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("~/.config/rofi/menus/bin/wallpaper"))
 hl.bind("SHIFT + CTRL + L",        hl.dsp.exec_cmd("swaync-client -C"))
 hl.bind(mainMod .. " + Z",         hl.dsp.exec_cmd("flatpak run com.rtosta.zapzap"))
 hl.bind(mainMod .. " + N",         hl.dsp.exec_cmd("night-mode"))
