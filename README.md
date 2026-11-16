@@ -14,9 +14,11 @@ Ou, com o repositório já clonado **em qualquer pasta**:
     cd ~/.dotfiles
     ./install.sh
 
-O instalador: instala as dependências, move para `~/.dotfiles-backup/<data>/`
-os arquivos que atrapalham, roda o stow, copia os wallpapers para
+O instalador: instala as dependências, verifica os arquivos que já existem e
+conflitam com o dotfiles (e pergunta o que fazer com cada um: apagar, renomear
+para `.bak`, pular ou cancelar), roda o stow, copia os wallpapers para
 `~/Imagens/Wallpapers`, gera o tema inicial e habilita os serviços de usuário.
+Com `-y` (ou sem terminal) os conflitantes são renomeados para `.bak`.
 
 Opções úteis (`./install.sh --help`):
 

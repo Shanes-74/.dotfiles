@@ -21,7 +21,6 @@ DOTFILES_DEST="${DOTFILES_DEST:-$HOME/.dotfiles}"
 
 TARGET_DIR="$HOME"
 WALLPAPER_DIR="$HOME/Imagens/Wallpapers"   # caminho fixo no wallset
-BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 
 # -----------------------------------------------------------------------------
 #  Dependências (edite à vontade)
@@ -201,11 +200,13 @@ install_deps() {
 }
 
 # -----------------------------------------------------------------------------
-#  2. Backup dos arquivos que atrapalhariam o stow
+#  2. Conflitos: arquivos que já existem e não são o link do dotfiles
+#     Primeiro varre tudo, depois pergunta (1 apagar / 2 .bak / 3 pular / 4 sair)
+#     e só então aplica — assim "cancelar" não deixa nada pela metade.
 # -----------------------------------------------------------------------------
-BACKED_UP=0
+C_STOWDIR=() C_PKG=() C_REL=() C_TARGET=() C_ACTION=()
 
-backup_conflicts() {   # backup_conflicts <stow_dir> <pacote>
+scan_conflicts() {   # scan_conflicts <stow_dir> <pacote>
     local stow_dir="$1" pkg="$2" src rel target parent foreign
     while IFS= read -r -d '' src; do
         rel="${src#"$stow_dir/$pkg/"}"
@@ -227,10 +228,95 @@ backup_conflicts() {   # backup_conflicts <stow_dir> <pacote>
             continue
         fi
 
-        run mkdir -p "$BACKUP_DIR/$(dirname "$rel")"
-        run mv "$target" "$BACKUP_DIR/$rel"
-        BACKED_UP=$((BACKED_UP + 1))
+        C_STOWDIR+=("$stow_dir"); C_PKG+=("$pkg"); C_REL+=("$rel"); C_TARGET+=("$target"); C_ACTION+=("")
     done < <(find "$stow_dir/$pkg" \( -type f -o -type l \) -not -path '*/.git/*' -print0)
+}
+
+scan_all_conflicts() {
+    local pkg
+    for pkg in "${PACKAGES[@]}"; do
+        [[ -d $DOTFILES_DIR/$pkg ]] && scan_conflicts "$DOTFILES_DIR" "$pkg"
+    done
+    scan_conflicts "$STYLES_DIR" "$CURRENT_STYLE"
+}
+
+# lê uma resposta do terminal (mesmo com o script vindo de um pipe)
+ask() {   # ask "prompt" → resposta em $REPLY; retorna 1 se não der para ler
+    REPLY=""
+    have_tty || return 1
+    read -r -p "$1" REPLY </dev/tty
+}
+
+resolve_conflicts() {
+    local total=${#C_TARGET[@]} i choice all_choice=""
+    (( total )) || { ok "Nenhum arquivo conflitante."; return 0; }
+
+    warn "$total arquivo(s) conflitante(s) encontrado(s)."
+
+    if (( DRY )); then
+        for i in "${!C_TARGET[@]}"; do printf '   conflito: %s\n' "${C_TARGET[i]/#$HOME/\~}"; done
+        echo "   [dry-run] na instalação real você escolhe o que fazer com cada um."
+        return 0
+    fi
+
+    # sem terminal ou com --yes: não dá para perguntar → opção segura (renomear para .bak)
+    if (( YES )) || ! have_tty; then
+        warn "modo não interativo: conflitantes serão renomeados para .bak"
+        for i in "${!C_TARGET[@]}"; do C_ACTION[i]=bak; done
+        return 0
+    fi
+
+    for i in "${!C_TARGET[@]}"; do
+        if [[ -n $all_choice ]]; then C_ACTION[i]="$all_choice"; continue; fi
+
+        printf '\n%sConflito (%d/%d):%s %s\n' "$C_YLW" $((i + 1)) "$total" "$C_OFF" "${C_TARGET[i]/#$HOME/\~}"
+        echo "  1) Apagar o arquivo existente"
+        echo "  2) Renomear para .bak e continuar"
+        echo "  3) Pular (manter o existente, não aplicar o do dotfiles)"
+        echo "  4) Cancelar toda a operação"
+        while :; do
+            ask "Escolha [1-4]: " || choice=4
+            [[ -z ${choice:-} ]] && choice="$REPLY"
+            case "$choice" in
+                1) C_ACTION[i]=delete; break ;;
+                2) C_ACTION[i]=bak;    break ;;
+                3) C_ACTION[i]=skip;   break ;;
+                4) die "Operação cancelada. Nada foi alterado." ;;
+                *) choice=""; echo "  opção inválida" ;;
+            esac
+        done
+        choice=""
+
+        if ask "Aplicar essa escolha a todos os próximos conflitos? [s/N] " && [[ $REPLY =~ ^[sSyY] ]]; then
+            all_choice="${C_ACTION[i]}"
+        fi
+    done
+}
+
+apply_conflict_actions() {
+    local i target n
+    for i in "${!C_TARGET[@]}"; do
+        target="${C_TARGET[i]}"
+        case "${C_ACTION[i]}" in
+            delete) run rm -rf -- "$target" ;;
+            bak)
+                n="$target.bak"
+                while [[ -e $n || -L $n ]]; do n="$n.bak"; done   # já existe um .bak? empilha outro
+                run mv -- "$target" "$n"
+                ;;
+            skip) : ;;   # tratado no stow via --ignore
+        esac
+    done
+}
+
+# argumentos --ignore do stow para os arquivos que o usuário escolheu pular
+ignore_args() {   # ignore_args <stow_dir> <pacote>  → um argumento por linha
+    local i esc
+    for i in "${!C_TARGET[@]}"; do
+        [[ ${C_ACTION[i]} == skip && ${C_STOWDIR[i]} == "$1" && ${C_PKG[i]} == "$2" ]] || continue
+        esc="$(printf '%s' "${C_REL[i]}" | sed 's/[][\\.*^$+?(){}|\/]/\\&/g')"
+        printf -- '--ignore=^%s$\n' "$esc"
+    done
 }
 
 # -----------------------------------------------------------------------------
@@ -270,24 +356,21 @@ stow_all() {
     # para o stow não "dobrar" a pasta inteira para dentro do repositório
     run mkdir -p "$HOME/.config/systemd/user" "$HOME/.local/bin" "$HOME/.local/share" "$HOME/.cache/matugen"
 
-    local pkg
+    local pkg ign
     for pkg in "${PACKAGES[@]}"; do
         [[ -d $DOTFILES_DIR/$pkg ]] || { warn "pacote ausente: $pkg"; continue; }
         info "Stow: $pkg"
-        backup_conflicts "$DOTFILES_DIR" "$pkg"
-        run stow -d "$DOTFILES_DIR" -t "$TARGET_DIR" --restow "$pkg"
+        mapfile -t ign < <(ignore_args "$DOTFILES_DIR" "$pkg")
+        run stow -d "$DOTFILES_DIR" -t "$TARGET_DIR" "${ign[@]}" --restow "$pkg"
     done
 
     # o estilo ativo (waybar, rofi, swaync, swayosd, wlogout, dock) é um pacote stow à parte
     info "Stow: estilo $CURRENT_STYLE"
-    backup_conflicts "$STYLES_DIR" "$CURRENT_STYLE"
-    run stow -d "$STYLES_DIR" -t "$TARGET_DIR" --restow "$CURRENT_STYLE"
-
-    if (( BACKED_UP )); then
-        warn "$BACKED_UP arquivo(s) antigos movidos para $BACKUP_DIR"
-    fi
+    mapfile -t ign < <(ignore_args "$STYLES_DIR" "$CURRENT_STYLE")
+    run stow -d "$STYLES_DIR" -t "$TARGET_DIR" "${ign[@]}" --restow "$CURRENT_STYLE"
 }
 
+# -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 #  5. Ajustes pós-link
 # -----------------------------------------------------------------------------
@@ -418,7 +501,7 @@ uninstall() {
         info "Removendo links: $pkg"
         run stow -d "$DOTFILES_DIR" -t "$TARGET_DIR" --delete "$pkg"
     done
-    ok "Links removidos. Backups antigos (se houver) estão em ~/.dotfiles-backup/"
+    ok "Links removidos. Arquivos renomeados para .bak na instalação continuam onde estão."
 }
 
 # -----------------------------------------------------------------------------
@@ -437,6 +520,9 @@ main() {
     fix_hardcoded_paths
     resolve_style
     make_executable
+    scan_all_conflicts
+    resolve_conflicts
+    apply_conflict_actions
     stow_all
     install_wallpapers
     ensure_path
