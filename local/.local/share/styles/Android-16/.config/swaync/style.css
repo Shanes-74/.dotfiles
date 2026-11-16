@@ -5,15 +5,17 @@
 @import "colors.css";
 
 * {
-  font-family: "Google Sans Display", "JetBrainsMono Nerd Font Propo";
-  font-weight: 500;
-  color:       @on_surface;
-  border-radius: 20px;
-  transition:
-        transform 180ms cubic-bezier(.4,0,.2,1),
-        background-color 200ms ease,
-        color 200ms ease,
-        border-color 200ms ease;
+    font-family: "Google Sans Display", "JetBrainsMono Nerd Font Propo";
+    font-weight: 500;
+    color: @on_surface;
+    box-shadow: none;
+    border-radius: 20px;
+}
+
+/* ========== BLUR ========== */
+.control-center,
+.floating-notifications {
+    backdrop-filter: blur(10px);
 }
 
 /* ===================================================== */
@@ -26,7 +28,11 @@
   border-radius: 20px;
   background-color: @surface;
   border: 1px solid @outline_variant;
-  border-top: 0;
+  backdrop-filter: blur(px);
+}
+
+.control-center-list {
+    background-color: @surface_container_high;
 }
 
 /* ===================================================== */
@@ -44,7 +50,7 @@
 /* ===================================================== */
 
 .notification {
-  margin: 6px 0;
+  margin: 9px 0;
   padding: 10px;
   border-radius: 20px;
   background-color: @surface;
@@ -279,7 +285,7 @@ scale slider {
 	font-size: 1.2rem;
 	margin: 0 3px;
 }
- 
+
 .widget-mpris-subtitle {
 	font-weight: 700;
 	font-size: 0.9rem;
@@ -307,7 +313,7 @@ scale slider {
 /* Control buttons */
 .widget-mpris-player button {
   border-radius: 12px;
-	padding: 2px 8px; 
+	padding: 2px 8px;
   background: @surface_container_high;
   border: 1px solid @outline_variant;
 }

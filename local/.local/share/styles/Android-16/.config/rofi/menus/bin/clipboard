@@ -5,8 +5,8 @@
 
 # ─── Configuração ─────────────────────────────────────────────────────────────
 ROFI_THEME="$HOME/.config/rofi/menus/themes/clipboard.rasi"
-CACHE_DIR="$HOME/.cache/cliphist-rofi"
-NOTIF_ID_FILE="$CACHE_DIR/notif_id"   # persiste o ID entre execuções do script
+CACHE_DIR="$HOME/.cache/clipboard-rofi"
+NOTIF_ID_FILE="$CACHE_DIR/notif_id"  # persiste o ID entre execuções do script
 MAX_IMG_ENTRIES=100
 
 # ─── Utilitários ──────────────────────────────────────────────────────────────

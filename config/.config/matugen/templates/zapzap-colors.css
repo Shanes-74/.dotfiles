@@ -1,0 +1,25 @@
+:root {
+	--WDS-accent: {{colors.primary.default.hex}} !important;
+	--WDS-persistent-always-branded: {{colors.primary.default.hex}} !important;
+	--WDS-accent-deemphasized: {{colors.primary.default.hex}}26 !important;
+    --WDS-accent-emphasized: {{colors.primary.default.hex}} !important;
+
+    --WDS-content-action-emphasized: {{colors.secondary.default.hex}} !important;
+
+    --WDS-systems-bubble-surface-outgoing: {{colors.on_secondary.default.hex}} !important;
+
+    --WDS-content-default: {{colors.on_background.default.hex}} !important;
+    --WDS-content-action-default: {{colors.on_background.default.hex}} !important;
+
+	--WDS-systems-chat-surface-composer: {{colors.background.default.hex}} !important;
+    --WDS-surface-default: {{colors.background.default.hex}} !important;
+    --WDS-systems-bubble-surface-incoming: {{colors.background.default.hex}} !important;
+    --WDS-surface-default: {{colors.background.default.hex}} !important;
+    --WDS-surface-elevated-default: {{colors.background.default.hex}} !important;
+    --WDS-app-wash: {{colors.background.default.hex}} !important;
+    --WDS-background-wash-plain: {{colors.background.default.hex}} !important;
+
+	--WDS-systems-chat-background-wallpaper: {{colors.surface_container.default.hex}} !important;
+    --WDS-background-elevated-wash-inset: {{colors.surface_container.default.hex}} !important;
+    --WDS-surface-emphasized: {{colors.surface_container.default.hex}} !important;
+}

@@ -24,6 +24,5 @@ hl.config({
         follow_min_visible = 0.0,
         focus_fit_method = 1,
         column_width = 0.70,
-        explicit_column_widths = 0.25, 0.5, 0.75, 1.0,
     },
 })

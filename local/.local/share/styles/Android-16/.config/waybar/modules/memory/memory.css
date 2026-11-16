@@ -1,0 +1,16 @@
+/* ----- Memory ----- */
+#memory-expander {
+    margin: 0px 7.5px;
+}
+
+#memory.value {
+    color: @on_surface;
+}
+
+#memory.value:hover {
+    color: @secondary;
+}
+
+#memory:hover {
+    color: @tertiary;
+}

@@ -1,0 +1,8 @@
+[config]
+
+[templates.cover-image]
+input_path = '~/.config/waybar/custom/waybar-music/template.css'
+output_path = './cover.css'
+
+#post_hook = 'touch ./cover.css'
+#post_hook = 'echo "@import \"/tmp/cover.css\";" >> ~/.config/waybar/colors.css'

@@ -1,0 +1,22 @@
+/* ----- Clock e Data ----- */
+#custom-clock,
+#custom-date {
+    font-family: "Google Sans Flex Freeze", monospace;
+    font-size: 1.30rem;
+    font-weight: bold;
+    margin: 0px 3.75px;
+}
+
+#custom-date {
+    color: @secondary;
+    margin-right: 10px;
+}
+
+#custom-clock {
+    margin-left: 10px;
+}
+
+#custom-clock:hover,
+#custom-date:hover {
+    color: @tertiary;
+}

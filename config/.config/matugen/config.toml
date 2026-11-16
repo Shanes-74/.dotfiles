@@ -14,7 +14,7 @@ output_path = '~/.config/hypr/colors.conf'
 
 [templates.css]
 input_path = './templates/css-colors.css'
-output_path = '~/.cache/matugen/colors/colors.css'
+output_path = '~/.cache/matugen/colors.css'
 post_hook = '~/.config/scripts/css-linker/css-linker.sh'
 
 [templates.kitty]
@@ -28,19 +28,33 @@ output_path = '~/.config/rofi/menus/themes/shared/colors.rasi'
 [templates.gtk3]
 input_path = './templates/gtk-colors.css'
 output_path = '~/.config/gtk-3.0/colors.css'
-post_hook = 'gsettings set org.gnome.desktop.interface gtk-theme ""; gsettings set org.gnome.desktop.interface gtk-theme m3-gtk'
+#input_path = './templates/gtk3.css'
+#output_path = '~/.themes/m3-gtk/gtk-3.0/gtk.css'
+#post_hook = 'gsettings set org.gnome.desktop.interface gtk-theme ""; gsettings set org.gnome.desktop.interface gtk-theme m3-gtk'
+post_hook = 'ln -sf ~/.themes/m3-gtk/gtk-3.0/gtk.css ~/.config/gtk-3.0/gtk.css'
 
 [templates.gtk4]
 input_path = './templates/gtk-colors.css'
 output_path = '~/.config/gtk-4.0/colors.css'
+#input_path = './templates/gtk4.css'
+#output_path = '~/.themes/m3-gtk/gtk-4.0/gtk.css'
+post_hook = 'touch ~/.config/gtk-4.0/gtk.css'
+
+[templates.qt5ct]
+input_path = './templates/qtct-colors.conf'
+output_path = '~/.config/qt5ct/colors/matugen.conf'
+
+[templates.qt6ct]
+input_path = './templates/qtct-colors.conf'
+output_path = '~/.config/qt6ct/colors/matugen.conf'
 
 [templates.kvantum_kvconfig]
 input_path = './templates/kvantum-colors.kvconfig'
-output_path = '~/.config/Kvantum/matugen/matugen.kvconfig'
+output_path = '~/.config/Kvantum/KvMatugen/KvMatugen.kvconfig'
 
 [templates.kvantum_svg]
 input_path = './templates/kvantum-colors.svg'
-output_path = '~/.config/Kvantum/matugen/matugen.svg'
+output_path = '~/.config/Kvantum/KvMatugen/KvMatugen.svg'
 
 #################
 ## SECUNDARIOS ##
@@ -54,7 +68,7 @@ output_path = '~/.config/btop/themes/matugen.theme'
 input_path = './templates/micro-colors.micro'
 output_path = '~/.config/micro/colorschemes/matugen.micro'
 
-[templates.vesktop]
+[templates.vencord]
 input_path = './templates/discord-colors.css'
 output_path = '~/.config/Vencord/themes/matugen.css'
 
@@ -66,7 +80,25 @@ output_path = '~/.local/share/sddm/sddm-current/theme.conf'
 input_path = './templates/slurp-colors.json'
 output_path = '~/.config/scripts/slurp/colors.json'
 
-[templates.pywallfox]
-input_path  = './templates/pywallfox-colors.json'
-output_path = '~/.cache/wal/colors.json'
-post_hook = '~/.config/scripts/pywallfox-update/pywallfox-update.sh'
+#[templates.pywallfox]
+#input_path  = './templates/pywallfox-colors.json'
+#output_path = '~/.cache/wal/colors.json'
+#post_hook = '~/.config/scripts/pywallfox-update/pywallfox-update.sh'
+
+[templates.zed]
+input_path = './templates/zed-colors.json'
+output_path = '~/.config/zed/themes/matugen.json'
+
+[templates.zapzap]
+input_path = './templates/zapzap-colors.css'
+output_path = '~/.var/app/com.rtosta.zapzap/data/ZapZap/customizations/global/css/colors.css'
+
+#[templates.nebula_prefs]
+#input_path = '~/.config/matugen/templates/nebula-colors.js'
+#output_path = '~/.cache/matugen/nebula-colors.js'
+#post_hook = '~/.config/scripts/nebula/nebula.sh'
+
+[templates.accela]
+input_path = './templates/accela-colors.conf'
+output_path = '~/.cache/matugen/accela-colors.conf'
+post_hook = '~/.config/scripts/accela/accela-colors.sh'

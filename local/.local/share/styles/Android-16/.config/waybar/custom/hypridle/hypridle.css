@@ -1,0 +1,8 @@
+/* ----- Hypridle ----- */
+#custom-hyprdile {
+    margin: 0 7.5px;
+}
+
+#custom-hyprdile.active {
+    color: alpha(@on_surface, 0.5);
+}

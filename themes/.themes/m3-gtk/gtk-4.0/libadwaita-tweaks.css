@@ -16,6 +16,10 @@
   --headerbar-bg-color: @headerbar_bg_color;
 }
 
+window {
+    backdrop-filter: blur(10px);
+}
+
 notebook > header {
   background-color: var(--window-bg-color);
 }

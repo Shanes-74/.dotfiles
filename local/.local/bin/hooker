@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ============================================================================
+#  HOOKER — Executa os hooks do Wallset
+#  Uso: hooker <wallpaper> <esquema> <modo>
+#  Cada hook recebe os mesmos argumentos: $1=wallpaper $2=esquema $3=modo
+# ============================================================================
+
+readonly YELLOW='\033[1;33m'
+readonly BLUE='\033[0;34m'
+readonly RESET='\033[0m'
+
+readonly ICON_WARN=""
+readonly ICON_HOOK=""
+
+HOOKS_DIR="$HOME/.config/hooker"
+export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+
+mkdir -p "$HOOKS_DIR"
+
+echo -e "${BLUE}${ICON_HOOK} Aplicando hooks...${RESET}"
+
+for hook in "$HOOKS_DIR"/*; do
+    [[ -f "$hook" && -x "$hook" && "$hook" != *.bak ]] || continue
+
+    name="${hook##*/}"
+    name="${name%.*}"
+
+    echo -e "${BLUE}${ICON_HOOK} Recarregando ${name}...${RESET}"
+
+    "$hook" "$@" >/dev/null 2>&1 || echo -e "${YELLOW}${ICON_WARN} Hook '${name}' falhou${RESET}"
+done

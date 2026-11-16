@@ -1,0 +1,12 @@
+/* ----- Launcher ----- */
+#custom-launcher {
+    padding: 0px 6px;
+    border-radius: 999px;
+    border: 1px solid @outline_variant;
+    background-color: @surface_container_high;
+}
+
+#custom-launcher:hover {
+    color: @surface_container_high;
+    background-color: @primary;
+}

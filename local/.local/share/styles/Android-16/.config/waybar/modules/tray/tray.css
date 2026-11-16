@@ -1,0 +1,32 @@
+#tray-expander:hover #custom-tray-expand-icon {
+    color: @surface_container_high;
+    background-color: @primary;
+    margin: 5px;
+    padding: 0px 3px;
+    border-radius: 999px;
+    border: 1px solid @outline_variant;
+}
+
+#tray>.passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray>.needs-attention image {
+    -gtk-icon-effect: highlight;
+    background: @error;
+    border-radius: 999px;
+    margin: 3px 0px;
+    padding: 3px;
+}
+
+/* ----- Tray (bandeja do sistema) ----- */
+#custom-tray-expand-icon {
+    font-size: 0.8rem;
+    font-weight: 900;
+    color: @primary;
+    background-color: @surface_container_high;
+    margin: 5px;
+    padding: 0px 3px;
+    border-radius: 999px;
+    border: 1px solid @outline_variant;
+}

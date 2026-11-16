@@ -1,0 +1,20 @@
+/* ----- Battery ----- */
+#battery {
+    margin: 0 7.5px;
+}
+
+@keyframes blink {
+    to {
+        color: white;
+        opacity: 1;
+    }
+}
+
+#battery.warning:not(.charging) {
+    color: @error;
+}
+
+#battery.critical:not(.charging) {
+    animation: blink 0.5s steps(12) infinite alternate;
+    color: red;
+}

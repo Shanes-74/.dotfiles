@@ -1,14 +1,15 @@
 #!/bin/bash
 # ~/.config/scripts/css-linker/css-linker.sh
 
-CENTRAL="$HOME/.cache/matugen/colors/colors.css"
+CENTRAL="$HOME/.cache/matugen/colors.css"
 
 DESTINOS=(
-    "$HOME/.config/waybar/colors.css"
-    "$HOME/.config/swaync/colors.css"
-    "$HOME/.config/swayosd/colors.css"
-    "$HOME/.config/hypr-dock/themes/lotos/colors.css"
-    "$HOME/.config/wlogout/colors.css"
+	"$HOME/.config/waybar/"
+    "$HOME/.config/swaync/"
+    "$HOME/.config/swayosd/"
+    #"$HOME/.config/hypr-dock/themes/lotos/"
+    "$HOME/.config/wlogout/"
+    "$HOME/.config/nwg-dock-hyprland/"
 )
 
 erro=0

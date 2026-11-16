@@ -2,7 +2,7 @@
 ---- ENVIRONMENT VARIABLES ----
 -------------------------------
 
--- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
+-- See https://wiki.hypr.land/configuring/core/environment-variables/
 
 -- Cursor
 hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Classic")
@@ -18,6 +18,7 @@ hl.env("GDK_BACKEND", "wayland,x11,*")
 hl.env("SDL_VIDEODRIVER", "wayland")
 hl.env("CLUTTER_BACKEND", "wayland")
 hl.env("DESKTOP_SESSION", "hyprland")
+hl.env("SSH_AUTH_SOCK", os.getenv("XDG_RUNTIME_DIR") .. "/gcr/ssh")
 
 -- GTK
 hl.env("GTK_THEME", "m3-gtk")
@@ -25,7 +26,7 @@ hl.env("GTK_THEME", "m3-gtk")
 -- QT
 hl.env("QT_AUTO_SCREEN_SCALE_FACTOR", "1")
 hl.env("QT_QPA_PLATFORM", "wayland;xcb")
-hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
+hl.env("QT_QPA_PLATFORMTHEME", "qt6ct:qt5ct")
 hl.env("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1")
 hl.env("QT_WAYLAND_SHELL_INTEGRATION", "xdg-shell")
 
@@ -37,18 +38,16 @@ hl.env("_JAVA_AWT_WM_NONREPARENTING", "1")
 -- Utils
 hl.env("TERMINAL", "kitty")
 hl.env("FILEMANAGER", "thunar")
-hl.env("CLIPHIST_DB_PATH", "$XDG_RUNTIME_DIR/cliphist.db")
+--hl.env("CLIPHIST_DB_PATH", os.getenv("XDG_RUNTIME_DIR") .. "/cliphist.db")
 
 -- Intel
---hl.env("LIBVA_DRIVER_NAME", "iHD")
-hl.env("WLR_DRM_NO_ATOMIC", "1")
-hl.env("WLR_DRM_NO_ATOMIC_GAMMA", "1")
+hl.env("LIBVA_DRIVER_NAME", "iHD")
 
 -- Nvidia
-hl.env("LIBVA_DRIVER_NAME", "nvidia")
-hl.env("VDPAU_DRIVER", "nvidia")
-hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
-hl.env("GBM_BACKEND", "nvidia-drm")
-hl.env("NVD_BACKEND", "direct")
+--hl.env("LIBVA_DRIVER_NAME", "nvidia")
+--hl.env("VDPAU_DRIVER", "nvidia")
+--hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
+--hl.env("GBM_BACKEND", "nvidia-drm")
+--hl.env("NVD_BACKEND", "direct")
 hl.env("__GL_GSYNC_ALLOWED", "0")
 hl.env("__GL_VRR_ALLOWED", "0")

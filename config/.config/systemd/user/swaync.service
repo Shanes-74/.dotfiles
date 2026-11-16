@@ -1,13 +1,16 @@
 [Unit]
-Description=Sway Notification Center Daemon
-After=graphical-session.target
-PartOf=graphical-session.target
+Description=Swaync notification daemon
+Documentation=https://github.com/ErikReider/SwayNotificationCenter
+PartOf=hyprland-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
 
 [Service]
-Type=simple
+Type=dbus
+BusName=org.freedesktop.Notifications
 ExecStart=/usr/bin/swaync
-Restart=always
-RestartSec=1
+ExecReload=/usr/bin/swaync-client --reload-config --reload-css
+Restart=on-failure
+RestartSec=2
 
 [Install]
-WantedBy=graphical-session.target
+WantedBy=hyprland-session.target

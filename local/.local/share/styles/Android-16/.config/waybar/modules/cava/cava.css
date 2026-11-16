@@ -1,0 +1,22 @@
+/* ----- Cava ----- */
+#cava {
+    color: @tertiary;
+    font-size: 0.5rem;
+    letter-spacing: 1px;
+    margin: 2px 3.75px 0px 3.75px;
+}
+
+#cava.1.silent {
+    font-size: 0.9rem;
+    color: @outline_variant;
+    margin-top: 3px
+}
+
+#cava.2 {
+    margin-top: -2.5px;
+}
+
+#cava.2.silent {
+    font-size: 0px;
+    margin: 0px;
+}

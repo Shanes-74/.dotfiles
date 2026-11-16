@@ -1,0 +1,67 @@
+#custom-waybar-music {
+    color: @on_surface;
+    margin: 2px;
+    padding: 0 7.5px;
+    background: @surface;
+    border-radius: 99px;
+}
+
+#custom-waybar-music.paused {
+    color: alpha(@on_surface, 0.5);
+}
+
+#custom-waybar-music:hover {
+    color: @color-1;
+    background-color: @color-5;
+}
+
+/* ----- Image (capa do player) ----- */
+#image.cover * {
+    margin: 0px 3.75px;
+}
+
+/* ----- CONTROL PLAYER ----- */
+#control-player {
+    color: @on_surface;
+    margin: 2px 3.75px 2px 2px;
+}
+
+#custom-previous,
+#custom-play-pause,
+#custom-next {
+    border-radius: 4px;
+    background-color: @surface;
+    margin: 0px 1px;
+    padding: 0 10px;
+}
+
+#custom-previous {
+    border-radius: 99px 24px 24px 99px;
+}
+
+#custom-next {
+    border-radius: 24px 99px 99px 24px;
+}
+
+#custom-previous:hover,
+#custom-play-pause:hover,
+#custom-next:hover,
+#custom-previous.paused:hover,
+#custom-play-pause.paused:hover,
+#custom-next.paused:hover {
+    color: @primary;
+    background-color: @primary_container;
+    color: @color-1;
+    background-color: @color-5;
+}
+
+#custom-previous.paused,
+#custom-play-pause.paused,
+#custom-next.paused {
+    color: alpha(@on_surface, 0.5);
+}
+
+/* ----- Music (grupo específico) ----- */
+#music #custom-point {
+    margin-right: 15px;
+}

@@ -1,18 +1,3 @@
-/* -----------------------------------------------------------------------------
-   ISLAND THEME - WAYBAR CSS
-
-   ORDEM HIERÁRQUICA DOS VALORES (exemplo):
-   1. Layout:      margin, padding, width, height, min/max, position, display, etc.
-   2. Background:  background, background-color, background-image, etc.
-   3. Border:      border (abreviação), border-radius, border-top, border-color, etc.
-   4. Tipografia:  font-family, font-size, font-weight, letter-spacing, etc.
-   5. Cor:         color (texto), etc.
-   6. Animação:    transition, animation, transform, etc.
-   7. Outros:      -gtk-icon-effect, etc.
-
-   Última atualização: 2026-05-27
------------------------------------------------------------------------------ */
-
 /* =============================================================================
    1. IMPORTS E CONFIGURAÇÕES GLOBAIS
    ============================================================================= */
@@ -21,108 +6,74 @@
 
 * {
     all: unset;
-    margin-right: 0.001;
-    font-family: "Google Sans Display", "JetBrains Mono Nerd Font Propo", monospace;
+    font-family: "Google Sans", "JetBrains Mono Nerd Font Propo", monospace;
     font-weight: 500;
-    transition:
-        transform 200ms cubic-bezier(.4, 0, .2, 1),
-        background-color 200ms ease-in-out,
-        color 200ms ease-in-out,
-        border-color 200ms ease-in-out;
 }
 
 /* =============================================================================
-   2. JANELA PRINCIPAL (WAYBAR ROOT)
+   2. MÓDULOS (ESQUERDA / CENTRO / DIREITA)
    ============================================================================= */
 
-window#waybar {
-    background: linear-gradient(rgba(0,0,0,.5), transparent);
-}
-
-/* =============================================================================
-   3. CONTÊINERES DE MÓDULOS (ESQUERDA / DIREITA)
-   ============================================================================= */
-
-#left,
+.modules-left,
 .modules-center,
-#right {
-    padding-bottom: 8px;
-    background: alpha(@surface, 0.7);
-    border: 1px solid @outline_variant;
-    border-top: 0;
-    color: @primary;
-}
-
 .modules-right {
-    margin-right: -4px;
+    color: @primary;
 }
 
 .modules-left,
 .modules-right {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
 }
 
-.modules-center {
-    border-radius: 0 0 120px 120px;
+#left,#center,#right {
+    margin: 15px 20px 0px 20px;
+    padding: 6px;
+    border-radius: 999px;
+    background: @surface;
+    border: 1px solid @outline_variant;
 }
-
-#left, #right {
-    opacity: 1;
-    transition: opacity 1.5s ease-out;
-}
-
-#left {
-    border-radius: 0 0 120px 0;
-    border-left: 0;
-}
-
-#left #custom-menu {
-    margin-left: 12px;
-}
-
-#right {
-    border-radius: 0 0 0 120px;
-    border-right: 0;
-}
-
-#right #quick-controls.4 {
-    margin-right: 12px;
-}
-
-#left:hover, #right:hover {
-    opacity: 1;
-    transition: opacity 0.3s ease-in;
-} 
 
 /* =============================================================================
-   4. WORKSPACES
+   3. WORKSPACES
    ============================================================================= */
 
-#workspaces {
-    min-width: 100px;
-    margin: 8px -8px;
-    padding: 4px;
-    font-size: 0;
+@keyframes gradient {
+    0% {
+        background-position: 0% 100%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
 }
 
 #workspaces button {
-    min-width: 4px;
-    min-height: 4px;
-    margin: 2px 4px;
-    padding: 0 12px;
-    border-radius: 99px;
-    background-color: @primary_container;
+    font-size: 0px;
+    transition: all 0.5s cubic-bezier(.55, -0.68, .48, 1.68);
+    border: 0.5px solid alpha(@secondary, 0.65);
+    border-radius: 999px;
+    background-color: alpha(@secondary, 0.65);
     color: transparent;
+    margin: 6px 3px;
+    min-width: 28px;
 }
 
 #workspaces button.empty:not(.active) {
     border: 1px solid @outline_variant;
-    background-color: alpha(@outline, 0.2);
+    background-color: @surface_container_high;
 }
 
 #workspaces button.active {
-    min-width: 1.4rem;
-    background: linear-gradient(135deg, @tertiary, @primary_fixed_dim);
+    animation: gradient 10s linear infinite;
+    transition: all 0.3s cubic-bezier(.55, -0.68, .48, 1.68);
+    background-color: @primary;
+    background-clip: padding-box;
+    background: radial-gradient(circle,
+                @tertiary calc(100% * 1/3),
+                @secondary calc(100% * 2/3),
+                @primary calc(100% * 3/3)
+                );
+    background-size: 300% 300%;
+    min-width: 40px;
 }
 
 #workspaces button.urgent {
@@ -131,318 +82,87 @@ window#waybar {
     color: @on_error;
 }
 
-#workspaces button label:first-child {
-    margin-right: 5px;
-}
-
-#workspaces button label:last-child {
-    margin-left: 5px;
-}
-
 /* =============================================================================
-   5. MÓDULOS INDIVIDUAIS (ORDEM ALFABÉTICA)
+   4. MÓDULOS
    ============================================================================= */
 
-/* ------ Backlight ----- */
-#backlight.button {
-    margin-left: 15px;
-}
+@import "/tmp/gamemode.css";
+@import "modules/backlight/backlight.css";
+@import "modules/battery/battery.css";
+@import "modules/cava/cava.css";
+@import "modules/control-center/control-center.css";
+@import "modules/memory/memory.css";
+@import "modules/network/network.css";
+@import "modules/pulseaudio/pulseaudio.css";
+@import "modules/tray/tray.css";
 
-/* ----- Battery ----- */
-#battery {
-    margin-right: 15px;
-}
-
-@keyframes blink {
-    to {
-    color: white;
-    opacity: 1;
-    }
-}
-
-#battery.warning:not(.charging) {
-    color: @error;
-}
-
-#battery.critical:not(.charging) {
-    color: red;
-    animation: blink 0.5s steps(12) infinite alternate;
-}
-
-/* ----- Cava ----- */
-#cava {
-    margin-right: 15px;
-    font-size: 0.8rem;
-    letter-spacing: 1.5px;
-    color: @tertiary;
-}
-
-/* ----- Control Center -----*/
-#custom-center {
-    margin-left: 15px;
-}
-
-#custom-center:hover {
-    color: @tertiary;
-}
-
-/* ----- Clipboard ----- */
-#custom-clipboard {
-    margin-left: 15px;
-}
-
-#custom-clipboard:hover {
-    color: @tertiary;
-}
-
-/* ----- Clock e Data ----- */
-#custom-clock,
-#custom-date {
-    font-family: "Google Sans Flex Freeze", monospace;
-    font-size: 1.4rem;
-    font-weight: bold;
-}
-
-#custom-date {
-    color: @secondary;
-}
-
-#custom-clock:hover,
-#custom-date:hover {
-    color: @tertiary;
-}
-
-/* ----- Image (capa do player) ----- */
-#image.cover * {
-    margin-right: 8px;
-}
-
-/* ----- Menu ----- */
-#custom-menu:hover {
-    color: @tertiary;
-}
-
-/* ----- Memory ----- */
-#memory-expander {
-    margin-left: 15px;
-}
-
-#memory.value {
-    color: @on_surface;
-}
-
-#memory.value:hover {
-    color: @secondary;
-}
-
-#memory:hover {
-    color: @tertiary;
-}
-
-/* ----- MPRIS (player nativo) ----- */
-#control-player {
-    font-size: 1.1rem;
-    color: @on_surface;
-    transition: all 0.5s ease-in-out;
-    margin-right: 15px;
-}
-
-#mpris {
-    margin: 12px 1px;
-    padding: 0 10px;
-    border-radius: 4px;
-    background-color: alpha(@outline, 0.25);
-}
-
-#mpris:hover,
-#mpris.paused:hover {
-    border-radius: 99px;
-    color: @primary;
-}
-
-#mpris.paused {
-    color: alpha(@on_surface, 0.5);
-}
-
-/* ----- Music (grupo específico) ----- */
-#music #custom-point {
-    margin-right: 15px;
-}
-
-/* ----- Network ----- */
-#network:hover {
-    color: @tertiary;
-}
-
-/* ----- No Idle ----- */
-#custom-noidle.active {
-    color: alpha(@on_surface, 0.5);
-}
-
-/* ----- Pacman (atualizações) ----- */
-#custom-pacman.value {
-    color: @on_surface;
-}
-
-#custom-pacman.value:hover {
-    color: @secondary;
-}
-
-#custom-pacman:hover {
-    color: @tertiary;
-}
-
-#player #custom-point {
-    margin-left: 0;
-}
-
-/* ----- Power ----- */
-#custom-power:hover {
-    color: red;
-}
-
-/* ----- Pulseaudio ----- */
-#pulseaudio.button {
-    margin-left: 15px;
-}
-
-#pulseaudio:hover {
-    color: @tertiary;
-}
-
-/* ----- Pulseaudio e Backlight Sliders ----- */
-#pulseaudio-slider,
-#backlight-slider {
-    border-radius: 99px;
-    background-color: transparent;
-}
-
-#pulseaudio-slider trough,
-#backlight-slider trough {
-    min-height: 10px;
-    min-width: 80px;
-    border-radius: 6px;
-    background-color: @outline_variant;
-}
-
-#pulseaudio-slider highlight,
-#backlight-slider highlight {
-    min-height: 10px;
-    border-radius: 6px;
-    background-color: alpha(@primary, 0.6);
-}
-
-#pulseaudio-slider slider,
-#backlight-slider slider {
-    min-height: 26px;
-    min-width: 5px;
-    margin: -2px 0;
-    border-radius: 99px;
-    background-color: @primary;
-}
-
-#pulseaudio-slider:hover slider,
-#backlight-slider:hover slider {
-    background-color: @tertiary;
-}
+@import "custom/clipboard/clipboard.css";
+@import "custom/date-time/date-time.css";
+@import "custom/hypridle/hypridle.css";
+@import "custom/launcher/launcher.css";
+@import "custom/power/power.css";
+@import "custom/wallpaper/wallpaper.css";
+@import "custom/waybar-music/waybar-music.css";
+@import "custom/waybar-music/cover.css";
+@import "custom/waybar-updates/waybar-updates.css";
+@import "custom/waybar-weather/waybar-weather.css";
 
 /* ----- Quick Controls ----- */
-#quick-controls.0,
-#quick-controls.2,
-#quick-controls.3,
-#quick-controls.4,
+#pill.0,
+#pill.2,
+#pill.3,
+#pill.4,
 #tray {
-    margin: 6px 0;
-    padding: 0 15px;
-    border-radius: 99px;
-    background-color: alpha(@surface_container_high, 0.7);
     border: 1px solid @outline_variant;
+    border-radius: 999px;
+    background-color: @surface_container_high;
+    padding: 0px 7.5px;
 }
 
-#quick-controls.1 {
-    margin: 0 15px;
+#tray {
+    padding: 0px 12.5px;
+}
+
+#pill.3 #custom-point {
+    margin: 0px 3.75px 0px 0px;
 }
 
 /* ----- Spacer customizado ----- */
 #custom-point {
-    margin: 0 15px;
-    font-size: 0.75rem;
-    color: @outline;
+    color: alpha(@secondary, 0.5);
+    font-size: 0.65rem;
+    margin: 0px 7.5px;
 }
 
-/* ----- Tray (bandeja do sistema) ----- */
-#custom-tray-expand-icon {
-    margin: 0 15px;
-}
-
-#tray-expander:hover #custom-tray-expand-icon {
-    color: @tertiary;
-}
-
-#tray > * {
-    border-radius: 99px;
-}
-
-#tray menu,
+/* ----- Menus de Contexto ----- */
+menu,
 tooltip {
-    background: @surface;
-    border: 1px solid @outline_variant;
-    border-radius: 12px;
     font-family: "Google Sans", monospace;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: normal;
-    color: @on_surface;
-    padding: 15px;
+    background-color: @surface_container_high; /* Altere para a cor de fundo desejada */
+    color: @on_surface;            /* Cor do texto */
+    border: 1px solid @outline_variant;
+    border-radius: 20px;
+    padding: 6px;
 }
 
-#tray > .passive {
-    -gtk-icon-effect: dim;
+menu separator {
+    background-color: @outline_variant; /* Cor da linha (ajuste a transparência ou hex) */
+    min-height: 1px;                              /* Espessura da linha horizontal */
+    margin: 4px 8px;                              /* Margem (Cima/Baixo e Esquerda/Direita) */
 }
 
-#tray > .needs-attention {
-    background: @error;
-    -gtk-icon-effect: highlight;
+/* Itens de menu individuais */
+menuitem,
+tooltip label {
+    border-radius: 999px;
+    padding: 7px 12px;
+    transition: background-color 0.2s ease;
 }
 
-/* ----- Wallpaper ----- */
-#custom-wallpaper {
-    margin-left: 15px;
-}
-
-#custom-wallpaper:hover {
-    color: @tertiary;
-}
-
-/* ----- Weather ----- */
-#custom-weather {
-    margin-right: 15px;
-    font-size: 1.1rem;
-    color: @on_surface;
-}
-
-#custom-weather:hover {
-    color: @secondary;
-}
-
-/* ----- Zscroll (letreiro custom) ----- */
-#custom-zscroll {
-    margin-right: 15px;
-    font-size: 1.05rem;
-    color: @on_surface;
-}
-
-@keyframes gradient {
-    to {
-        background: linear-gradient(-360deg, @primary, @tertiary);
-    }
-}
-
-/*#custom-zscroll.playing {
-    background: linear-gradient(360deg, @primary, @tertiary);
-    color: @surface;
-    animation:  gradient 1s linear infinite;
-}*/
-
-#custom-zscroll.paused {
-    color: alpha(@on_surface, 0.5);
+/* Estado ao passar o mouse ou selecionar */
+menuitem:hover,
+menuitem:selected {
+    background-color: alpha(@primary, 0.15); /* Cor de destaque (accent) ao passar o mouse */
 }

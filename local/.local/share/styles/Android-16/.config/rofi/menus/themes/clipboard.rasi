@@ -1,99 +1,103 @@
 /**
- *
- * Authors:  Shane. (github: @shanes-74),
+ * Authors: Shane. (github: @shanes-74)
  * 
- **/
+ * HIERARQUIA DE PROPRIEDADES (ordem de declaração)
+ * =================================================
+ * 1. Visibilidade / Estado: enabled, visible
+ * 2. Dimensões e posicionamento: width, height, margin, padding, expand, location, anchor, x-offset, y-offset
+ * 3. Layout interno: orientation, spacing, children, columns, lines, dynamic, scrollbar, scrollbar-width, layout
+ * 4. Borda e arredondamento: border, border-color, border-radius
+ * 5. Fundo e cores: background-color, color, text-color, placeholder-color, handle-color, handle-width
+ * 6. Tipografia e conteúdo: font, placeholder, str, markup, blink
+ * 7. Alinhamento: vertical-align, horizontal-align
+ * 8. Cursor e interação: cursor
+ * 9. Específicos do widget: size, round, etc.
+ */
 
 @import "shared/colors.rasi"
 
-/*****----- Configuration -----*****/
+/*****----- CONFIGURATION -----*****/
 configuration {
-    disable-history:            false;
+    disable-history:             false;
     show-icons:                  true;
 }
 
-/*****----- Main Window -----*****/
+/*****----- WINDOW -----*****/
 window {
-    transparency:               "real";
-    location:                   center;
-    anchor:                     center;
-    fullscreen:                 false;
-    width:                      33%;
-    x-offset:                   0px;
-    y-offset:                   0px;
-    enabled:                    true;
-    margin:                     0px;
-    padding:                    0px;
-    cursor:                     "default";
-    background-color:           transparent;
+    location:                    south;
+    anchor:                      south;
+    fullscreen:                  false;
+    width:                       650px;
+    height:                      68%;
+    y-offset:                    20px;
+    enabled:                     true;
+    margin:                      0px;
+    padding:                     0px;
+    cursor:                      "default";
+    background-color:            transparent;
+    transparency:                "real";
 }
 
-/*****----- Main Box -----*****/
+/*****----- MAINBOX -----*****/
 mainbox {
-    enabled:                    true;
-    spacing:                    10px;
-    margin:                     0px;
-    padding:                    0px;
-    background-color:           transparent;
-    /* hotkeys no topo, busca, lista */
-    children:                   [ "inputbar", "listview", "message" ];
-}
-
-/*****----- Message (atalhos) -----*****/
-/*
- * Exibido no TOPO para ficar sempre visível —
- * mostra "Enter: copiar | Alt+D: deletar | Esc: sair"
- */
-message {
-    enabled:                    true;
-    margin:                     0px;
-    padding:                    10px 18px;
-    border:                     2px;
-    border-radius:              25px;
-    border-color:               @outline-variant;
-    background-color:           @surface-container;
-}
-textbox {
-    background-color:           transparent;
-    text-color:                 @on-surface-variant;
-    vertical-align:             0.5;
-    horizontal-align:           0.5;    /* centraliza a linha de atalhos */
+    spacing:                     15px;
+    padding:                     15px 15px 30px 15px;
+    border:                      1px;
+    border-color:                @outline-variant;
+    border-radius:               20px 20px 0 0;
+    background-color:            @surface;
+    color:                       @on-surface;
+    children:                    [ "inputbar", "message", "listview" ];
 }
 
 /*****----- Inputbar -----*****/
 inputbar {
-    enabled:                    true;
-    spacing:                    10px;
-    margin:                     0px;
-    padding:                    14px 18px;
-    border:                     2px;
-    border-radius:              25px;
-    border-color:               @outline-variant;
-    background-color:           @surface-container;
-    children:                   [ "entry" ];
+    spacing:                     10px;
+    children:                    [ "textbox-0", "entry" ];
+    background-color:            inherit;
 }
+
+/*****----- TEXTBOX-0 -----*****/
+textbox-0 {
+    enabled:                     true;
+    expand:                      false;
+    width:                       3%;
+    height:                      50%;
+    border-radius:               99px;
+    color:                       @surface;
+    background-color:            @tertiary;
+    font:                        "GeistMono Nerd Font Propo, bold 18";
+    str:                         "";
+    vertical-align:              0.5;
+    horizontal-align:            0.5;
+}
+
 prompt {
     enabled:                    true;
     background-color:           transparent;
     text-color:                 @primary;
 }
+
 textbox-prompt-colon {
     enabled:                    false;  /* removido — o prompt já tem ícone */
 }
+
+/*****----- ENTRY -----*****/
 entry {
-    enabled:                    true;
-    background-color:           transparent;
-    text-color:                 @on-surface;
-    cursor:                     text;
-    placeholder:                "Buscar no histórico…";
-    placeholder-color:          @outline;
+    padding:                     15px 15px;
+    border:                      1px;
+    border-color:                @outline-variant;
+    border-radius:               99px;
+    background-color:            @surface-container-high;
+    color:                       @on-surface;
+    placeholder-color:           @outline;
+    placeholder:                 "Buscar no histórico...";
+    vertical-align:              0.5;
 }
 
 /*****----- Listview -----*****/
 listview {
-    enabled:                    true;
     columns:                    1;
-    lines:                      6;
     cycle:                      true;
     dynamic:                    true;
     scrollbar:                  false;
@@ -104,77 +108,100 @@ listview {
     spacing:                    4px;
     margin:                     0px;
     padding:                    10px;
-    border:                     2px;
-    border-radius:              25px;
-    border-color:               @outline-variant;
-    background-color:           @surface-container;
-    cursor:                     "default";
+    border:                      1px;
+    border-color:                @outline-variant;
+    border-radius:               20px;
+    background-color:            @surface-container-high;
+    color:                       @on-surface;
 }
 
-/*****----- Elements -----*****/
+/*****----- ELEMENT -----*****/
 element {
-    enabled:                    true;
-    padding:                    6px;
-    spacing:                    12px;
-    border-radius:              100px;
-    background-color:           transparent;
-    cursor:                     pointer;
+    enabled:                     true;
+    margin:                      6px 6px -4px 6px;
+    padding:                     5px 10px;
+    border-radius:               20px;
+    background-color:            transparent;
+    color:                       @on-surface;
+    cursor:                      pointer;
 }
 
-/*
- * Ícone maior para thumbnails de imagem ficarem legíveis
- * (o script gera thumbs 256×256, mas 52px aqui é o suficiente para
- *  distinguir visualmente sem inflar o menu)
- */
+/*****----- SCROLLBAR -----*****/
+#scrollbar {
+    border-radius:               20px;
+    background-color:            inherit;
+    handle-color:                @tertiary;
+    handle-width:                10px;
+}
+
+/*****----- ELEMENT -----*****/
+element {
+    enabled:                     true;
+    margin:                      6px 6px -4px 6px;
+    padding:                     5px 10px;
+    border-radius:               20px;
+    background-color:            transparent;
+    color:                       @on-surface;
+    cursor:                      pointer;
+}
+
+/*****----- ELEMENT SELECTED -----*****/
+element selected.normal {
+    background-color:            @primary;
+    color:                       @surface;
+}
+
+/*****----- ELEMENT ICON -----*****/
 element-icon {
-    size:                       64px;
-    background-color:           transparent;
-    vertical-align:             0.5;
-    border-radius:              25px;
+    size:                        56px;
+    margin:                      0 5px 0 -5px;
+    border-radius:               20px;
+    background-color:            @surface-container;
+    color:                       inherit;
+    cursor:                      pointer;
 }
 
+/*****----- ELEMENT ICON SELECTED -----*****/
+element-icon selected.normal {
+
+}
+
+/*****----- ELEMENT TEXT -----*****/
 element-text {
-    background-color:           transparent;
-    text-color:                 inherit;
-    vertical-align:             0.5;
-    horizontal-align:           0.0;
-    expand:                     true;
+    background-color:            transparent;
+    color:                       inherit;
+    vertical-align:              0.5;
+    cursor:                      inherit;
 }
 
-/*****----- Estados de Seleção -----*****/
-element normal normal {
-    text-color:                 @on-surface;
-    background-color:           transparent;
+/*****----- MESSAGE -----*****/
+message {
+    enabled:                     true;
+    margin:                      0px;
+    padding:                     0px;
+    border:                      1px;
+    border-color:                @outline-variant;
+    border-radius:               20px;
+    background-color:            @surface-container-high;
+    color:                       @surface;
 }
-element normal urgent {
-    text-color:                 @error;
-    background-color:           transparent;
+
+/*****----- TEXTBOX -----*****/
+textbox {
+    padding:                     10px;
+    border-radius:               20px;
+    background-color:            inherit;
+    color:                       @on-surface;
+    placeholder-color:           @on-surface-variant;
+    blink:                       true;
+    markup:                      true;
+    vertical-align:              0.5;
+    horizontal-align:            0.5;
 }
-element normal active {
-    text-color:                 @primary;
-    background-color:           transparent;
-}
-element selected normal {
-    background-color:           @primary;
-    text-color:                 @on-primary;
-}
-element selected urgent {
-    background-color:           @error;
-    text-color:                 @on-error;
-}
-element selected active {
-    background-color:           @secondary;
-    text-color:                 @on-secondary;
-}
-element alternate normal {
-    background-color:           transparent;
-    text-color:                 @on-surface;
-}
-element alternate urgent {
-    background-color:           transparent;
-    text-color:                 @error;
-}
-element alternate active {
-    background-color:           transparent;
-    text-color:                 @primary;
+
+/*****----- ERROR MESSAGE -----*****/
+error-message {
+    padding:                     10px;
+    border-radius:               20px 20px 0 0;
+    background-color:            @error-container;
 }

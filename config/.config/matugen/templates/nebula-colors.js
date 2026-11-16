@@ -1,0 +1,16 @@
+user_pref("var-nebula-color-glass-light", "rgba({{colors.background.default.red}}, {{colors.background.default.green}}, {{colors.background.default.blue}}, 0.4)");
+user_pref("var-nebula-color-glass-dark", "rgba({{colors.background.default.red}}, {{colors.background.default.green}}, {{colors.background.default.blue}}, 0.4)");
+user_pref("var-nebula-ui-tint-light", "rgba({{colors.background.default.red}}, {{colors.background.default.green}}, {{colors.background.default.blue}}, 0.7)");
+user_pref("var-nebula-ui-tint-dark", "rgba({{colors.background.default.red}}, {{colors.background.default.green}}, {{colors.background.default.blue}}, 0.7)");
+user_pref("var-nebula-website-tint-light", "rgba({{colors.background.default.red}}, {{colors.background.default.green}}, {{colors.background.default.blue}}, 0)");
+user_pref("var-nebula-website-tint-dark", "rgba({{colors.background.default.red}}, {{colors.background.default.green}}, {{colors.background.default.blue}}, 0)");
+user_pref("var-nebula-tabs-minimum-light", "rgba({{colors.background.default.red}}, {{colors.background.default.green}}, {{colors.background.default.blue}}, 0.1)");
+user_pref("var-nebula-tabs-minimum-dark", "rgba({{colors.background.default.red}}, {{colors.background.default.green}}, {{colors.background.default.blue}}, 0.2)");
+user_pref("var-nebula-tabs-default-light", "rgba({{colors.background.default.red}}, {{colors.background.default.green}}, {{colors.background.default.blue}}, 0.25)");
+user_pref("var-nebula-tabs-default-dark", "rgba({{colors.background.default.red}}, {{colors.background.default.green}}, {{colors.background.default.blue}}, 0.35)");
+user_pref("var-nebula-tabs-hover-light", "rgba({{colors.background.default.red}}, {{colors.background.default.green}}, {{colors.background.default.blue}}, 0.35)");
+user_pref("var-nebula-tabs-hover-dark", "rgba({{colors.background.default.red}}, {{colors.background.default.green}}, {{colors.background.default.blue}}, 0.45)");
+user_pref("var-nebula-tabs-selected-light", "rgba({{colors.background.default.red}}, {{colors.background.default.green}}, {{colors.background.default.blue}}, 0.45)");
+user_pref("var-nebula-tabs-selected-dark", "rgba({{colors.background.default.red}}, {{colors.background.default.green}}, {{colors.background.default.blue}}, 0.55)");
+user_pref("var-nebula-color-shadow-light", "rgba({{colors.background.default.red}}, {{colors.background.default.green}}, {{colors.background.default.blue}}, 0.055)");
+user_pref("var-nebula-color-shadow-dark", "rgba({{colors.background.default.red}}, {{colors.background.default.green}}, {{colors.background.default.blue}}, 0.55)");

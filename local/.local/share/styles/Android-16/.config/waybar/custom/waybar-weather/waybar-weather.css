@@ -1,0 +1,9 @@
+/* ----- Weather ----- */
+#custom-weather {
+    color: @on_surface;
+    margin: 0 7.5px;
+}
+
+#custom-weather:hover {
+    color: @secondary;
+}

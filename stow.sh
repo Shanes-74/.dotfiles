@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # ============================================================================
-#  stow.sh  —  Stow para pacotes essenciais (config, local, hyprland)
-#  Área de atuação: ~/.dotfiles/ (absoluto)
+#  stow.sh  —  Stow para pacotes essenciais (config, local, hyprland, themes)
+#  Área de atuação: a pasta onde este script está (funciona em qualquer lugar)
 # ============================================================================
 
 # ----------------------------------------------------------------------------
@@ -12,12 +12,13 @@ PACKAGES=(
     "." "config"
     "." "local"
     "." "hyprland"
+    "." "themes"
 )
 
 # ----------------------------------------------------------------------------
 #  Diretórios absolutos
 # ----------------------------------------------------------------------------
-DOTFILES_DIR="$HOME/.dotfiles"
+DOTFILES_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
 TARGET_DIR="$HOME"
 
 # ----------------------------------------------------------------------------
@@ -29,6 +30,7 @@ readonly YELLOW='\033[1;33m'
 readonly BLUE='\033[0;34m'
 readonly MAGENTA='\033[0;35m'
 readonly CYAN='\033[0;36m'
+readonly BOLD='\033[1m'
 readonly RESET='\033[0m'
 
 readonly ICON_SUCCESS=""
@@ -42,19 +44,57 @@ readonly ICON_CONFLICT=""
 readonly ICON_CHECK=""
 
 # ----------------------------------------------------------------------------
+#  Função de ajuda
+# ----------------------------------------------------------------------------
+show_help() {
+    printf "${BLUE}${ICON_INFO} stow.sh — Gerenciador de dotfiles${RESET}\n\n"
+    printf "${BOLD}Uso:${RESET}\n"
+    printf "  %s [OPÇÕES]\n\n" "$(basename "$0")"
+    printf "${BOLD}Sem opções:${RESET}\n"
+    printf "  Executa ${GREEN}stow${RESET} (cria links) para todos os pacotes listados em PACKAGES.\n\n"
+    printf "${BOLD}Opções:${RESET}\n"
+    printf "  ${GREEN}-r, --restow${RESET}    Recria os links (stow -R)\n"
+    printf "  ${GREEN}-d, --delete${RESET}    Remove os links (stow -D)\n"
+    printf "  ${GREEN}-n, --simulate${RESET}  Mostra o que seria feito (stow -n)\n"
+    printf "  ${GREEN}-v, --verbose${RESET}   Exibe mais detalhes\n"
+    printf "  ${GREEN}-h, --help${RESET}      Mostra esta ajuda\n\n"
+    printf "${BOLD}Exemplos:${RESET}\n"
+    printf "  ${CYAN}%s${RESET}         # Cria links\n" "$(basename "$0")"
+    printf "  ${CYAN}%s -d${RESET}      # Remove links\n" "$(basename "$0")"
+    printf "  ${CYAN}%s -r -v${RESET}   # Recria links com detalhes\n" "$(basename "$0")"
+    printf "  ${CYAN}%s -n${RESET}      # Simula\n\n" "$(basename "$0")"
+    printf "${BOLD}Pacotes gerenciados:${RESET} ${GREEN}"
+    for ((i=1; i<${#PACKAGES[@]}; i+=2)); do
+        printf "%s " "${PACKAGES[i]}"
+    done
+    printf "${RESET}\n"
+}
+
+# ----------------------------------------------------------------------------
 #  Processamento de opções
 # ----------------------------------------------------------------------------
 ACTION=""
 SIMULATE=""
 VERBOSE=""
 
-while getopts "rdnv" opt; do
+while getopts "rdnvh-" opt; do
     case "$opt" in
         r) ACTION="-R" ;;
         d) ACTION="-D" ;;
         n) SIMULATE="-n" ;;
         v) VERBOSE="-v" ;;
-        *) echo "Uso: $0 [-r|-d] [-n] [-v]"; exit 1 ;;
+        h) show_help; exit 0 ;;
+        -)
+            case "${OPTARG}" in
+                restow)   ACTION="-R" ;;
+                delete)   ACTION="-D" ;;
+                simulate) SIMULATE="-n" ;;
+                verbose)  VERBOSE="-v" ;;
+                help)     show_help; exit 0 ;;
+                *) echo -e "${RED}${ICON_ERROR} Opção inválida: --${OPTARG}${RESET}"; exit 1 ;;
+            esac
+            ;;
+        *) echo "Uso: $0 [-r|-d|-n|-v|-h]"; exit 1 ;;
     esac
 done
 
@@ -67,7 +107,7 @@ case "$ACTION" in
 esac
 
 # ----------------------------------------------------------------------------
-#  Verificação de conflitos
+#  Verificação de conflitos (apenas para stow e restow)
 # ----------------------------------------------------------------------------
 check_conflicts() {
     local subdir="$1"
@@ -84,7 +124,7 @@ check_conflicts() {
     return 1
 }
 
-if [ -z "$SIMULATE" ]; then
+if [ -z "$SIMULATE" ] && [ "$ACTION" != "-D" ]; then
     echo -e "${BLUE}${ICON_CHECK} Verificando conflitos...${RESET}"
     HAS_CONFLICT=0
     CONFLICT_DETAILS=""

@@ -1,6 +1,6 @@
-@import url("colors.css");
-@import url("libadwaita-tweaks.css");
 @import url("libadwaita.css");
+@import url("libadwaita-tweaks.css");
+@import url("colors.css");
 
 /* ══════════════════════════════════════════
    GLOBAL
@@ -13,6 +13,7 @@
 /* ══════════════════════════════════════════
    JANELAS & DECORAÇÕES
 ══════════════════════════════════════════ */
+
 window.csd,
 window.csd decoration {
     box-shadow: none;
@@ -494,4 +495,100 @@ separator {
     min-height: 1px;
     min-width: 1px;
     border-radius: 999px;
+}
+
+/* cursor-clip */
+.cursor-clip-card {
+    background-color: alpha(@window_bg_color, 0.7);
+}
+
+.cursor-clip-card .clipboard-time,
+.cursor-clip-card .clipboard-pin {
+    opacity: 1;
+    color: alpha(@window_fg_color, 0.8);
+}
+
+.cursor-clip-card .clipboard-item:selected .clipboard-time,
+.cursor-clip-card .clipboard-item:selected .clipboard-pin {
+    color: @accent_fg_color;
+}
+
+.cursor-clip-card .clipboard-item:not(:selected) {
+    background-color: alpha(@card_bg_color, 0.7);
+}
+
+.cursor-clip-card .clipboard-item:not(:selected):hover {
+    background-color: alpha(mix(@card_bg_color, @window_fg_color, 0.12), 0.7);
+    border: 2px solid @accent_color;
+}
+
+.cursor-clip-card,
+.cursor-clip-card .clipboard-item:not(:selected) {
+    border: 1px solid alpha(@window_fg_color, 0.2);
+}
+
+.cursor-clip-card .clipboard-item:selected .clipboard-preview {
+    color: @accent_fg_color;
+}
+
+/* botão X */
+.cursor-clip-card .manual-close-icon {
+    background-color: @destructive_bg_color;
+    color: @destructive_fg_color;
+}
+
+.cursor-clip-card .manual-close-icon image {
+    color: @destructive_fg_color;
+}
+
+.cursor-clip-card .manual-close-icon:hover {
+    background-color: @destructive_fg_color;
+}
+
+.cursor-clip-card .manual-close-icon:hover image {
+    color: @window_bg_color;
+}
+
+/* botões do cabeçalho */
+.cursor-clip-card .compact-header-action {
+    padding: 4px;
+}
+
+/* lixeira do topo: hover vermelho (só o 1º botão da esquerda) */
+.cursor-clip-card headerbar box.start > button:first-child:hover {
+    background-color: @destructive_bg_color;
+}
+
+.cursor-clip-card headerbar box.start > button:first-child:hover image {
+    color: @destructive_fg_color;
+}
+
+/* lixeira dos itens: quadrada */
+.cursor-clip-card .clipboard-delete {
+    min-width: 32px;
+    min-height: 32px;
+    padding: 0;
+    border-radius: 8px;
+}
+
+/* diálogo de exclusão sem escurecimento nem fundo */
+.cursor-clip-backdrop floating-sheet > dimming {
+    background: none;
+}
+
+.cursor-clip-backdrop dialog-host > dialog {
+    background: none;
+}
+
+.cursor-clip-card .clipboard-pin {
+    margin-right: 4px;
+    border-radius: 8px
+}
+
+.cursor-clip-card .clipboard-pin.pinned {
+    background-color: @warning_color;
+}
+
+.cursor-clip-card .clipboard-pin.pinned image {
+    color: @window_bg_color;
 }

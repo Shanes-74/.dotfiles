@@ -1,0 +1,47 @@
+@import 'colors.css';
+
+* {
+  font-family: "Google Sans Display", "JetBrainsMono Nerd Font Propo";
+  font-size: 20px;
+  font-weight: 500;
+}
+
+window#osd {
+  border-radius: 999px;
+  background: @surface_container;
+  border: 1px solid @outline_variant;
+  padding: 8px;
+  margin: 4px;
+}
+
+window#osd #container {
+  margin: 4px;
+}
+
+window#osd image {
+  color: @on_surface_variant;
+  font-size: 22px;
+}
+
+window#osd label {
+  color: @on_surface;
+}
+
+window#osd progressbar {
+  min-height: 24px;
+  min-width: 240px;
+  border-radius: 16px;
+  background: transparent;
+}
+
+window#osd trough {
+  min-height: inherit;
+  border-radius: inherit;
+  background: @surface_variant;
+}
+
+window#osd progress {
+  min-height: inherit;
+  border-radius: inherit;
+  background: @primary;
+}

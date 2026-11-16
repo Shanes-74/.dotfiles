@@ -14,10 +14,18 @@ hl.config({
 
         sensitivity = 0, -- -1.0 - 1.0, 0 means no modification.
 
+        accel_profile = "flat",
+
         touchpad = {
             natural_scroll = false,
         },
     },
+
+    cursor = {
+        no_hardware_cursors = 2,
+        inactive_timeout = 5,
+    },
+
 })
 
 hl.gesture({

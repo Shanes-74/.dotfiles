@@ -1,0 +1,8 @@
+/* ----- Wallpaper ----- */
+#custom-wallpaper {
+    margin: 0 7.5px;
+}
+
+#custom-wallpaper:hover {
+    color: @tertiary;
+}

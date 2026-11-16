@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+nwg-dock-hyprland -nolauncher -i 76 -d -hd 200 & disown

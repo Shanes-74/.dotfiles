@@ -1,7 +1,7 @@
 /**
  *
  * Authors:  Shane. (github: @shanes-74),
- * 
+ *
  **/
 
 @import "shared/colors.rasi"
@@ -29,14 +29,17 @@ window {
 
 /*****----- Main Box -----*****/
 mainbox {
-    spacing:                    15px;
-    margin:                     0px;
+    padding:                    15px;
+    border:                     1px;
+    border-radius:              35px;
+    border-color:               @outline-variant;
+    background-color:           @surface;
     children:                   [ "listview" ];
 }
 
 /*****----- Listview -----*****/
 listview {
-    spacing:                    15px;
+    spacing:                    10px;
     columns:                    5;
     lines:                      1;
     cycle:                      true;
@@ -46,26 +49,24 @@ listview {
     fixed-columns:              true;
 
     margin:                     0px;
-    padding:                    20px;
-    border:                     2px;
-    border-radius:              25px;
+    padding:                    15px;
+    border:                     1px;
+    border-radius:              20px;
     border-color:               @outline-variant;
-    background-color:           @surface-container;
+    background-color:           @surface-container-high;
 }
 
 /*****----- Elements -----*****/
 element {
     orientation:                vertical;
     padding:                    8px;
-    spacing:                    6px;
-    border-radius:              25px;
+    border-radius:              28px;
     background-color:           transparent;
 }
 
 element-icon {
     size:                       400px;
-    horizontal-align:           0.5;
-    border-radius:              25px;
+    border-radius:              20px;
     background-color:           transparent;
 }
 
@@ -77,7 +78,6 @@ element-text {
 
 element selected {
     background-color:           @primary;
-    border-radius:              25px;
 }
 
 /*****----- Message -----*****/

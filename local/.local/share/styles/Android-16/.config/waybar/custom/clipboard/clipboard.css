@@ -1,0 +1,8 @@
+/* ----- Clipboard ----- */
+#custom-clipboard {
+    margin: 0 7.5px;
+}
+
+#custom-clipboard:hover {
+    color: @tertiary;
+}

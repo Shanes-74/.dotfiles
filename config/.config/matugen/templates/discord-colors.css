@@ -1,5 +1,5 @@
 /**
- * @name midnight
+ * @name matugen
  * @description A dark, rounded discord theme.
  * @author refact0r
  * @version 1.6.2
@@ -17,10 +17,10 @@
 /* customize things here */
 :root {
 	/* font, change to 'gg sans' for default discord font*/
-	--font: 'figtree';
+	--font: 'Google Sans Display';
 
 	/* top left corner text */
-	--corner-text: 'Midnight';
+	--corner-text: 'Matugen';
 
 	/* color of status indicators and window controls */
 	--online-indicator: {{colors.primary.default.hex}};                 /* change to #23a55a for default green */
@@ -34,7 +34,7 @@
 	--accent-3: {{colors.primary.default.hex}};                         /* accent buttons */
 	--accent-4: {{colors.primary_container.default.hex}};               /* accent buttons when hovered */
 	--accent-5: {{colors.primary_fixed_dim.default.hex}};               /* accent buttons when clicked */
-	--mention: {{colors.primary_container.default.hex}};                /* mentions & mention messages */
+	--mention: {{colors.on_secondary.default.hex}};                		/* mentions & mention messages */
 	--mention-hover: {{colors.secondary_container.default.hex}};        /* mentions & mention messages when hovered */
 
 	/* text colors */
@@ -46,13 +46,12 @@
 	--text-5: {{colors.outline.default.hex}};                           /* muted channels/chats and timestamps */
 
 	/* background and dark colors */
-	/* bg-1 (darkest) → bg-4 (lightest/main), seguindo a hierarquia do Midnight */
 	--bg-1: {{colors.surface_container_highest.default.hex}};           /* dark buttons when clicked */
 	--bg-2: {{colors.surface_container_high.default.hex}};              /* dark buttons */
-	--bg-3: {{colors.surface_container.default.hex}};                   /* spacing, secondary elements */
-	--bg-4: {{colors.surface_container_low.default.hex}};               /* main background color */
+	--bg-3: {{colors.surface.default.hex}};                   			/* spacing, secondary elements */
+	--bg-4: {{colors.surface_container_high.default.hex}};              /* main background color */
 	--hover: {{colors.surface_container_highest.default.hex}};          /* channels and buttons when hovered */
-	--active: {{colors.secondary_container.default.hex}};               /* channels and buttons when clicked or selected */
+	--active: {{colors.outline_variant.default.hex}};               	/* channels and buttons when clicked or selected */
 	--message-hover: {{colors.surface_container_high.default.hex}};     /* messages when hovered */
 
 	/* amount of spacing and padding */
@@ -66,12 +65,12 @@
 	--icon-spin-transition: 1s ease;    /* round icon button spin (settings, emoji, etc.) */
 
 	/* corner roundness (border-radius) */
-	--roundness-xl: 22px; /* roundness of big panel outer corners */
+	--roundness-xl: 20px; /* roundness of big panel outer corners */
 	--roundness-l: 20px;  /* popout panels */
-	--roundness-m: 16px;  /* smaller panels, images, embeds */
-	--roundness-s: 12px;  /* members, settings inputs */
-	--roundness-xs: 10px; /* channels, buttons */
-	--roundness-xxs: 8px; /* searchbar, small elements */
+	--roundness-m: 20px;  /* smaller panels, images, embeds */
+	--roundness-s: 20px;  /* members, settings inputs */
+	--roundness-xs: 20px; /* channels, buttons */
+	--roundness-xxs: 20px; /* searchbar, small elements */
 
 	/* direct messages moon icon */
 	/* change to block to show, none to hide */
@@ -96,4 +95,47 @@
 .selected_f6f816 .link_d8bfb3 * {
   color: var(--text-0) !important;
   fill: var(--text-0) !important;
+}
+
+/* Hecks */
+div[class*="winButton"] {
+    display: none !important;
+}
+
+.base__5e434 {
+    grid-template-rows: 12px !important;
+}
+
+.bar_c38106 {
+    margin: -20px 4.2px -20px 0 !important;
+}
+
+.toolbar__9293f {
+    margin-right: -102px !important;
+}
+
+.root_bfe55a {
+	background-color: {{colors.surface_container_high.default.hex}};
+}
+
+.gradientContainer_bfe55a {
+    background: linear-gradient(
+        to top, 
+        transparent 0%, 
+       {{colors.surface.default.hex}} 100%
+    );
+}
+
+.overlay-secondary_a22cb0,
+.experimentOverlayTitle__2f4f7 {
+    background-color: {{colors.surface_container.default.hex}}99;
+}
+
+.overlay-secondary_a22cb0:hover {
+	background-color: {{colors.surface_container.default.hex}}CC;
+}
+
+.videoControls_cf09d8,
+.mediaBarInteractionVolume_b26b79 {
+    background-color: {{colors.surface_container.default.hex}}99;
 }

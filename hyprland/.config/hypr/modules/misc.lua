@@ -5,20 +5,22 @@
 hl.config({
     misc = {
         animate_mouse_windowdragging = true,
-        animate_manual_resizes = true,
-        disable_hyprland_logo   = true, -- If true disables the random hyprland logo / anime girl background. :(
+        animate_manual_resizes       = true,
+
+        on_focus_under_fullscreen = 1, -- 0 = do nothing, 1 = focus, 2 = focus and raise
+
+        disable_hyprland_logo    = true, -- If true disables the random hyprland logo / anime girl background. :(
         disable_splash_rendering = true,
-        focus_on_activate = true,
+        focus_on_activate        = true,
 
-        vrr = 1,
-
+        --vrr = 0,
         mouse_move_enables_dpms = true,
-        key_press_enables_dpms = true,
+        key_press_enables_dpms  = true,
 
-        font_family = "GeistMono Nerd Font Mono",
+        font_family = "Google Sans Display Regular",
 
         enable_swallow = false,
-        swallow_regex = "^(kitty|firefox)$",
+        swallow_regex  = "^(kitty|firefox)$",
     },
 
     ecosystem = {

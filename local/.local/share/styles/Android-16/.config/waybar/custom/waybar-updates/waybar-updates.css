@@ -1,0 +1,16 @@
+/* ----- Pacman (atualizações) ----- */
+#pacman-expander {
+    margin: 0 7.5px;
+}
+
+#custom-pacman.value {
+    color: @on_surface;
+}
+
+#custom-pacman.value:hover {
+    color: @secondary;
+}
+
+#custom-pacman:hover {
+    color: @tertiary;
+}

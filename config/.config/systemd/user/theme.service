@@ -1,0 +1,10 @@
+[Unit]
+Description=Wallset color-scheme listener
+PartOf=hyprland-session.target
+
+[Service]
+ExecStart=%h/.config/scripts/theme/theme.py
+Restart=on-failure
+
+[Install]
+WantedBy=hyprland-session.target

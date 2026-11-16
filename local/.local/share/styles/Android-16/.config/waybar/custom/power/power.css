@@ -1,0 +1,8 @@
+/* ----- Power ----- */
+#custom-power {
+    margin: 0px 8px;
+}
+
+#custom-power:hover {
+    color: red;
+}

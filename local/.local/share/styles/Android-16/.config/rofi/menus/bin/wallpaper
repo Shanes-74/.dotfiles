@@ -27,6 +27,19 @@ def hash_path(path: Path) -> str:
     return hashlib.sha1(str(path).encode()).hexdigest()
 
 
+def clean_orphan_thumbs():
+    """Apaga thumbnails cujo wallpaper não existe mais em WALL_DIR."""
+    valid = {
+        hash_path(f)
+        for f in WALL_DIR.rglob("*")
+        if f.suffix.lower() in EXTENSIONS and f.is_file()
+    }
+
+    for thumb in THUMB_DIR.glob("*.jpg"):
+        if thumb.stem not in valid:
+            thumb.unlink(missing_ok=True)
+
+
 def gen_thumb(img: Path):
     img_hash = hash_path(img)
     thumb = THUMB_DIR / f"{img_hash}.jpg"
@@ -77,6 +90,8 @@ def main():
     if not WALL_DIR.exists():
         return
 
+    clean_orphan_thumbs()
+
     folders = sorted(f.name for f in WALL_DIR.iterdir() if f.is_dir())
     if not folders:
         return
@@ -126,7 +141,7 @@ def main():
     )
 
     if selected in path_map:
-        subprocess.run(["walset", str(path_map[selected])])
+        subprocess.run(["wallset", str(path_map[selected])])
 
 
 if __name__ == "__main__":

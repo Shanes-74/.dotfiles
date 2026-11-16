@@ -1,0 +1,8 @@
+/* ----- Control Center -----*/
+#custom-center {
+    margin: 0 7.5px;
+}
+
+#custom-center:hover {
+    color: @tertiary;
+}

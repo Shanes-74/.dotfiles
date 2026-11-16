@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+bash "$HOME/.config/hypr-dock/themes/lotos/point/color-change.sh"

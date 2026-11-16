@@ -18,7 +18,7 @@
 
 /*****----- CONFIGURATION -----*****/
 configuration {
-    disable-history:             true;
+    disable-history:             false;
     show-icons:                  true;
     modi:                        "drun,run,filebrowser";
     display-drun:                "";
@@ -30,8 +30,7 @@ configuration {
 window {
     location:                    south;
     anchor:                      south;
-    width:                       32%;
-    height:                      68%;
+    width:                       550px;
     y-offset:                    20px;
     background-color:            transparent;
     transparency:                "real";
@@ -52,12 +51,12 @@ mainbox {
 /*****----- INPUTBAR -----*****/
 inputbar {
     spacing:                     10px;
-    children:                    [ "textbox-prompt-colon", "entry", "mode-switcher" ];
-    background-color:            inherit;
+    children:                    [ "textbox-0", "entry", "mode-switcher" ];
+    background-color:            transparent;
 }
 
-/*****----- PROMPT (textbox-prompt-colon) -----*****/
-textbox-prompt-colon {
+/*****----- TEXTBOX -----*****/
+textbox-0 {
     enabled:                     true;
     expand:                      false;
     width:                       3%;
@@ -117,7 +116,8 @@ button selected {
 /*****----- LISTVIEW -----*****/
 listview {
     columns:                     1;
-    dynamic:                     true;
+    lines:                       8;
+    dynamic:                     false;
     scrollbar:                   true;
     layout:                      vertical;
     spacing:                     0px;

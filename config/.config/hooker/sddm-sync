@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Atualiza o background do SDDM com o wallpaper recebido em $1
+SDDM_ASSETS_DIR="$HOME/.local/share/sddm/sddm-current/assets"
+
+mkdir -p "$SDDM_ASSETS_DIR"
+cp "$1" "$SDDM_ASSETS_DIR/background.jpg"
+sddm-sync

@@ -1,18 +1,16 @@
 /**
  *
  * Authors:  Shane. (github: @shanes-74),
- * 
+ *
  **/
 
 @import "shared/colors.rasi"
 
 /*****----- Configuration -----*****/
 configuration {
-    show-icons:                 false;
-}
-
-* {
-    font:                       "GeistMono Nerd Font Mono 48";
+    show-icons: false;
+    font: "Google Sans Display Medium 25";
+    hover-select: true;
 }
 
 /*****----- Main Window -----*****/
@@ -21,19 +19,18 @@ window {
     location:                   center;
     anchor:                     center;
     fullscreen:                 false;
-    width:                      556px;
-    height:                     380px;
-    margin:                     0px;
-    padding:                    0px;
-    cursor:                     "default";
+    width:                      600px;
     background-color:           transparent;
 }
 
-/*****----- Main Box -----*****/
 mainbox {
-    spacing:                    16px;
-    margin:                     0px;
-    children:                   [ "listview" ];
+    spacing:                     15px;
+    padding:                     15px;
+    border:                      1px;
+    border-color:                @outline-variant;
+    border-radius:               35px;
+    background-color:            @surface;
+    children:                    [ "listview" ];
 }
 
 /*****----- Listview -----*****/
@@ -43,30 +40,24 @@ listview {
     spacing:                    16px;
     cycle:                      true;
     dynamic:                    true;
-    scrollbar:                  false;
     layout:                     vertical;
     fixed-columns:              true;
-    margin:                     0px;
-    padding:                    24px;
-    border:                     2px;
-    border-radius:              25px;
-    border-color:               @outline-variant;
-    background-color:           @surface-container;
+    background-color:           transparent;
 }
 
 /*****----- Elements -----*****/
 element {
     orientation:                vertical;
-    padding:                    34px;
-    spacing:                    24px;
     border:                     2px;
     border-color:               @outline-variant;
-    border-radius:              100px;
-    background-color:           @surface-container;
+    border-radius:              999px;
+    background-color:           @surface-container-high;
+    cursor:                     pointer;
 }
 
 element-text {
-    background-color:           transparent; 
+    padding:                    67px 0px;
+    background-color:           transparent;
     text-color:                 inherit;
     vertical-align:             0.5;
     horizontal-align:           0.5;
@@ -74,17 +65,11 @@ element-text {
 
 /****----- Estados de Selção -----****/
 element normal {
-    text-color:                 @on-surface; 
+    text-color:                 @on-surface;
 }
 
 element selected normal {
-    background-color:           @primary; 
+    background-color:           @primary;
     text-color:                 @on-primary;
     border-radius:              50px;
-}
-
-message {
-    padding:                    10px;
-    background-color:           @surface-container-low;
-    border-radius:              12px;
 }

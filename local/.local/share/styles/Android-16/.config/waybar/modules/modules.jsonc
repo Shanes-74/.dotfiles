@@ -1,0 +1,511 @@
+// -*- mode: jsonc -*-
+
+{
+  // ============================================================================
+  // Geral
+  // ============================================================================
+  "layer": "top",
+  //"height": 48,
+  //"margin-top": 15,
+  //"margin-left": 15,
+  //"margin-right": 15,
+  "reload_style_on_change": true,
+
+  // ============================================================================
+  // GRUPOS DOS MÓDULOS ESQUERDO E DIREITO
+  // ============================================================================
+
+  "group/left": {
+    "orientation": "inherit",
+    "modules": [
+      "custom/launcher",
+      "custom/point",
+      "group/pill#0",
+      "custom/point",
+      "group/player",
+      "group/cava",
+    ]
+  },
+
+  "group/center": {
+    "orientation": "inherit",
+    "modules": [
+      "group/pill#1",
+    ]
+  },
+
+  "group/right": {
+    "orientation": "inherit",
+    "modules": [
+      "group/tray-expander",
+      "group/pill#2",
+      "custom/point",
+      "group/pill#3",
+      "custom/point",
+      "group/pill#4"
+    ]
+  },
+
+  // ============================================================================
+  // 3. MÓDULOS NÃO‑CUSTOM (ORDEM ALFABÉTICA)
+  // ============================================================================
+
+  // ----- backlight -----
+  "backlight#button": {
+    "format": "{icon}",
+    "format-icons": ["", "󰖨"],
+    "on-scroll-up": "brightnessctl set +5%",
+    "on-scroll-down": "brightnessctl set 5%-",
+    "tooltip": true,
+    "tooltip-format": "Brilho: {percent}%"
+  },
+
+  "backlight/slider": {
+    "min": 5,
+    "max": 100,
+    "orientation": "horizontal",
+    "tooltip": false,
+    "on-click": ""
+  },
+
+  // ----- battery -----
+  "battery": {
+    "bat": "BAT1",
+    "format": "{icon} {capacity}%",
+    "format-charging": " {capacity}%",
+    "format-full": "",
+    "interval": 5,
+    "tooltip-format": "{capacity}% - Descarregado em: {time}",
+    "tooltip-format-charging": "{capacity}% - Carregado em: {time}",
+    "states": {
+      "warning": 25,
+      "critical": 15
+    },
+    "format-icons": {
+      "default": [
+        "󰂎",
+        "󰁺",
+        "󰁻",
+        "󰁼",
+        "󰁽",
+        "󰁾",
+        "󰁿",
+        "󰂀",
+        "󰂁",
+        "󰂂",
+        "󰁹"
+      ]
+    }
+  },
+
+  "group/cava": {
+    "orientation": "vertical",
+    "modules": [
+      "cava#1",
+      "cava#2"
+    ]
+  },
+
+  // ----- cava -----
+  "cava#1": {
+    "on-click": "kitty cava",
+    "framerate": 60,
+    "autosens": 0,
+    "sensitivity": 0.379,
+    "bars": 12,
+    "lower_cutoff_freq": 50,
+    "higher_cutoff_freq": 10000,
+    "hide_on_silence": false,
+    "hide-empty-text": true,
+    "sleep_timer": 1,
+    "format_silent": "Sem mídia",
+    "method": "pipewire",
+    "source": "auto",
+    "stereo": true,
+    "reverse": true,
+    "bar_delimiter": 0,
+    "monstercat": true,
+    "waves": false,
+    "noise_reduction": 0.486,
+    "input_delay": 0,
+    "format-icons": ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"],
+    "actions": {
+      "on-click-right": ""
+    }
+  },
+
+  "cava#2": {
+    "on-click": "kitty cava",
+    "rotate": 180,
+    "framerate": 60,
+    "autosens": 0,
+    "sensitivity": 0.379,
+    "bars": 12,
+    "lower_cutoff_freq": 50,
+    "higher_cutoff_freq": 10000,
+    "hide_on_silence": false,
+    "hide-empty-text": true,
+    "sleep_timer": 1,
+    "format_silent": "quiet",
+    "method": "pipewire",
+    "source": "auto",
+    "stereo": true,
+    "reverse": true,
+    "bar_delimiter": 0,
+    "monstercat": true,
+    "waves": false,
+    "noise_reduction": 0.486,
+    "input_delay": 0,
+    "format-icons": ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"],
+    "actions": {
+      "on-click-right": ""
+    }
+  },
+
+  // ----- hyprland/workspaces -----
+  "hyprland/workspaces": {
+    "format": "",
+    "on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({workspace=\"e-1\"})'",
+    "on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({workspace=\"e+1\"})'",
+    "on-click": "activate",
+    "on-click-right": "desactivate",
+    "persistent-workspaces": {
+      "eDP-1": 5,
+      "HDMI-A-2": 5
+    }
+  },
+
+  // ----- idle_inhibitor -----
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+        "activated": "",
+        "deactivated": ""
+    }
+  },
+
+  // ----- memory -----
+  "memory": {
+    "format": "󰍛",
+    "interval": 5,
+    "return-type": "json",
+    "tooltip-format": "RAM:     {used:0.1f}/{total:0.1f} GiB\nSWAP:   {swapUsed:0.1f}/{swapTotal:0.1f} GiB"
+  },
+
+  "memory#value": {
+    "format": " {percentage}%",
+    "interval": 5,
+    "return-type": "json",
+    "tooltip-format": "RAM:     {used:0.1f}/{total:0.1f} GiB\nSWAP:   {swapUsed:0.1f}/{swapTotal:0.1f} GiB",
+    "on-click": "kitty btop"
+  },
+
+  // ----- network -----
+  "network": {
+    "format-wifi": "{icon}",
+    "format-ethernet": "",
+    "format-linked": "",
+    "format-disconnected": "",
+    "format-icons": ["󰤫", "󰤟", "󰤢", "󰤥", "󰤨"],
+    "on-click": "nmgui",
+    "tooltip-format": "{essid}\nSinal: {signalStrength}%\nIP: {ipaddr}"
+  },
+
+  // ----- pulseaudio -----
+  "pulseaudio#button": {
+    "scroll-step": 5,
+    "on-click": "pavucontrol",
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "format": "{format_source}",
+    "format-muted": "{format_source}",
+    "format-bluetooth": "{format_source}󰂱",
+    "format-bluetooth-muted": "{format_source}󰂲",
+    "format-source": "",
+    "format-source-muted": " ",
+    "tooltip-format": "Volume: {volume}%\nSaida: {desc}\nEntrada: {source_desc}",
+    "format-icons": {
+      "headphone": "{format_source}",
+      "hands-free": "{format_source}",
+      "headset": "{format_source}",
+      "phone": "{format_source}",
+      "portable": "{format_source}",
+      "car": "{format_source}",
+      "muted": "{format_source}",
+      "default": [
+        "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "", ""
+      ]
+    }
+  },
+
+  "pulseaudio/slider": {
+    "min": 0,
+    "max": 100,
+    "orientation": "horizontal",
+    "on-click": ""
+  },
+
+  // ----- tray -----
+  "tray": {
+    "icon-size": 19,
+    "spacing": 12
+  },
+
+  // ============================================================================
+  // 4. MÓDULOS CUSTOM (ORDEM ALFABÉTICA)
+  // ============================================================================
+
+  "custom/center": {
+      "format": "{icon}",
+      "format-icons": {
+          "notification": "󰆈",
+          "none": "󰆉",
+          "dnd-notification": "󱗟",
+          "dnd-none": "󱗠",
+          "inhibited-notification": "󱗡",
+          "inhibited-none": "󱗢",
+          "dnd-inhibited-notification": "󰗞",
+          "dnd-inhibited-none": "󰆇"
+      },
+      "return-type": "json",
+      "exec-if": "which swaync-client",
+      "exec": "swaync-client -swb",
+      "on-click": "swaync-client -R -rs -t",
+      "on-click-right": "swaync-client -d -sw",
+      "escape": true
+  },
+
+"custom/clipboard": {
+    "format": "󰨸",
+    "on-click": "cursor-clip",
+    "tooltip": false
+  },
+
+  "custom/clock": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 1,
+    "exec": "bash -c 'hour=$(date +\"%H\"); min=$(date +\"%M\"); sec=$(date +\"%S\"); text=\"${hour}<sup><big> ${min}</big></sup>\"; tooltip=\" $(date +\"%H:%M:%S\")\"; echo \"{\\\"text\\\":\\\"$text\\\",\\\"tooltip\\\":\\\"$tooltip\\\"}\"'",
+    "escape": false,
+    "on-click": "gnome-clocks"
+  },
+
+  "custom/date": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 1000,
+    "exec": "bash -c 'day=$(date +\"%d\"); month=$(date +\"%m\"); text=\"${day}<sup><big> ${month}</big></sup>\"; tooltip=\"󰸗 $(date +\"%A, %d de %B de %Y\")\"; echo \"{\\\"text\\\":\\\"$text\\\",\\\"tooltip\\\":\\\"$tooltip\\\"}\"'",
+    "escape": false,
+    "on-click": "gnome-calendar"
+  },
+
+  "custom/spacer": {
+    "format": "    "
+  },
+
+  "custom/tray-expand-icon": {
+    "format": "󰅁",
+    "tooltip": false
+  },
+
+  "custom/launcher": {
+    "format": "󰣇",
+    "on-click": "~/.config/rofi/menus/bin/launcher",
+    "tooltip": false
+  },
+
+  "custom/hyprdile": {
+    "exec": "exec ~/.config/waybar/custom/hypridle/hypridle.sh status",
+    "on-click": "~/.config/waybar/custom/hypridle/hypridle.sh toggle",
+    "interval": 2,
+    "return-type": "json"
+  },
+
+  "custom/pacman#icon": {
+    "format": "<b>{icon}</b>",
+    "return-type": "json",
+    "exec-if": "which waybar-updates",
+    "exec": "waybar-updates",
+    "hide-if-empty": true,
+    "format-icons": {
+      "pending-updates": "󱧕",
+      "updated": "󰏗"
+    }
+  },
+
+  "custom/pacman#value": {
+    "format": "{icon}{0}",
+    "return-type": "json",
+    "exec-if": "which waybar-updates",
+    "exec": "waybar-updates",
+    "on-click": "kitty paru -Syu && sudo pacman -Rns $(pacman -Qtdq)",
+    "hide-if-empty": true,
+    "format-icons": {
+      "pending-updates": " ",
+      "updated": ""
+    }
+  },
+
+  "custom/power": {
+    "format": "",
+    "on-click": "~/.config/rofi/menus/bin/power",
+    "tooltip": false
+  },
+
+  "custom/point": {
+    "format": "",
+    "tooltip": false
+  },
+
+  "custom/weather": {
+    "exec": "waybar-weather -config ~/.config/waybar/custom/waybar-weather/config.toml",
+    "restart-interval": 300,
+    "return-type": "json",
+    "hide-empty-text": true,
+    "on-click": "gnome-weather"
+  },
+
+  "custom/wallpaper": {
+    "format": "󰸉",
+    "on-click": "~/.config/rofi/menus/bin/wallpaper",
+    "tooltip": false
+  },
+
+  "image#cover": {
+    "path": "/tmp/cd.png",
+    "size": 26,
+    "interval": 0.0167,
+    "expand": true
+  },
+
+  "custom/waybar-music": {
+    "exec": "exec ~/.config/waybar/custom/waybar-music/waybar-music.py",
+    "format": "{}",
+    "scroll-step": 1,
+    "return-type": "json",
+    "escape": true,
+    "max-length": 13,
+    "on-click": "sleep 0.2 && ~/.config/waybar/custom/waybar-music/waybar-music.py -next",
+    "on-click-right": "sleep 0.2 && ~/.config/waybar/custom/waybar-music/waybar-music.py -prev",
+    "on-double-click": "~/.config/waybar/custom/waybar-music/waybar-music.py -open",
+    "tooltip": true
+  },
+
+  "custom/previous": {
+    "exec": "~/.config/waybar/custom/waybar-music/waybar-music.py -icon-prev",
+    "return-type": "json",
+    "on-click": "~/.config/waybar/custom/waybar-music/waybar-music.py -pc previous",
+    "tooltip": false
+  },
+  "custom/play-pause": {
+    "exec": "~/.config/waybar/custom/waybar-music/waybar-music.py -icon-playpause",
+    "return-type": "json",
+    "on-click": "~/.config/waybar/custom/waybar-music/waybar-music.py -pc play-pause",
+    "tooltip": false
+  },
+  "custom/next": {
+    "exec": "~/.config/waybar/custom/waybar-music/waybar-music.py -icon-next",
+    "return-type": "json",
+    "on-click": "~/.config/waybar/custom/waybar-music/waybar-music.py -pc next",
+    "tooltip": false
+  },
+
+  // ============================================================================
+  // 5. GRUPOS (APENAS OS CONTAINERS)
+  // ============================================================================
+
+  "group/backlight-expander": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 400,
+      "transition-left-to-right": false
+    },
+    "modules": ["backlight#button", "custom/point", "backlight/slider"]
+  },
+
+  "group/control-player": {
+    "orientation": "inherit",
+    "modules": ["custom/previous", "custom/play-pause", "custom/next"]
+  },
+
+  "group/memory-expander": {
+    "orientation": "inherit",
+    "output": "eDP-1",
+    "drawer": {
+      "transition-duration": 400,
+      "transition-left-to-right": true,
+      "click-to-reveal": true
+    },
+    "modules": ["memory", "memory#value"]
+  },
+
+  "group/pacman-expander": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 400,
+      "transition-left-to-right": true
+    },
+    "modules": ["custom/pacman#icon", "custom/pacman#value"]
+  },
+
+  "group/player": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 300,
+      "transition-left-to-right": false
+    },
+    "modules": ["group/waybar-music", "group/control-player"]
+  },
+
+  "group/pulseaudio-expander": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 400,
+      "transition-left-to-right": false
+    },
+    "modules": ["pulseaudio#button", "custom/point", "pulseaudio/slider"]
+  },
+
+  "group/pill#0": {
+    "orientation": "inherit",
+    "modules": ["custom/weather", "custom/hyprdile"]//, "idle_inhibitor"]
+  },
+
+  "group/pill#1": {
+    "orientation": "inherit",
+    "modules": ["custom/clock", "custom/point", "hyprland/workspaces", "custom/point", "custom/date"]
+  },
+
+  "group/pill#2": {
+    "orientation": "inherit",
+    "modules": ["group/pacman-expander", "group/memory-expander", "custom/clipboard", "custom/wallpaper"]
+  },
+
+  "group/pill#3": {
+    "orientation": "inherit",
+    "modules": ["network", "group/pulseaudio-expander", "group/backlight-expander", "custom/center"]
+  },
+
+  "group/pill#4": {
+    "orientation": "inherit",
+    "modules": ["battery", "custom/power"]
+  },
+
+  "group/tray-expander": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 400
+    },
+    "modules": ["custom/tray-expand-icon", "group/tray-group"]
+  },
+
+  "group/tray-group": {
+    "orientation": "inherit",
+    "modules": ["tray", "custom/point"]
+  },
+
+  "group/waybar-music": {
+    "orientation": "inherit",
+    "modules": ["image#cover", "custom/waybar-music"]
+  }
+}
