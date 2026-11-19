@@ -2,6 +2,7 @@
 
 # ============================================================================
 #  stow.sh  —  Stow para pacotes essenciais (config, local, hyprland, themes)
+#  Sempre simula antes: se algo falhar, nada é aplicado e o problema é apontado.
 #  Área de atuação: a pasta onde este script está (funciona em qualquer lugar)
 # ============================================================================
 
@@ -51,18 +52,18 @@ show_help() {
     printf "${BOLD}Uso:${RESET}\n"
     printf "  %s [OPÇÕES]\n\n" "$(basename "$0")"
     printf "${BOLD}Sem opções:${RESET}\n"
-    printf "  Executa ${GREEN}stow${RESET} (cria links) para todos os pacotes listados em PACKAGES.\n\n"
+    printf "  Simula e, se tudo estiver certo, executa ${GREEN}stow${RESET} (cria links) para todos os pacotes de PACKAGES.\n"
+    printf "  Se a simulação achar qualquer problema, ${RED}nada é aplicado${RESET} e os problemas são listados.\n\n"
     printf "${BOLD}Opções:${RESET}\n"
     printf "  ${GREEN}-r, --restow${RESET}    Recria os links (stow -R)\n"
     printf "  ${GREEN}-d, --delete${RESET}    Remove os links (stow -D)\n"
-    printf "  ${GREEN}-n, --simulate${RESET}  Mostra o que seria feito (stow -n)\n"
     printf "  ${GREEN}-v, --verbose${RESET}   Exibe mais detalhes\n"
     printf "  ${GREEN}-h, --help${RESET}      Mostra esta ajuda\n\n"
     printf "${BOLD}Exemplos:${RESET}\n"
     printf "  ${CYAN}%s${RESET}         # Cria links\n" "$(basename "$0")"
     printf "  ${CYAN}%s -d${RESET}      # Remove links\n" "$(basename "$0")"
     printf "  ${CYAN}%s -r -v${RESET}   # Recria links com detalhes\n" "$(basename "$0")"
-    printf "  ${CYAN}%s -n${RESET}      # Simula\n\n" "$(basename "$0")"
+    printf "\n"
     printf "${BOLD}Pacotes gerenciados:${RESET} ${GREEN}"
     for ((i=1; i<${#PACKAGES[@]}; i+=2)); do
         printf "%s " "${PACKAGES[i]}"
@@ -74,27 +75,24 @@ show_help() {
 #  Processamento de opções
 # ----------------------------------------------------------------------------
 ACTION=""
-SIMULATE=""
 VERBOSE=""
 
-while getopts "rdnvh-" opt; do
+while getopts "rdvh-" opt; do
     case "$opt" in
         r) ACTION="-R" ;;
         d) ACTION="-D" ;;
-        n) SIMULATE="-n" ;;
         v) VERBOSE="-v" ;;
         h) show_help; exit 0 ;;
         -)
             case "${OPTARG}" in
                 restow)   ACTION="-R" ;;
                 delete)   ACTION="-D" ;;
-                simulate) SIMULATE="-n" ;;
                 verbose)  VERBOSE="-v" ;;
                 help)     show_help; exit 0 ;;
                 *) echo -e "${RED}${ICON_ERROR} Opção inválida: --${OPTARG}${RESET}"; exit 1 ;;
             esac
             ;;
-        *) echo "Uso: $0 [-r|-d|-n|-v|-h]"; exit 1 ;;
+        *) echo "Uso: $0 [-r|-d|-v|-h]"; exit 1 ;;
     esac
 done
 
@@ -107,77 +105,88 @@ case "$ACTION" in
 esac
 
 # ----------------------------------------------------------------------------
-#  Verificação de conflitos (apenas para stow e restow)
+#  Agrupa os pacotes por pasta: um único stow por pasta = um plano só, e o stow
+#  checa todos os pacotes juntos antes de mexer em qualquer coisa.
 # ----------------------------------------------------------------------------
-check_conflicts() {
-    local subdir="$1"
-    local pkg="$2"
-    local stow_dir="$DOTFILES_DIR/$subdir"
-    local stow_cmd="stow -n -t \"$TARGET_DIR\""
-    [ -n "$VERBOSE" ] && stow_cmd="$stow_cmd $VERBOSE"
+declare -A PKG_GROUPS
+GROUP_ORDER=()
+PROBLEMS=()
 
-    output=$( ( cd "$stow_dir" && eval $stow_cmd "$pkg" 2>&1 ) )
-    if echo "$output" | grep -q "would cause conflicts\|existing target is not owned by stow"; then
-        echo "$output"
-        return 0
-    fi
-    return 1
-}
-
-if [ -z "$SIMULATE" ] && [ "$ACTION" != "-D" ]; then
-    echo -e "${BLUE}${ICON_CHECK} Verificando conflitos...${RESET}"
-    HAS_CONFLICT=0
-    CONFLICT_DETAILS=""
-
-    for ((i=0; i<${#PACKAGES[@]}; i+=2)); do
-        subdir="${PACKAGES[i]}"
-        pkg="${PACKAGES[i+1]}"
-        conflicts=$(check_conflicts "$subdir" "$pkg")
-        if [ $? -eq 0 ]; then
-            HAS_CONFLICT=1
-            CONFLICT_DETAILS+="\n${RED}${ICON_CONFLICT} Conflito em ${CYAN}$subdir/$pkg${RESET}:\n$conflicts\n"
-        fi
-    done
-
-    if [ $HAS_CONFLICT -eq 1 ]; then
-        echo -e "${RED}${ICON_ERROR} Abortando. Conflitos detectados:${RESET}$CONFLICT_DETAILS"
-        exit 1
-    fi
-    echo -e "${GREEN}${ICON_SUCCESS} Nenhum conflito.${RESET}"
-fi
-
-# ----------------------------------------------------------------------------
-#  Aplicar stow
-# ----------------------------------------------------------------------------
-stow_one() {
-    local subdir="$1"
-    local pkg="$2"
-    local stow_dir="$DOTFILES_DIR/$subdir"
-
-    if [ ! -d "$stow_dir/$pkg" ]; then
-        echo -e "${YELLOW}${ICON_WARN} Pacote não encontrado: $stow_dir/$pkg${RESET}"
-        return 1
-    fi
-
-    echo -e "${CYAN}$MSG_ACTION $subdir/$pkg${RESET}"
-    ( cd "$stow_dir" && stow $SIMULATE $VERBOSE $ACTION -t "$TARGET_DIR" "$pkg" )
-    return $?
-}
-
-ALL_OK=0
 for ((i=0; i<${#PACKAGES[@]}; i+=2)); do
     subdir="${PACKAGES[i]}"
     pkg="${PACKAGES[i+1]}"
-    if stow_one "$subdir" "$pkg"; then
-        :
+    if [ ! -d "$DOTFILES_DIR/$subdir/$pkg" ]; then
+        PROBLEMS+=("${RED}${ICON_WARN} Pacote não encontrado:${RESET} $DOTFILES_DIR/$subdir/$pkg")
+        continue
+    fi
+    [ -z "${PKG_GROUPS[$subdir]+x}" ] && GROUP_ORDER+=("$subdir")
+    PKG_GROUPS[$subdir]+="$pkg "
+done
+
+run_stow() {   # run_stow <1=simular|0=aplicar> <subdir>  → saída do stow; retorna o status dele
+    local sim="$1" subdir="$2" flag="" pkgs
+    read -ra pkgs <<< "${PKG_GROUPS[$subdir]}"
+    [ "$sim" -eq 1 ] && flag="-n"
+    ( cd "$DOTFILES_DIR/$subdir" && stow $flag $VERBOSE $ACTION -t "$TARGET_DIR" "${pkgs[@]}" 2>&1 )
+}
+
+format_stow_output() {   # destaca o que o stow reportou
+    local line
+    while IFS= read -r line; do
+        case "$line" in
+            ""|"All operations aborted."|*"in simulation mode"*) ;;
+            *ERROR*)  echo -e "   ${RED}${ICON_ERROR} ${line}${RESET}" ;;
+            *"* "*)   echo -e "   ${RED}${ICON_CONFLICT}${RESET} ${line#*\* }" ;;
+            *)        echo -e "   ${YELLOW}${line}${RESET}" ;;
+        esac
+    done
+}
+
+# ----------------------------------------------------------------------------
+#  Fase 1 — simulação (nada é alterado)
+# ----------------------------------------------------------------------------
+echo -e "${BLUE}${ICON_CHECK} Simulando antes de aplicar...${RESET}"
+
+for subdir in "${GROUP_ORDER[@]}"; do
+    out="$(run_stow 1 "$subdir")"
+    rc=$?
+    if [ $rc -ne 0 ] || printf '%s\n' "$out" | grep -qE 'ERROR|would cause conflicts'; then
+        PROBLEMS+=("${RED}${ICON_CONFLICT} Problemas ao stowar:${RESET} ${CYAN}${PKG_GROUPS[$subdir]% }${RESET}
+$(printf '%s\n' "$out" | format_stow_output)")
     else
-        ALL_OK=1
+        # avisos que não impedem (ex.: link absoluto ignorado)
+        printf '%s\n' "$out" | grep -i 'ignoring' | while IFS= read -r line; do
+            echo -e "   ${YELLOW}${ICON_WARN} ${line}${RESET}"
+        done
     fi
 done
 
-if [ $ALL_OK -eq 0 ]; then
-    echo -e "${GREEN}${ICON_SUCCESS} Concluído.${RESET}"
-else
-    echo -e "${RED}${ICON_ERROR} Algum pacote falhou.${RESET}"
+if [ ${#PROBLEMS[@]} -gt 0 ]; then
+    echo -e "\n${RED}${ICON_ERROR} A simulação falhou — NADA foi aplicado.${RESET}\n"
+    for p in "${PROBLEMS[@]}"; do
+        echo -e "$p\n"
+    done
+    echo -e "${YELLOW}Resolva os itens acima e rode ./$(basename "$0") de novo. (O ./install.sh pergunta o que fazer com arquivos conflitantes.)${RESET}"
     exit 1
 fi
+echo -e "${GREEN}${ICON_SUCCESS} Simulação sem erros.${RESET}"
+
+# ----------------------------------------------------------------------------
+#  Fase 2 — aplicação de verdade
+# ----------------------------------------------------------------------------
+APPLIED=()
+for subdir in "${GROUP_ORDER[@]}"; do
+    echo -e "${CYAN}$MSG_ACTION ${PKG_GROUPS[$subdir]% }${RESET}"
+    out="$(run_stow 0 "$subdir")"
+    rc=$?
+    [ -n "$VERBOSE" ] && printf '%s\n' "$out"
+    if [ $rc -ne 0 ]; then
+        echo -e "${RED}${ICON_ERROR} Falha inesperada ao aplicar em ${CYAN}$subdir${RESET}:"
+        printf '%s\n' "$out" | format_stow_output
+        [ ${#APPLIED[@]} -gt 0 ] && echo -e "${YELLOW}Já aplicados antes da falha: ${APPLIED[*]}${RESET}"
+        exit 1
+    fi
+    APPLIED+=("$subdir")
+done
+
+echo -e "${GREEN}${ICON_SUCCESS} Concluído.${RESET}"

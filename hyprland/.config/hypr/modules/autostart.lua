@@ -10,7 +10,7 @@
 
 hl.on("hyprland.start", function()
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP DISPLAY")
-    hl.exec_cmd("hyprlock")
+    --hl.exec_cmd("hyprlock")
     hl.exec_cmd("hypridle")
     hl.exec_cmd("awww-daemon")
     hl.exec_cmd("waybar")

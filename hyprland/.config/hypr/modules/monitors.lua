@@ -10,7 +10,7 @@ hl.monitor({
     mode =      "highrr",
     position =  "0x0",
     scale =     1,
-    vrr =       1,
+    vrr =       0,
 })
 
 -- 1-5 no notebook

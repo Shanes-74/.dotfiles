@@ -12,6 +12,7 @@ require("modules.binds")
 require("modules.windowrules")
 
 -- Apps
+--require("apps.network")
 require("apps.gamemode")
 require("apps.fullscreen-dnd")
 require("apps.auto-clicker")

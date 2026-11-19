@@ -200,6 +200,24 @@ install_deps() {
 }
 
 # -----------------------------------------------------------------------------
+#  Links órfãos: links quebrados que apontam para dentro do repo (estrutura antiga).
+#  O stow aborta ("cannot read directory") se encontra um desses no caminho.
+# -----------------------------------------------------------------------------
+clean_orphan_links() {
+    local repo_name link dest removed=0
+    repo_name="$(basename "$DOTFILES_DIR")"
+    while IFS= read -r -d '' link; do
+        dest="$(readlink "$link")"
+        [[ $dest == *"$repo_name/"* ]] || continue
+        warn "link órfão removido: ${link/#$HOME/\~} → $dest"
+        run rm -- "$link"
+        removed=$((removed + 1))
+    done < <(find "$HOME/.config" "$HOME/.local" "$HOME/.themes" -xtype l -print0 2>/dev/null)
+    (( removed )) || return 0
+    ok "$removed link(s) órfão(s) removido(s)."
+}
+
+# -----------------------------------------------------------------------------
 #  2. Conflitos: arquivos que já existem e não são o link do dotfiles
 #     Primeiro varre tudo, depois pergunta (1 apagar / 2 .bak / 3 pular / 4 sair)
 #     e só então aplica — assim "cancelar" não deixa nada pela metade.
@@ -247,8 +265,16 @@ ask() {   # ask "prompt" → resposta em $REPLY; retorna 1 se não der para ler
     read -r -p "$1" REPLY </dev/tty
 }
 
+action_label() {
+    case "$1" in
+        delete) echo "apagar" ;;
+        bak)    echo "renomear para .bak" ;;
+        skip)   echo "pular (manter o existente)" ;;
+    esac
+}
+
 resolve_conflicts() {
-    local total=${#C_TARGET[@]} i choice all_choice=""
+    local total=${#C_TARGET[@]} i choice all_choice="" asked_all=0 answer
     (( total )) || { ok "Nenhum arquivo conflitante."; return 0; }
 
     warn "$total arquivo(s) conflitante(s) encontrado(s)."
@@ -266,6 +292,7 @@ resolve_conflicts() {
         return 0
     fi
 
+    # 1) só pergunta — nada é alterado enquanto você escolhe
     for i in "${!C_TARGET[@]}"; do
         if [[ -n $all_choice ]]; then C_ACTION[i]="$all_choice"; continue; fi
 
@@ -275,22 +302,34 @@ resolve_conflicts() {
         echo "  3) Pular (manter o existente, não aplicar o do dotfiles)"
         echo "  4) Cancelar toda a operação"
         while :; do
-            ask "Escolha [1-4]: " || choice=4
-            [[ -z ${choice:-} ]] && choice="$REPLY"
+            choice=""
+            ask "Escolha [1-4]: " && choice="$REPLY" || choice=4
             case "$choice" in
                 1) C_ACTION[i]=delete; break ;;
                 2) C_ACTION[i]=bak;    break ;;
                 3) C_ACTION[i]=skip;   break ;;
                 4) die "Operação cancelada. Nada foi alterado." ;;
-                *) choice=""; echo "  opção inválida" ;;
+                *) echo "  opção inválida" ;;
             esac
         done
-        choice=""
 
-        if ask "Aplicar essa escolha a todos os próximos conflitos? [s/N] " && [[ $REPLY =~ ^[sSyY] ]]; then
-            all_choice="${C_ACTION[i]}"
+        # a pergunta "aplicar a todos" aparece só depois da primeira escolha
+        if (( ! asked_all )); then
+            asked_all=1
+            if (( i < total - 1 )) && ask "Aplicar essa escolha aos $((total - i - 1)) conflitos restantes? [s/N] " \
+               && [[ $REPLY =~ ^[sSyY] ]]; then
+                all_choice="${C_ACTION[i]}"
+            fi
         fi
     done
+
+    # 2) resumo e confirmação final antes de mexer em qualquer arquivo
+    printf '\n%sResumo do que será feito:%s\n' "$C_BLU" "$C_OFF"
+    for i in "${!C_TARGET[@]}"; do
+        printf '  %-48s → %s\n' "${C_TARGET[i]/#$HOME/\~}" "$(action_label "${C_ACTION[i]}")"
+    done
+    if ask "Confirmar e continuar a instalação? [S/n] "; then answer="${REPLY:-s}"; else answer=n; fi
+    [[ $answer =~ ^[sSyY] ]] || die "Operação cancelada. Nada foi alterado."
 }
 
 apply_conflict_actions() {
@@ -298,13 +337,19 @@ apply_conflict_actions() {
     for i in "${!C_TARGET[@]}"; do
         target="${C_TARGET[i]}"
         case "${C_ACTION[i]}" in
-            delete) run rm -rf -- "$target" ;;
+            delete)
+                run rm -rf -- "$target"
+                echo "   apagado:   ${target/#$HOME/\~}"
+                ;;
             bak)
                 n="$target.bak"
                 while [[ -e $n || -L $n ]]; do n="$n.bak"; done   # já existe um .bak? empilha outro
                 run mv -- "$target" "$n"
+                echo "   renomeado: ${target/#$HOME/\~} → ${n/#$HOME/\~}"
                 ;;
-            skip) : ;;   # tratado no stow via --ignore
+            skip)
+                echo "   mantido:   ${target/#$HOME/\~}"   # o stow ignora esse arquivo (--ignore)
+                ;;
         esac
     done
 }
@@ -520,6 +565,7 @@ main() {
     fix_hardcoded_paths
     resolve_style
     make_executable
+    clean_orphan_links
     scan_all_conflicts
     resolve_conflicts
     apply_conflict_actions

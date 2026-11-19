@@ -158,3 +158,10 @@ hl.window_rule({
     no_blur = false,
     opacity = "0.85 0.85 1.0"
 })
+
+hl.window_rule({
+    match = {
+        class = "discord"
+    },
+    no_blur = false,
+})

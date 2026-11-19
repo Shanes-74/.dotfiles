@@ -3,7 +3,7 @@
 # ============================================================================
 #  styler-menu.sh  —  Gerencia temas com Stow + Rofi (alvo = $HOME)
 #  Além do Stow, edita ~/.config/hypr/modules/appearance.lua para alternar
-#  o tema do Hyprland, chama walset --reload, e depois recarrega o Hyprland.
+#  o tema do Hyprland, chama wallset --reload, e depois recarrega o Hyprland.
 # ============================================================================
 
 # ----------------------------------------------------------------------------
@@ -37,7 +37,7 @@ TARGET_DIR="$HOME"
 STYLES_DIR="$HOME/.local/share/styles"
 STATE_FILE="$STYLES_DIR/.current_theme"
 APPEARANCE_FILE="$HOME/.config/hypr/modules/appearance.lua"
-ROFI_THEME="$HOME/.config/rofi/rofi.rasi"
+ROFI_THEME="$HOME/.config/scripts/styler/styler.rasi"
 
 # Resolve link simbólico se existir
 if [ -L "$STYLES_DIR" ]; then
@@ -176,20 +176,20 @@ else
 fi
 
 # ----------------------------------------------------------------------------
-#  Se tudo ok, atualizar appearance.lua, depois walset, depois recarregar Hyprland
+#  Se tudo ok, atualizar appearance.lua, depois wallset, depois recarregar Hyprland
 # ----------------------------------------------------------------------------
 if [ $ALL_OK -eq 0 ] && [ $NEEDS_HYPR_UPDATE -eq 1 ]; then
     update_hypr_appearance "$NEW_THEME_FOR_HYPR" "$current_theme"
 fi
 
-if [ $ALL_OK -eq 0 ] && command -v walset &>/dev/null; then
+if [ $ALL_OK -eq 0 ] && command -v wallset &>/dev/null; then
     echo -e "${MAGENTA}${ICON_WALLPAPER} Regenerando cores...${RESET}"
-    walset --reload && echo -e "${GREEN}${ICON_SUCCESS} Cores regeneradas.${RESET}" || echo -e "${RED}${ICON_ERROR} Falha no walset.${RESET}"
+    wallset --reload && echo -e "${GREEN}${ICON_SUCCESS} Cores regeneradas.${RESET}" || echo -e "${RED}${ICON_ERROR} Falha no wallset.${RESET}"
 elif [ $ALL_OK -eq 0 ]; then
-    echo -e "${YELLOW}${ICON_WARN} walset não instalado. Pule a regeneração de cores.${RESET}"
+    echo -e "${YELLOW}${ICON_WARN} wallset não instalado. Pule a regeneração de cores.${RESET}"
 fi
 
-# Recarregar Hyprland depois de tudo (para aplicar as cores geradas pelo walset)
+# Recarregar Hyprland depois de tudo (para aplicar as cores geradas pelo wallset)
 if [ $ALL_OK -eq 0 ]; then
     reload_hyprland
 fi
